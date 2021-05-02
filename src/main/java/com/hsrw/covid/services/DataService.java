@@ -1,6 +1,5 @@
 package com.hsrw.covid.services;
 
-import com.google.gson.JsonObject;
 import com.hsrw.covid.models.City;
 import com.hsrw.covid.models.LocationStats;
 import com.hsrw.covid.models.Region;

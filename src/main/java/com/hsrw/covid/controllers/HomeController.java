@@ -1,10 +1,8 @@
 package com.hsrw.covid.controllers;
 
-import com.google.gson.Gson;
 import com.hsrw.covid.database.config;
 import com.hsrw.covid.models.LocationStats;
 import com.hsrw.covid.services.DataService;
-import net.minidev.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

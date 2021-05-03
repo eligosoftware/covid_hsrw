@@ -6,8 +6,8 @@ public class LocationStats {
 
     private Region region;
     private City city;
-    private double Lat;
     private Date date;
+    private Date last_update;
     private int totalDeaths;
     private int totalConfirmed;
     private int totalRecovered;
@@ -18,33 +18,11 @@ public class LocationStats {
     private int recovered;
     private double fatality_rate;
 
-
-    public double getLat() {
-        return Lat;
-    }
-
-    public void setLat(double lat) {
-        Lat = lat;
-    }
-
-    public double getLong() {
-        return Long;
-    }
-
-    public void setLong(double aLong) {
-        Long = aLong;
-    }
-
-    private double Long;
-
-    private int latestTotalCases;
-    private int diffFromPreviousDay;
-
-    public LocationStats(Region region, City city, double lat, Date date, int totalDeaths, int totalConfirmed, int totalRecovered, int totalActive, int active, int deaths, int confirmed, int recovered, double fatality_rate, double aLong, int latestTotalCases, int diffFromPreviousDay) {
+    public LocationStats(Region region, City city, Date date,Date last_update, int totalDeaths, int totalConfirmed, int totalRecovered, int totalActive, int active, int deaths, int confirmed, int recovered, double fatality_rate) {
         this.region = region;
         this.city = city;
-        this.Lat = lat;
         this.date = date;
+        this.last_update=last_update;
         this.totalDeaths = totalDeaths;
         this.totalConfirmed = totalConfirmed;
         this.totalRecovered = totalRecovered;
@@ -54,35 +32,29 @@ public class LocationStats {
         this.confirmed = confirmed;
         this.recovered = recovered;
         this.fatality_rate = fatality_rate;
-        this.Long = aLong;
-        this.latestTotalCases = latestTotalCases;
-        this.diffFromPreviousDay = diffFromPreviousDay;
     }
 
     @Override
     public String toString() {
         return "LocationStats{" +
                 "region='" + region + '\'' +","+
-                "city='" + city + '\'' +","+
-                ", latestTotalCases=" + latestTotalCases +
+                "city='" + city + '\''+
                 '}';
     }
 
-
-
-    public int getLatestTotalCases() {
-        return latestTotalCases;
+    public Region getRegion() {
+        return region;
     }
 
-    public void setLatestTotalCases(int latestTotalCases) {
-        this.latestTotalCases = latestTotalCases;
+    public City getCity() {
+        return city;
     }
 
-    public int getDiffFromPreviousDay() {
-        return diffFromPreviousDay;
+    public int getTotalConfirmed() {
+        return totalConfirmed;
     }
 
-    public void setDiffFromPreviousDay(int diffFromPreviousDay) {
-        this.diffFromPreviousDay = diffFromPreviousDay;
+    public int getConfirmed() {
+        return confirmed;
     }
 }

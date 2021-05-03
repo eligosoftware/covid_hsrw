@@ -1,13 +1,11 @@
 package com.hsrw.covid.models;
 
-import java.util.ArrayList;
 
 public class Region {
     private String name;
     private String iso;
     private String province;
 
-    private ArrayList<City> cities;
 
 
     private double lat;
@@ -19,10 +17,21 @@ public class Region {
         this.lat = lat;
         this.lon = lon;
         this.province=province;
-        cities=new ArrayList();
     }
 
-    public void addCity(City city){
-        cities.add(city);
+    public String getName() {
+        return name;
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public double getLat() {
+        return lat;
+    }
+
+    public double getLon() {
+        return lon;
     }
 }

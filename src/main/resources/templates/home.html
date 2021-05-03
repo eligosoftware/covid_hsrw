@@ -36,16 +36,18 @@
 
 <table class="table">
     <tr>
-        <th>State</th>
         <th>Country</th>
+        <th>Province</th>
+        <th>City</th>
         <th>Total stats</th>
         <th>New cases</th>
     </tr>
     <tr th:each="locationStat : ${locationStats}">
-        <td th:text="${locationStat.state}"></td>
-        <td th:text="${locationStat.country}"></td>
-        <td th:text="${locationStat.latestTotalCases}">0</td>
-        <td th:text="${locationStat.diffFromPreviousDay}">0</td>
+        <td th:text="${locationStat.region.name}"></td>
+        <td th:text="${locationStat.region.province}"></td>
+        <td th:text="${locationStat.city==null} ? '':${locationStat.city.name}"></td>
+        <td th:text="${locationStat.totalConfirmed}">0</td>
+        <td th:text="${locationStat.confirmed}">0</td>
     </tr>
 </table>
 </div>

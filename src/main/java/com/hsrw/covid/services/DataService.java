@@ -26,11 +26,22 @@ public class DataService {
     private static String DATA_URL_TOTALS ="https://covid-19-statistics.p.rapidapi.com/reports/total";
     private static String DATA_URL_STATS ="https://covid-19-statistics.p.rapidapi.com/reports";
 
-    private List<LocationStats> allStats=new ArrayList();
+    private List<LocationStats> regionStats =new ArrayList();
+    private List<LocationStats> cityStats =new ArrayList();
+
     private int max_stat=0;
 
     private Totals mTotals;
     private HttpClient client;
+
+    public Totals getmTotals() {
+        return mTotals;
+    }
+
+    public List<LocationStats> getCityStats() {
+        return cityStats;
+    }
+
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
     private SimpleDateFormat simpleDateFormatHours = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
@@ -153,18 +164,69 @@ public class DataService {
             for(int i = 0 ; i < data.length() ; i++){
                 JSONObject row=data.getJSONObject(i);//getString("interestKey");
                 JSONObject regionJson=row.getJSONObject("region");
-                Region region=new Region(regionJson.getString("name"),
+                //System.out.println(regionJson.getString("lat"));
+                Region region;
+                try{
+                region=new Region(regionJson.getString("name"),
                         regionJson.getString("iso"),
                         regionJson.getString("province"),
                         Double.parseDouble(regionJson.getString("lat")),
                         Double.parseDouble(regionJson.getString("long")));
+                }
+                catch (Exception e){
+                    region=new Region(regionJson.getString("name"),
+                            regionJson.getString("iso"),
+                            regionJson.getString("province"),
+                            0,
+                            0);
+                }
+                if(row.getInt("confirmed")>max_stat){
+                    max_stat=row.getInt("confirmed");
+                }
+                regionStats.add(new LocationStats(region,
+                        null,
+                        simpleDateFormat.parse(row.getString("date")),
+                        simpleDateFormatHours.parse(row.getString("last_update")),
+                        row.getInt("deaths"),
+                        row.getInt("confirmed"),
+                        row.getInt("recovered"),
+                        row.getInt("active"),
+                        row.getInt("active_diff"),
+                        row.getInt("deaths_diff"),
+                        row.getInt("confirmed_diff"),
+                        row.getInt("recovered_diff"),
+                        row.getDouble("fatality_rate")
+                        ));
                 JSONArray cities=regionJson.getJSONArray("cities");
                 for(int j=0;j<cities.length();j++){
-                   // region.addCity(new City(cities.getJSONObject(j).getString("name")));
+                    JSONObject row_city=cities.getJSONObject(j);
+                    City city;
+                    try {
+                        city = new City(row_city.getString("name"),
+                                Double.valueOf(row_city.getString("lat")),
+                                Double.valueOf(row_city.getString("long")));
+                    } catch (Exception e){
+                        city = new City(row_city.getString("name"),
+                               0,
+                                0);
+                    }
+                    cityStats.add(new LocationStats(region,
+                            city,
+                            simpleDateFormat.parse(row_city.getString("date")),
+                            simpleDateFormatHours.parse(row_city.getString("last_update")),
+                            row_city.getInt("deaths"),
+                            row_city.getInt("confirmed"),
+                            0,//row_city.getInt("recovered"),
+                            0,//row_city.getInt("active"),
+                            0,//row_city.getInt("active_diff"),
+                            row_city.getInt("deaths_diff"),
+                            row_city.getInt("confirmed_diff"),
+                            0,//row_city.getInt("recovered_diff"),
+                            0//row_city.getDouble("fatality_rate")
+                    ));
                 }
-               // LocationStats stat=new LocationStats(region);
                 //allStats.add(stat);
-                System.out.println("a");
+                //System.out.println("a");
             }
 
         }
@@ -214,7 +276,7 @@ public class DataService {
 
         return cal.getTime();
     }
-    public List<LocationStats> getAllStats() {
-        return allStats;
+    public List<LocationStats> getRegionStats() {
+        return regionStats;
     }
 }

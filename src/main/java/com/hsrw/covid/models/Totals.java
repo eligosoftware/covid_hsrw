@@ -27,4 +27,50 @@ public class Totals {
         this.totalActive = totalActive;
         this.totalRecovered = totalRecovered;
     }
+
+    public int getTotalCases() {
+        return totalCases;
+    }
+
+    public Date getForDate() {
+        return forDate;
+    }
+
+    public int getNewCases() {
+        return newCases;
+    }
+
+    public int getNewDeaths() {
+        return newDeaths;
+    }
+
+    public int getNewRecovered() {
+        return newRecovered;
+    }
+
+    public double getFatalityRate() {
+        return fatalityRate;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public int getTotalActive() {
+        return totalActive;
+    }
+
+    public int getTotalRecovered() {
+        return totalRecovered;
+    }
+
+    public Totals(int totalDeaths, int totalActive, int totalRecovered) {
+        this.totalDeaths = totalDeaths;
+        this.totalActive = totalActive;
+        this.totalRecovered = totalRecovered;
+    }
+
+    public int getTotalDeaths() {
+        return totalDeaths;
+    }
 }

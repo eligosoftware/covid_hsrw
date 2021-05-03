@@ -10,6 +10,8 @@ import org.springframework.ui.Model;
 
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -34,9 +36,14 @@ public class HomeController {
         int totalRecovered=totals.getTotalRecovered();
         int totalActive=totals.getTotalActive();
 
+        DecimalFormatSymbols symbols = DecimalFormatSymbols.getInstance();
+        symbols.setGroupingSeparator(' ');
+
+        DecimalFormat formatter = new DecimalFormat("###,###.##", symbols);
+
         model.addAttribute("locationStats", allStats);
-        model.addAttribute("totalReportedCases",totalCases);
-        model.addAttribute("totalNewCases",totalNewCases);
+        model.addAttribute("totalReportedCases",formatter.format(totalCases));
+        model.addAttribute("totalNewCases",formatter.format(totalNewCases));
         model.addAttribute("totalDeaths",totalDeaths);
         model.addAttribute("totalRecovered",totalRecovered);
         model.addAttribute("totalActive",totalActive);

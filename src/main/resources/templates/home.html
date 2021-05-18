@@ -5,9 +5,21 @@
 <head>
     <title>Covid 19 Info Page</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+    <!--<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+    -->
+    <script
+            src="https://code.jquery.com/jquery-3.6.0.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap4.min.css">
     <script src="https://maps.google.com/maps/api/js?key=AIzaSyDst0N8AWu46dF6XWzZHxrEs82eBBQR4_k"></script>
     <script src="https://code.jscharting.com/latest/jscharting.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>
+
     <link rel="shortcut icon" type="image/png" th:href="@{/img/favicon.png}"/>
     <!--PLEASE NOTE: As of June 22 2016, Google Maps require an API key.
     * GET YOUR API KEY FROM ... https://developers.google.com/maps/documentation/javascript/get-api-key
@@ -32,129 +44,235 @@
         </div>
     </div>
     <div class="row">
+    <select class="form-select" aria-label="Default select example">
+        <option selected value="0">World</option>
+        <option value="1">Europe</option>
+        <option value="2">North America</option>
+        <option value="3">South America</option>
+        <option value="4">Asia</option>
+        <option value="5">Oceania</option>
+        <option value="6">Africa</option>
+    </select>
+    </div>
+    <div class="row">
         <div class="col">
-
-<table class="table">
-    <tr>
-        <th>Country</th>
-        <th>Province</th>
-        <th>City</th>
-        <th>Total stats</th>
-        <th>New cases</th>
-    </tr>
-    <tr th:each="locationStat : ${locationStats}">
-        <td th:text="${locationStat.region.name}"></td>
-        <td th:text="${locationStat.region.province}"></td>
-        <td th:text="${locationStat.city==null} ? '':${locationStat.city.name}"></td>
-        <td th:text="${locationStat.totalConfirmed}">0</td>
-        <td th:text="${locationStat.confirmed}">0</td>
-    </tr>
-</table>
-</div>
-        <div class="col">
-            <div id="mapContainer" style="width:750px;height:350px;"></div>
+            <div id="mapContainer" style="width:100%;height:650px;"></div>
         </div>
     </div>
+    <br/>
+    <div class="row">
+
+        <div class="col">
+
+    <table class="table table-striped table-bordered mydatatable">
+    <thead>
+
+    <tr>
+        <th>Country</th>
+       <!-- <th>Province</th>-->
+        <!--  <th>City</th>>-->
+         <th>Total stats</th>
+         <th>New cases</th>
+     </tr>
+     </thead>
+     <tr th:each="locationStat : ${locationStats}">
+         <td th:text="${locationStat.region.name}"></td>
+         <!-- <td th:text="${locationStat.region.province}"></td>-->
+         <!-- <td th:text="${locationStat.city==null} ? '':${locationStat.city.name}"></td>-->
+         <td th:text="${locationStat.totalConfirmed}">0</td>
+         <td th:text="${locationStat.confirmed}">0</td>
+     </tr>
+
+         <tfoot>
+         <tr>
+             <th>Country</th>
+             <!--<th>Province</th>-->
+             <!--<th>City</th>-->
+             <th>Total stats</th>
+             <th>New cases</th>
+         </tr>
+         </tfoot>
+ </table>
+ </div>
+
+     </div>
 
 
 
 
-</div>
+ </div>
+ <script>
+     $('.mydatatable').DataTable({
+         order:[
+             [0,'asc']
+             ],
+         lengthMenu: [
+            [5,10,25,50,-1],[5,10,25,50,"All"]
+         ],
+         scrollY: 400,
+         scrollCollapse: true,
+         pagingType: 'full_numbers'
+     });
+ </script>
 <script>
-    // LOCATION IN LATITUDE AND LONGITUDE.
-    var center = new google.maps.LatLng(19.0822507, 72.8812041);
+$( "select" )
+  .change(function () {
 
-    function initialize() {
-        // MAP ATTRIBUTES.
-        var mapAttr = {
-            center: center,
-            zoom: 10,
-            mapTypeId: google.maps.MapTypeId.TERRAIN
-        };
-
-        // THE MAP TO DISPLAY.
-        var map = new google.maps.Map(document.getElementById("mapContainer"), mapAttr);
-var max_stat=[[${max_stat}]];
-var s="[[${json}]]".replaceAll("&quot;","\"");
-         //console.log(s);
-        var obj=JSON.parse(s);
-
-       for (var i = 0; i < obj.length; i++){
-  var obj2 = obj[i];
-  var lat=0;
-  var long=0;
-  var ltc=0;
-  for (var key in obj2){
-  if(key=="lat")
-    lat=obj2[key];
-    if(key=="long")
-    long=obj2[key];
-   if(key=="ltc")
-    ltc=obj2[key];
-  }
-  if(lat!=0){
-  //console.log(lat);
-  //console.log(long);
-  //console.log(ltc);
-  //console.log(max_stat);
-  //console.log(750000*ltc/max_stat);
-
-  var dot = new google.maps.LatLng(lat, long);
-    var circle = new google.maps.Circle({
-            center: dot,
-            map: map,
-            radius: 1000000*ltc/max_stat,          // IN METERS.
-            fillColor: '#FF6600',
-            fillOpacity: 0.3,
-            strokeColor: "#FFF",
-            strokeWeight: 0         // DON'T SHOW CIRCLE BORDER.
-        });
-  }
- // break;
-}
-infoWindow = new google.maps.InfoWindow();
-  const locationButton = document.createElement("button");
-  locationButton.textContent = "Pan to Current Location";
-  locationButton.classList.add("custom-map-control-button");
-  map.controls[google.maps.ControlPosition.TOP_CENTER].push(locationButton);
-  locationButton.addEventListener("click", () => {
-    // Try HTML5 geolocation.
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const pos = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          };
-          infoWindow.setPosition(pos);
-          infoWindow.setContent("Location found.");
-          infoWindow.open(map);
-          map.setCenter(pos);
-        },
-        () => {
-          handleLocationError(true, infoWindow, map.getCenter());
-        }
-      );
-    } else {
-      // Browser doesn't support Geolocation
-      handleLocationError(false, infoWindow, map.getCenter());
+    var point;
+    switch(this.value){
+    case "1": // Europe
+    point = new google.maps.LatLng(55.4833, 28.8000);
+    break;
+    case "2": // N Am
+    point = new google.maps.LatLng(48.10, -100.10);
+    break;
+    case "3": // S Am
+    point = new google.maps.LatLng(-26.085429, -60.535785);
+    break;
+    case "4": // Asia
+    point = new google.maps.LatLng(43.4037,87.1952 );
+    break;
+    case "5": // Oceania
+    point = new google.maps.LatLng(30, 140);
+    break;
+    case "6": // Africa
+    point = new google.maps.LatLng(1.300000 , 15);
+    break;
+    case "0":
+    point = new google.maps.LatLng(40.52, 34.34);
+    break;
     }
+    map.setCenter(point);
+    if(this.value=="0")
+    map.setZoom(2);
+    else
+        map.setZoom(4);
   });
-    }
-
-function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-  infoWindow.setPosition(pos);
-  infoWindow.setContent(
-    browserHasGeolocation
-      ? "Error: The Geolocation service failed."
-      : "Error: Your browser doesn't support geolocation."
-  );
-  infoWindow.open(map);
-}
-
-    google.maps.event.addDomListener(window, 'load', initialize);
 </script>
+ <script>
+     // LOCATION IN LATITUDE AND LONGITUDE.
+     var center = new google.maps.LatLng(40.52, 34.34);
+     var map;
+     function initialize() {
+         // MAP ATTRIBUTES.
+         var mapAttr = {
+             center: center,
+             zoom: 2,
+             mapTypeId: google.maps.MapTypeId.TERRAIN
+         };
 
-</body>
+         // THE MAP TO DISPLAY.
+         map = new google.maps.Map(document.getElementById("mapContainer"), mapAttr);
+ var max_stat=[[${max_stat}]];
+ var s="[[${json}]]".replaceAll("&quot;","\"");
+          //console.log(s);
+         var obj=JSON.parse(s);
 
-</html>
+        for (var i = 0; i < obj.length; i++){
+   var obj2 = obj[i];
+   var lat=0;
+   var long=0;
+   var ltc=0;
+   var country="";
+  // var province="";
+  // var city="";
+
+   for (var key in obj2){
+   if(key=="lat")
+     lat=obj2[key];
+     if(key=="long")
+     long=obj2[key];
+     if(key=="country")
+     country=obj2[key];
+    // if(key=="province")
+    // province=obj2[key];
+    // if(key=="city")
+    // city=obj2[key];
+    if(key=="ltc")
+     ltc=obj2[key];
+   }
+   if(lat!=0){
+   //console.log(lat);
+   //console.log(long);
+   //console.log(ltc);
+   //console.log(max_stat);
+   //console.log(750000*ltc/max_stat);
+
+ var infowindow = new google.maps.InfoWindow({});
+ var marker = new google.maps.Marker({
+     map: map
+ });
+ var title= country+'<br/>'+ltc;
+   var dot = new google.maps.LatLng(lat, long);
+     var circle = new google.maps.Circle({
+             center: dot,
+             map: map,
+             radius: 50000+1000000*ltc/max_stat,          // IN METERS.
+             fillColor: '#FF6600',
+             title: title,
+             fillOpacity: 0.3,
+             strokeColor: "#FFF",
+             strokeWeight: 0         // DON'T SHOW CIRCLE BORDER.
+         });
+
+         google.maps.event.addListener(circle, 'mouseover', function () {
+  if (typeof this.title !== "undefined") {
+     marker.setPosition(this.getCenter()); // get circle's center
+     infowindow.setContent("<b>" + this.title + "</b>"); // set content
+     infowindow.open(map, marker); // open at marker's location
+     marker.setVisible(false); // hide the marker
+    }
+ });
+
+ google.maps.event.addListener(circle, 'mouseout', function () {
+  infowindow.close();
+ });
+   }
+  // break;
+ }
+ infoWindow = new google.maps.InfoWindow();
+   const locationButton = document.createElement("button");
+   locationButton.textContent = "Pan to Current Location";
+   locationButton.classList.add("custom-map-control-button");
+   map.controls[google.maps.ControlPosition.TOP_CENTER].push(locationButton);
+   locationButton.addEventListener("click", () => {
+     // Try HTML5 geolocation.
+     if (navigator.geolocation) {
+       navigator.geolocation.getCurrentPosition(
+         (position) => {
+           const pos = {
+             lat: position.coords.latitude,
+             lng: position.coords.longitude,
+           };
+           infoWindow.setPosition(pos);
+           infoWindow.setContent("Location found.");
+           infoWindow.open(map);
+           map.setCenter(pos);
+         },
+         () => {
+           handleLocationError(true, infoWindow, map.getCenter());
+         }
+       );
+     } else {
+       // Browser doesn't support Geolocation
+       handleLocationError(false, infoWindow, map.getCenter());
+     }
+   });
+     }
+
+ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+   infoWindow.setPosition(pos);
+   infoWindow.setContent(
+     browserHasGeolocation
+       ? "Error: The Geolocation service failed."
+       : "Error: Your browser doesn't support geolocation."
+   );
+   infoWindow.open(map);
+ }
+
+     google.maps.event.addDomListener(window, 'load', initialize);
+ </script>
+
+ </body>
+
+ </html>

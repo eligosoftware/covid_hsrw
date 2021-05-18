@@ -26,9 +26,9 @@ public class HomeController {
     public String home(Model model){
         config conf=config.newInstance();
         conf.connect();
-        List<LocationStats> regionStats = covidDataService.getRegionStats();
-        List<LocationStats> cityStats = covidDataService.getCityStats();
-        List<LocationStats> allStats = Stream.concat(regionStats.stream(),cityStats.stream()).collect(Collectors.toList());
+        List<LocationStats> regionStats = covidDataService.getRegionStatsCountry();
+      //  List<LocationStats> cityStats = covidDataService.getCityStats();
+       // List<LocationStats> allStats = Stream.concat(regionStats.stream(),cityStats.stream()).collect(Collectors.toList());
         Totals totals=covidDataService.getmTotals();
         int totalCases=totals.getTotalCases();//allStats.stream().mapToInt(stat->stat.getLatestTotalCases()).sum();
         int totalNewCases=totals.getNewCases();//allStats.stream().mapToInt(stat->stat.getDiffFromPreviousDay()).sum();
@@ -41,7 +41,8 @@ public class HomeController {
 
         DecimalFormat formatter = new DecimalFormat("###,###.##", symbols);
 
-        model.addAttribute("locationStats", allStats);
+        model.addAttribute("locationStats", regionStats);
+       // model.addAttribute("locationStats", allStats);
         model.addAttribute("totalReportedCases",formatter.format(totalCases));
         model.addAttribute("totalNewCases",formatter.format(totalNewCases));
         model.addAttribute("totalDeaths",totalDeaths);
@@ -51,14 +52,17 @@ public class HomeController {
         StringBuilder builder = new StringBuilder();
 
         builder.append("[");
-        for( LocationStats stat:allStats){
+        for( LocationStats stat:regionStats){
             builder.append("{");
             builder.append("\"country\":\""+stat.getRegion().getName()+"\",");
-            builder.append("\"province\":\""+stat.getRegion().getProvince()+"\",");
-            builder.append("\"city\":\""+((stat.getCity()==null)?"":stat.getCity().getName())+"\",");
+           // builder.append("\"province\":\""+stat.getRegion().getProvince()+"\",");
+           // builder.append("\"city\":\""+((stat.getCity()==null)?"":stat.getCity().getName())+"\",");
 
-            builder.append("\"lat\":"+((stat.getCity()==null)?stat.getRegion().getLat():stat.getCity().getLat())+",");
-            builder.append("\"long\":"+((stat.getCity()==null)?stat.getRegion().getLon():stat.getCity().getLon())+",");
+            builder.append("\"lat\":"+stat.getRegion().getLat()+",");
+            builder.append("\"long\":"+stat.getRegion().getLon()+",");
+
+        //    builder.append("\"lat\":"+((stat.getCity()==null)?stat.getRegion().getLat():stat.getCity().getLat())+",");
+        //    builder.append("\"long\":"+((stat.getCity()==null)?stat.getRegion().getLon():stat.getCity().getLon())+",");
 
             builder.append("\"ltc\":"+stat.getTotalConfirmed()+"");
 
@@ -68,7 +72,7 @@ public class HomeController {
         builder.append("]");
         //System.out.println(builder.toString());
         //System.out.println(JSONArray.toJSONString(allStats));
-        System.out.println(builder.toString());
+       // System.out.println(builder.toString());
         //model.addAttribute("json", JSONArray.toJSONString(allStats));//builder.toString());
         model.addAttribute("json", builder.toString());
         model.addAttribute("max_stat",covidDataService.getMax_stat());

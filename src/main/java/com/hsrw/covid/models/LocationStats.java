@@ -57,4 +57,40 @@ public class LocationStats {
     public int getConfirmed() {
         return confirmed;
     }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public Date getLast_update() {
+        return last_update;
+    }
+
+    public int getTotalDeaths() {
+        return totalDeaths;
+    }
+
+    public int getTotalRecovered() {
+        return totalRecovered;
+    }
+
+    public int getTotalActive() {
+        return totalActive;
+    }
+
+    public int getActive() {
+        return active;
+    }
+
+    public int getDeaths() {
+        return deaths;
+    }
+
+    public int getRecovered() {
+        return recovered;
+    }
+
+    public double getFatality_rate() {
+        return fatality_rate;
+    }
 }

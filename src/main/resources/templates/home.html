@@ -11,6 +11,7 @@
             src="https://code.jquery.com/jquery-3.6.0.min.js"
             integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
             crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap4.min.css">
     <script src="https://maps.google.com/maps/api/js?key=AIzaSyDst0N8AWu46dF6XWzZHxrEs82eBBQR4_k"></script>
@@ -44,7 +45,7 @@
         </div>
     </div>
     <div class="row">
-    <select class="form-select" aria-label="Default select example">
+    <select class="form-select"  aria-label="Default select example">
         <option selected value="0">World</option>
         <option value="1">Europe</option>
         <option value="2">North America</option>
@@ -100,7 +101,126 @@
 
 
 
- </div>
+
+<br/>
+    <h1>Numbers</h1>
+<div class="row">
+    <div class="container">
+        <div class="col-md-6">
+            <div class="bg-light p-5 rounded-lg m-3">
+
+                <div>
+                    <input type="radio" id="world" name="type" value="1" checked>World
+                    <input type="radio" id="continents" name="type" value="2" >Continents
+                    <input type="radio" id="countries" name="type" value="3" >Countries<br/>
+
+                </div>
+                <div>
+                    <select id="describe">
+                    </select>
+                </div>
+                <h1 id="f_rate" class="display-4" th:text="${fatalityRate}"></h1>
+                <p class="lead">Fatality rate</p>
+            </div>
+        </div>
+        <div class="card-deck">
+            <div class="card text-center">
+                <div class="card-block text-light bg-primary">
+                    <h4 class="card-title">Last Day Cases</h4>
+                    <p id="new_cases" class="card-text">
+                        [[${new_cases}]]
+                    </p>
+                </div>
+            </div>
+
+            <div class="card text-center">
+                <div class="card-block text-light bg-dark">
+                    <h4 class="card-title">Last Day Deaths</h4>
+                    <p id="new_deaths" class="card-text">
+                        [[${new_deaths}]]
+                    </p>
+                </div>
+            </div>
+
+            <div class="card text-center">
+                <div class="card-block text-light bg-success">
+                    <h4 class="card-title">Last Day Recovered</h4>
+                    <p id="new_recovered" class="card-text">
+                        [[${new_recovered}]]
+                    </p>
+                </div>
+            </div>
+
+            <div class="card text-center">
+                <div class="card-block text-dark bg-warning">
+                    <h4 class="card-title">Last Day Active</h4>
+                    <p id="new_active" class="card-text">
+                        [[${new_active}]]
+                    </p>
+                </div>
+            </div>
+
+        </div>
+        <div class="card-deck mt-5">
+            <div class="card text-center">
+                <div class="card-block text-light bg-primary">
+                    <h4 class="card-title">Total Cases</h4>
+                    <p id="total_cases" class="card-text">
+                        [[${total_cases}]]
+                    </p>
+                </div>
+            </div>
+
+            <div class="card text-center">
+                <div class="card-block text-light bg-dark">
+                    <h4 class="card-title">Total Deaths</h4>
+                    <p id="total_deaths" class="card-text">
+                        [[${total_deaths}]]
+                    </p>
+                </div>
+            </div>
+
+            <div class="card text-center">
+                <div class="card-block text-light bg-success">
+                    <h4 class="card-title">Total Recovered</h4>
+                    <p id="total_recovered" class="card-text">
+                        [[${total_recovered}]]
+                    </p>
+                </div>
+            </div>
+
+            <div class="card text-center">
+                <div class="card-block text-dark bg-warning">
+                    <h4 class="card-title">Total Active</h4>
+                    <p id="total_active" class="card-text">
+                        [[${total_active}]]
+                    </p>
+                </div>
+            </div>
+        </div>
+</div>
+</div>
+<br/>
+    <h1>Charts</h1>
+<div class="row">
+    <div class="col-sm">
+ <div id="chartDiv" style="max-width: 740px;height: 290px;margin: 0px auto">
+</div>
+    </div>
+    <div class="col-sm">
+    <div id="chartDiv2" style="max-width: 740px;height: 400px;margin: 0px auto">
+    </div>
+    </div>
+</div>
+    <div class="row">
+    <div id="chartDiv3" style="max-width: 740px;height: 400px;margin: 0px auto">
+    </div>
+    </div>
+</div>
+<script>
+  var listA = [{name:'Europe', value:'europe'}, {name:'North America', value:'north_america'},{name:'South America', value:'south_america'},{name:'Asia', value:'asia'}, {name:'Oceania', value:'oceania'}, {name:'Africa', value:'africa'}];
+  var listB =[{name:'Afghanistan',value:'Afghanistan'}, {name:'Albania',value:'Albania'}, {name:'Algeria',value:'Algeria'}, {name:'Andorra',value:'Andorra'}, {name:'Angola',value:'Angola'}, {name:'Anguilla',value:'Anguilla'}, {name:'Antigua and Barbuda',value:'Antigua and Barbuda'}, {name:'Argentina',value:'Argentina'}, {name:'Armenia',value:'Armenia'}, {name:'Aruba',value:'Aruba'}, {name:'Australia',value:'Australia'}, {name:'Austria',value:'Austria'}, {name:'Azerbaijan',value:'Azerbaijan'}, {name:'Bahamas',value:'Bahamas'}, {name:'Bahrain',value:'Bahrain'}, {name:'Bangladesh',value:'Bangladesh'}, {name:'Barbados',value:'Barbados'}, {name:'Belarus',value:'Belarus'}, {name:'Belgium',value:'Belgium'}, {name:'Belize',value:'Belize'}, {name:'Benin',value:'Benin'}, {name:'Bermuda',value:'Bermuda'}, {name:'Bhutan',value:'Bhutan'}, {name:'Bolivia',value:'Bolivia'}, {name:'Bosnia and Herzegovina',value:'Bosnia and Herzegovina'}, {name:'Botswana',value:'Botswana'}, {name:'Bouvet Island',value:'Bouvet Island'}, {name:'Brazil',value:'Brazil'}, {name:'British Indian Ocean Territory',value:'British Indian Ocean Territory'}, {name:'British Virgin Islands',value:'British Virgin Islands'}, {name:'Brunei',value:'Brunei'}, {name:'Bulgaria',value:'Bulgaria'}, {name:'Burkina Faso',value:'Burkina Faso'}, {name:'Burma',value:'Burma'}, {name:'Burundi',value:'Burundi'}, {name:'Cabo Verde',value:'Cabo Verde'}, {name:'Cambodia',value:'Cambodia'}, {name:'Cameroon',value:'Cameroon'}, {name:'Canada',value:'Canada'}, {name:'Cape Verde',value:'Cape Verde'}, {name:'Cayman Islands',value:'Cayman Islands'}, {name:'Central African Republic',value:'Central African Republic'}, {name:'Chad',value:'Chad'}, {name:'Chile',value:'Chile'}, {name:'China',value:'China'}, {name:'Christmas Island',value:'Christmas Island'}, {name:'Cocos [Keeling] Islands',value:'Cocos [Keeling] Islands'}, {name:'Colombia',value:'Colombia'}, {name:'Comoros',value:'Comoros'}, {name:'Congo (Brazzaville)',value:'Congo (Brazzaville)'}, {name:'Congo (Kinshasa)',value:'Congo (Kinshasa)'}, {name:'Cook Islands',value:'Cook Islands'}, {name:'Costa Rica',value:'Costa Rica'}, {name:'Cote d\'Ivoire',value:'Cote d\'Ivoire'}, {name:'Croatia',value:'Croatia'}, {name:'Cuba',value:'Cuba'}, {name:'Cyprus',value:'Cyprus'}, {name:'Czechia',value:'Czechia'}, {name:'Denmark',value:'Denmark'}, {name:'Diamond Princess',value:'Diamond Princess'}, {name:'Djibouti',value:'Djibouti'}, {name:'Dominica',value:'Dominica'}, {name:'Dominican Republic',value:'Dominican Republic'}, {name:'Ecuador',value:'Ecuador'}, {name:'Egypt',value:'Egypt'}, {name:'El Salvador',value:'El Salvador'}, {name:'Equatorial Guinea',value:'Equatorial Guinea'}, {name:'Eritrea',value:'Eritrea'}, {name:'Estonia',value:'Estonia'}, {name:'Eswatini',value:'Eswatini'}, {name:'Ethiopia',value:'Ethiopia'}, {name:'Falkland Islands [Islas Malvinas]',value:'Falkland Islands [Islas Malvinas]'}, {name:'Faroe Islands',value:'Faroe Islands'}, {name:'Fiji',value:'Fiji'}, {name:'Finland',value:'Finland'}, {name:'France',value:'France'}, {name:'French Guiana',value:'French Guiana'}, {name:'French Polynesia',value:'French Polynesia'}, {name:'French Southern Territories',value:'French Southern Territories'}, {name:'Gabon',value:'Gabon'}, {name:'Gambia',value:'Gambia'}, {name:'Gaza Strip',value:'Gaza Strip'}, {name:'Georgia',value:'Georgia'}, {name:'Germany',value:'Germany'}, {name:'Ghana',value:'Ghana'}, {name:'Gibraltar',value:'Gibraltar'}, {name:'Greece',value:'Greece'}, {name:'Greenland',value:'Greenland'}, {name:'Grenada',value:'Grenada'}, {name:'Guadeloupe',value:'Guadeloupe'}, {name:'Guam',value:'Guam'}, {name:'Guatemala',value:'Guatemala'}, {name:'Guernsey',value:'Guernsey'}, {name:'Guinea',value:'Guinea'}, {name:'Guinea-Bissau',value:'Guinea-Bissau'}, {name:'Guyana',value:'Guyana'}, {name:'Haiti',value:'Haiti'}, {name:'Heard Island and McDonald Islands',value:'Heard Island and McDonald Islands'}, {name:'Holy See ',value:'Holy See '}, {name:'Honduras',value:'Honduras'}, {name:'Hong Kong',value:'Hong Kong'}, {name:'Hungary',value:'Hungary'}, {name:'Iceland',value:'Iceland'}, {name:'India',value:'India'}, {name:'Indonesia',value:'Indonesia'}, {name:'Iran',value:'Iran'}, {name:'Iraq',value:'Iraq'}, {name:'Ireland',value:'Ireland'}, {name:'Isle of Man',value:'Isle of Man'}, {name:'Israel',value:'Israel'}, {name:'Italy',value:'Italy'}, {name:'Jamaica',value:'Jamaica'}, {name:'Japan',value:'Japan'}, {name:'Jersey',value:'Jersey'}, {name:'Jordan',value:'Jordan'}, {name:'Kazakhstan',value:'Kazakhstan'}, {name:'Kenya',value:'Kenya'}, {name:'Kiribati',value:'Kiribati'}, {name:'Korea, South',value:'Korea, South'}, {name:'Kosovo',value:'Kosovo'}, {name:'Kuwait',value:'Kuwait'}, {name:'Kyrgyzstan',value:'Kyrgyzstan'}, {name:'Laos',value:'Laos'}, {name:'Latvia',value:'Latvia'}, {name:'Lebanon',value:'Lebanon'}, {name:'Lesotho',value:'Lesotho'}, {name:'Liberia',value:'Liberia'}, {name:'Libya',value:'Libya'}, {name:'Liechtenstein',value:'Liechtenstein'}, {name:'Lithuania',value:'Lithuania'}, {name:'Luxembourg',value:'Luxembourg'}, {name:'Macau',value:'Macau'}, {name:'Madagascar',value:'Madagascar'}, {name:'Malawi',value:'Malawi'}, {name:'Malaysia',value:'Malaysia'}, {name:'Maldives',value:'Maldives'}, {name:'Mali',value:'Mali'}, {name:'Malta',value:'Malta'}, {name:'Marshall Islands',value:'Marshall Islands'}, {name:'Martinique',value:'Martinique'}, {name:'Mauritania',value:'Mauritania'}, {name:'Mauritius',value:'Mauritius'}, {name:'Mayotte',value:'Mayotte'}, {name:'Mexico',value:'Mexico'}, {name:'Micronesia',value:'Micronesia'}, {name:'Moldova',value:'Moldova'}, {name:'Monaco',value:'Monaco'}, {name:'Mongolia',value:'Mongolia'}, {name:'Montenegro',value:'Montenegro'}, {name:'Montserrat',value:'Montserrat'}, {name:'Morocco',value:'Morocco'}, {name:'Mozambique',value:'Mozambique'}, {name:'MS Zaandam',value:'MS Zaandam'}, {name:'Namibia',value:'Namibia'}, {name:'Nauru',value:'Nauru'}, {name:'Nepal',value:'Nepal'}, {name:'Netherlands',value:'Netherlands'}, {name:'Netherlands Antilles',value:'Netherlands Antilles'}, {name:'New Caledonia',value:'New Caledonia'}, {name:'New Zealand',value:'New Zealand'}, {name:'Nicaragua',value:'Nicaragua'}, {name:'Niger',value:'Niger'}, {name:'Nigeria',value:'Nigeria'}, {name:'Niue',value:'Niue'}, {name:'Norfolk Island',value:'Norfolk Island'}, {name:'North Korea',value:'North Korea'}, {name:'North Macedonia',value:'North Macedonia'}, {name:'Northern Mariana Islands',value:'Northern Mariana Islands'}, {name:'Norway',value:'Norway'}, {name:'Oman',value:'Oman'}, {name:'Pakistan',value:'Pakistan'}, {name:'Palau',value:'Palau'}, {name:'Palestinian Territories',value:'Palestinian Territories'}, {name:'Panama',value:'Panama'}, {name:'Papua New Guinea',value:'Papua New Guinea'}, {name:'Paraguay',value:'Paraguay'}, {name:'Peru',value:'Peru'}, {name:'Philippines',value:'Philippines'}, {name:'Pitcairn Islands',value:'Pitcairn Islands'}, {name:'Poland',value:'Poland'}, {name:'Portugal',value:'Portugal'}, {name:'Puerto Rico',value:'Puerto Rico'}, {name:'Qatar',value:'Qatar'}, {name:'Romania',value:'Romania'}, {name:'Russia',value:'Russia'}, {name:'Rwanda',value:'Rwanda'}, {name:'Sao Tome and Principe ',value:'Sao Tome and Principe '}, {name:'Saint Helena',value:'Saint Helena'}, {name:'Saint Kitts and Nevis',value:'Saint Kitts and Nevis'}, {name:'Saint Lucia',value:'Saint Lucia'}, {name:'Saint Pierre and Miquelon',value:'Saint Pierre and Miquelon'}, {name:'Saint Vincent and the Grenadines',value:'Saint Vincent and the Grenadines'}, {name:'Samoa',value:'Samoa'}, {name:'San Marino',value:'San Marino'}, {name:'Saudi Arabia',value:'Saudi Arabia'}, {name:'Senegal',value:'Senegal'}, {name:'Serbia',value:'Serbia'}, {name:'Seychelles',value:'Seychelles'}, {name:'Sierra Leone',value:'Sierra Leone'}, {name:'Singapore',value:'Singapore'}, {name:'Slovakia',value:'Slovakia'}, {name:'Slovenia',value:'Slovenia'}, {name:'Solomon Islands',value:'Solomon Islands'}, {name:'Somalia',value:'Somalia'}, {name:'South Africa',value:'South Africa'}, {name:'South Georgia and the South Sandwich Islands',value:'South Georgia and the South Sandwich Islands'}, {name:'Spain',value:'Spain'}, {name:'Sri Lanka',value:'Sri Lanka'}, {name:'South Sudan',value:'South Sudan'}, {name:'Sudan',value:'Sudan'}, {name:'Suriname',value:'Suriname'}, {name:'Svalbard and Jan Mayen',value:'Svalbard and Jan Mayen'}, {name:'Sweden',value:'Sweden'}, {name:'Switzerland',value:'Switzerland'}, {name:'Syria',value:'Syria'}, {name:'Taiwan',value:'Taiwan'}, {name:'Tajikistan',value:'Tajikistan'}, {name:'Tanzania',value:'Tanzania'}, {name:'Thailand',value:'Thailand'}, {name:'Timor-Leste',value:'Timor-Leste'}, {name:'Togo',value:'Togo'}, {name:'Tokelau',value:'Tokelau'}, {name:'Tonga',value:'Tonga'}, {name:'Trinidad and Tobago',value:'Trinidad and Tobago'}, {name:'Tunisia',value:'Tunisia'}, {name:'Turkey',value:'Turkey'}, {name:'Turkmenistan',value:'Turkmenistan'}, {name:'Turks and Caicos Islands',value:'Turks and Caicos Islands'}, {name:'Tuvalu',value:'Tuvalu'}, {name:'U.S. Minor Outlying Islands',value:'U.S. Minor Outlying Islands'}, {name:'U.S. Virgin Islands',value:'U.S. Virgin Islands'}, {name:'Uganda',value:'Uganda'}, {name:'Ukraine',value:'Ukraine'}, {name:'United Arab Emirates',value:'United Arab Emirates'}, {name:'United Kingdom',value:'United Kingdom'}, {name:'US',value:'US'}, {name:'Uruguay',value:'Uruguay'}, {name:'Uzbekistan',value:'Uzbekistan'}, {name:'Vanuatu',value:'Vanuatu'}, {name:'Vatican City',value:'Vatican City'}, {name:'Venezuela',value:'Venezuela'}, {name:'Vietnam',value:'Vietnam'}, {name:'Wallis and Futuna',value:'Wallis and Futuna'}, {name:'Western Sahara',value:'Western Sahara'}, {name:'West Bank and Gaza',value:'West Bank and Gaza'}, {name:'Yemen',value:'Yemen'}, {name:'Zambia',value:'Zambia'}, {name:'Zimbabwe',value:'Zimbabwe'}];
+</script>
  <script>
      $('.mydatatable').DataTable({
          order:[
@@ -114,6 +234,160 @@
          pagingType: 'full_numbers'
      });
  </script>
+
+<script>
+var js_scr="[[${js_script}]]";
+js_scr=js_scr.replaceAll("&#39;","\'");
+js_scr=js_scr.replaceAll("&lt;","<");
+js_scr=js_scr.replaceAll("&gt;",">");
+
+//console.log(js_scr);
+
+eval(js_scr);
+
+var js_scr2="[[${js_script2}]]";
+js_scr2=js_scr2.replaceAll("&#39;","\'");
+js_scr2=js_scr2.replaceAll("&lt;","<");
+js_scr2=js_scr2.replaceAll("&gt;",">");
+
+//console.log(js_scr);
+
+eval(js_scr2);
+
+
+var chart3 = JSC.chart('chartDiv3', {
+	debug: true,
+	defaultSeries_type: 'column',
+	title_label_text:'US Social Network Users in 2016',
+	yAxis:{
+		defaultTick_enabled:false,
+		scale_range_padding:.15
+	},
+	legend_visible:false,
+	toolbar_visible:false,
+	series:[
+		{
+			name:'Social Network Users',
+			color:'turquoise',
+			defaultPoint:{
+
+
+				label:{
+					text:'%valueM'
+				}},
+
+			points:[
+				{name:'Facebook',y:166.8},
+				{name:'Instagram',y:67.2},
+				{name:'Twitter',y:52.2},
+				{name:'Pinterest',y:54.3},
+				{name:'Tumblr',y:23.2},
+			]}
+	]
+});
+</script>
+
+<script>
+  $(document).ready( function() {
+
+  $('#describe').on('change', function() {
+
+  $.ajax({
+	url: '/updateNumbers',
+	method: 'post',
+	data: {country: this.value},
+	success: function(data){
+		if (data!="error"){
+		    //console.log(data);
+            var obj = JSON.parse(data);
+            //console.log(obj.country);
+            document.getElementById('new_cases').innerHTML=numberWithSpaces(obj.new_cases);
+            document.getElementById('new_active').innerHTML=numberWithSpaces(obj.new_active);
+            document.getElementById('new_recovered').innerHTML=numberWithSpaces(obj.new_recovered);
+            document.getElementById('new_deaths').innerHTML=numberWithSpaces(obj.new_deaths);
+            document.getElementById('total_cases').innerHTML=numberWithSpaces(obj.total_cases);
+            document.getElementById('total_deaths').innerHTML=numberWithSpaces(obj.total_deaths);
+            document.getElementById('total_recovered').innerHTML=numberWithSpaces(obj.total_recovered);
+            document.getElementById('total_active').innerHTML=numberWithSpaces(obj.total_active);
+            document.getElementById('f_rate').innerHTML=obj.fatalityRate;
+
+
+
+            var chart1=obj.chart1;
+            if(chart1.update){
+            var js_chart1="var chart = JSC.chart('chartDiv', {debug: true,legend_position: 'inside left bottom',defaultSeries: { type: 'pie', pointSelection: true },defaultPoint_label: {text: '<b>%name</b>',placement: 'auto',autoHide: false},toolbar_items: {Mode: {margin: 10,type: 'select',events_change: setMode,items: 'enum_placement'},'Auto Hide': { type: 'checkbox', events_change: setAutoHide }},title_label_text: 'Top 10 countries by case numbers',yAxis: { label_text: 'Cases', formatString: 'n' },series: [{name: 'Countries', points: [";
+
+             for (i = 0; i < chart1.values.length-1; i++) {
+                var region=chart1.values[i];
+              js_chart1 += "{ name: '"+region.name+"', y: "+region.y+" },";
+              }
+               var region=chart1.values[chart1.values.length-1];
+              js_chart1 += "{ name: '"+region.name+"', y: "+region.y+" }";
+
+            js_chart1+="]}]});function setMode(val) { chart.options({ defaultPoint: { label: { placement: val } } }); } function setAutoHide(val) {chart.options({ defaultPoint: { label: { autoHide: val } } }); }";
+            eval(js_chart1);
+            //stopped there
+            var chart2=obj.chart2;
+            if(chart2.update){
+            var js_chart2="var chart2 = JSC.chart('chartDiv2', {debug: true,type: 'line',title_label_text: 'Line Series Types',legend_position: 'inside bottom right',toolbar_items: {'Line Type': {type: 'select',label_style_fontSize: 13,margin: 5,items: 'Line,Step,Spline',events_change: function(val) {chart2.series().options({ type: val });}}},xAxis: { scale_type: 'time' },series: [{name: 'New Cases',points: [";
+
+             for (i = 0; i < chart1.values.length-1; i++) {
+                var region=chart1.values[i];
+              js_chart2 += "{ name: '"+region.name+"', y: "+region.y+" },";
+              }
+               var region=chart1.values[chart1.values.length-1];
+              js_chart2 += "{ name: '"+region.name+"', y: "+region.y+" }";
+
+            js_chart2+="]}]});";
+           eval(js_chart2);
+
+}
+
+		}
+
+		else{
+		alert("No data for the selected region");
+		      document.getElementById('new_cases').innerHTML="-";
+            document.getElementById('new_active').innerHTML="-";
+            document.getElementById('new_recovered').innerHTML="-";
+            document.getElementById('new_deaths').innerHTML="-";
+            document.getElementById('total_cases').innerHTML="-";
+            document.getElementById('total_deaths').innerHTML="-";
+            document.getElementById('total_recovered').innerHTML="-";
+            document.getElementById('total_active').innerHTML="-";
+            document.getElementById('f_rate').innerHTML="-";
+
+		}
+	}
+});
+})
+
+
+;
+  $('#describe').hide();
+    $('#world').bind('click', function() {
+      $('#describe').empty();
+       $('#describe').hide();
+    });
+
+    $('#countries').bind('click', function() {
+
+      $('#describe').empty();
+      $('#describe').show();
+      $.each(listB, function(index, value) {
+        $('#describe').append('<option value="'+value.value+'">'+value.name+'</option>');
+      });
+    });
+
+    $('#continents').bind('click', function(){
+      $('#describe').empty();
+      $('#describe').show();
+      $.each(listA, function(index, value) {
+        $('#describe').append('<option value="'+value.value+'">'+value.name+'</option>');
+      });
+    });
+  });
+</script>
 <script>
 $( "select" )
   .change(function () {
@@ -202,7 +476,7 @@ $( "select" )
  var marker = new google.maps.Marker({
      map: map
  });
- var title= country+'<br/>'+ltc;
+ var title= country+'<br/>'+numberWithSpaces(ltc);
    var dot = new google.maps.LatLng(lat, long);
      var circle = new google.maps.Circle({
              center: dot,
@@ -271,6 +545,9 @@ $( "select" )
  }
 
      google.maps.event.addDomListener(window, 'load', initialize);
+     function numberWithSpaces(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+}
  </script>
 
  </body>

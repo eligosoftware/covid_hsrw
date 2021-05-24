@@ -900,14 +900,198 @@ public class DataService {
             String body=String.valueOf(response.body()).replace("\n","");
             //body=body.replaceAll(" ","");
             JSONObject obj = new JSONObject(body);
-            JSONObject data=obj.getJSONObject("data");
+            try {
+                JSONObject data=obj.getJSONObject("data");
 
-            result.put(simpleDateFormat2.format(date),data.getInt("confirmed_diff"));
+                result.put(simpleDateFormat2.format(date),data.getInt("confirmed_diff"));
+
+            } catch (Exception e){
+                result.put(simpleDateFormat2.format(date),0);
+            }
+
         }}
         return result;
     }
 
+    public Map<String, Integer> getStatsTotal_14days_country(String country) throws IOException, InterruptedException, ParseException{
+        Calendar cal = new GregorianCalendar();
 
+        Map<String,Integer> result=new HashMap();
+        Date date=null;
+        for(int j=0;j<14;j++){
+            cal.add(Calendar.DAY_OF_MONTH, -1);
+            date=cal.getTime();
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(DATA_URL_STATS+"?date="+simpleDateFormat.format(date)+"&region_name="+country))
+                    .header("accept","application/json")
+                    .header("x-rapidapi-key", "7b0e4f3eefmsh9a199e54efe9595p1f6669jsn29c7d74d3974")
+                    .header("x-rapidapi-host", "covid-19-statistics.p.rapidapi.com")
+                    .header("useQueryString", String.valueOf(true))
+                    .build();
+        /*mapping = new HashMap<String, Integer>();
+        mapping.put("Province/State",0);
+        mapping.put("Country/Region",1);
+        mapping.put("Lat",2);
+        mapping.put("Long",3);*/
+
+            HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            if(response.statusCode()==200){
+
+                String body=String.valueOf(response.body()).replace("\n","");
+                //body=body.replaceAll(" ","");
+                JSONObject obj = new JSONObject(body);
+                JSONArray data=obj.getJSONArray("data");
+
+
+
+
+                Region lastCountry=null;
+                String lastCountryDate="";
+                String lastCountryUpdated="";
+                int t_confirmed_diff=0;
+
+                for(int i = 0 ; i < data.length() ; i++){
+                    JSONObject row=data.getJSONObject(i);//getString("interestKey");
+                    JSONObject regionJson=row.getJSONObject("region");
+                    //System.out.println(regionJson.getString("lat"));
+                    if(lastCountry!=null && regionJson.getString("name").equals(lastCountry.getName())){
+
+
+                        t_confirmed_diff+=row.getInt("confirmed_diff");
+                    } else {
+
+                        if(lastCountry!=null){
+
+                            result.put(simpleDateFormat2.format(date),t_confirmed_diff);
+
+                            try{
+                                lastCountry=new Region(regionJson.getString("name"),
+                                        regionJson.getString("iso"),
+                                        "",
+                                        coords.get(regionJson.getString("name")).getLat(),
+                                        coords.get(regionJson.getString("name")).getLon());
+                            }
+                            catch (Exception e){
+                                lastCountry=new Region(regionJson.getString("name"),
+                                        regionJson.getString("iso"),
+                                        "",
+                                        0,
+                                        0);
+                            }
+                            lastCountryDate=row.getString("date");
+                            lastCountryUpdated=row.getString("last_update");
+
+                            t_confirmed_diff=row.getInt("confirmed_diff");
+                        }
+                        else{
+                            try{
+                                lastCountry=new Region(regionJson.getString("name"),
+                                        regionJson.getString("iso"),
+                                        "",
+                                        coords.get(regionJson.getString("name")).getLat(),
+                                        coords.get(regionJson.getString("name")).getLon());
+                            }
+                            catch (Exception e){
+                                lastCountry=new Region(regionJson.getString("name"),
+                                        regionJson.getString("iso"),
+                                        "",
+                                        0,
+                                        0);
+                            }
+                            lastCountryDate=row.getString("date");
+                            lastCountryUpdated=row.getString("last_update");
+                            t_confirmed_diff=row.getInt("confirmed_diff");
+                        }
+                    }
+
+                }
+
+                result.put(simpleDateFormat2.format(date),t_confirmed_diff);
+
+            }
+
+        }
+        return result;
+    }
+    public Map<String, Integer> getStatsTotal_14days_continents(String continent) throws IOException, InterruptedException, ParseException{
+        Calendar cal = new GregorianCalendar();
+
+        Map<String,Integer> result=new HashMap();
+        Date date=null;
+
+        String europe="Albania;Andorra;Armenia;Austria;Azerbaijan;Belarus;Belgium;Bosnia and Herzegovina;Bulgaria;Croatia;Cyprus;Czechia;Denmark;Estonia;Faroe Islands;Finland;France;Georgia;Germany;Gibraltar;Greece;Hungary;Iceland;Ireland;Italy;Kosovo;Latvia;Liechtenstein;Lithuania;Luxembourg;Malta;Moldova;Monaco;Montenegro;Netherlands;North Macedonia;Norway;Poland;Portugal;Romania;Russia;San Marino;Serbia;Slovakia;Slovenia;Spain;Svalbard and Jan Mayen;Sweden;Switzerland;Turkey;Ukraine;United Kingdom;Vatican City;";
+        String asia="Afghanistan;Bahrain;Bangladesh;Bhutan;British Indian Ocean Territory;Brunei;Burma;Cambodia;China;Hong Kong;India;Indonesia;Iran;Iraq;Israel;Japan;Jordan;Kazakhstan;Korea, South;Laos;Lebanon;Macau;Malaysia;Maldives;Mongolia;Nepal;North Korea;Oman;Pakistan;Palestinian Territories;Philippines;Qatar;Saudi Arabia;Singapore;Sri Lanka;Syria;Taiwan;Tajikistan;Thailand;Timor-Leste;Turkmenistan:United Arab Emirates;Uzbekistan;Vietnam;Yemen;";
+        String africa="Algeria;Angola;Benin;Botswana;Burkina Faso;Burundi;Cabo Verde;Cameroon;Cape Verde;Central African Republic;Chad;Congo (Brazzaville);Congo (Kinshasa);Cote d'Ivoire;Djibouti;Egypt;Equatorial Guinea;Eritrea;Eswatini;Ethiopia;Gabon;Gambia;Ghana;Kenya;Lesotho;Liberia;Libya;Madagascar;Malawi;Mali;Mauritania;Mauritius;Morocco;Mozambique;Namibia;Niger;Nigeria;Rwanda;Senegal;Somalia:South Africa;Sudan;Togo;Tunisia;Uganda;Zambia;Zimbabwe";
+        String oceania="American Samoa;Australia;Christmas Island;Cocos [Keeling] Islands;Cook Islands;Fiji;French Polynesia;GuamHeard Island and McDonald Islands;Kiribati;Marshall Islands;Micronesia;Nauru;New Caledonia;New Zealand;Niue;Norfolk Island;Northern Mariana Islands;Palau;Papua New Guinea;Pitcairn Islands;Samoa;Solomon Islands;Tokelau;Tonga;Tuvalu;U.S. Minor Outlying Islands;Vanuatu;Wallis and Futuna;";
+        String north_america="Anguilla;Antigua and Barbuda;Aruba;Bahamas;Barbados;Belize;Bermuda;British Virgin Islands;Canada;Cayman Islands;Costa Rica;Cuba;Dominica;Dominican Republic;El Salvador;Greenland;Grenada;Guadeloupe;Haiti;Honduras;Jamaica;Martinique;Mexico;Montserrat;Netherlands Antilles;Nicaragua;Panama;Puerto Rico;Saint Kitts and Nevis;Saint LuciaSaint Pierre and Miquelon;Saint Vincent and the Grenadines;Trinidad and Tobago;Turks and Caicos Islands;U.S. Virgin Islands;US;";
+        String south_america="Antarctica;Argentina;Bolivia;Bouvet Island;Brazil;Chile;Colombia;Ecuador;Falkland Islands [Islas Malvinas];French Guiana;Guyana;Paraguay;Peru;Suriname;Uruguay;Venezuela;";
+
+        String selected_continent="";
+        switch (continent){
+            case "europe":
+                selected_continent=europe;
+                break;
+            case "asia":
+                selected_continent=asia;
+                break;
+            case "africa":
+                selected_continent=africa;
+                break;
+            case "oceania":
+                selected_continent=oceania;
+                break;
+            case "north_america":
+                selected_continent=north_america;
+                break;
+            case "south_america":
+                selected_continent=south_america;
+                break;
+
+        }
+        for(int j=0;j<14;j++){
+            cal.add(Calendar.DAY_OF_MONTH, -1);
+            date=cal.getTime();
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(DATA_URL_STATS+"?date="+simpleDateFormat.format(date)))
+                    .header("accept","application/json")
+                    .header("x-rapidapi-key", "7b0e4f3eefmsh9a199e54efe9595p1f6669jsn29c7d74d3974")
+                    .header("x-rapidapi-host", "covid-19-statistics.p.rapidapi.com")
+                    .header("useQueryString", String.valueOf(true))
+                    .build();
+        /*mapping = new HashMap<String, Integer>();
+        mapping.put("Province/State",0);
+        mapping.put("Country/Region",1);
+        mapping.put("Lat",2);
+        mapping.put("Long",3);*/
+
+            HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            if(response.statusCode()==200){
+
+                String body=String.valueOf(response.body()).replace("\n","");
+                //body=body.replaceAll(" ","");
+                JSONObject obj = new JSONObject(body);
+                JSONArray data=obj.getJSONArray("data");
+                int t_confirmed_diff=0;
+
+                for(int i = 0 ; i < data.length() ; i++) {
+                    JSONObject row = data.getJSONObject(i);//getString("interestKey");
+                    JSONObject regionJson = row.getJSONObject("region");
+
+                    if (!selected_continent.contains(regionJson.getString("name") + ";"))
+                        continue;
+
+                    t_confirmed_diff += row.getInt("confirmed_diff");
+
+                }
+                result.put(simpleDateFormat2.format(date),t_confirmed_diff);
+
+            }
+
+        }
+        return result;
+    }
 
 
     private void getStats() throws IOException, InterruptedException, ParseException{

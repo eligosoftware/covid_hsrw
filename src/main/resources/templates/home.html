@@ -292,12 +292,18 @@ var chart3 = JSC.chart('chartDiv3', {
 
   $('#describe').on('change', function() {
 
-  $.ajax({
+  $.ajax({//1
 	url: '/updateNumbers',
 	method: 'post',
 	data: {country: this.value},
-	success: function(data){
-		if (data!="error"){
+	success: function(data){//2
+
+        console.log(data);
+
+	    var data = data.replace(",]", "]");
+        console.log(data);
+
+		if (data!="error"){//3
 		    //console.log(data);
             var obj = JSON.parse(data);
             //console.log(obj.country);
@@ -314,38 +320,37 @@ var chart3 = JSC.chart('chartDiv3', {
 
 
             var chart1=obj.chart1;
-            if(chart1.update){
+            if(chart1.update){//4
             var js_chart1="var chart = JSC.chart('chartDiv', {debug: true,legend_position: 'inside left bottom',defaultSeries: { type: 'pie', pointSelection: true },defaultPoint_label: {text: '<b>%name</b>',placement: 'auto',autoHide: false},toolbar_items: {Mode: {margin: 10,type: 'select',events_change: setMode,items: 'enum_placement'},'Auto Hide': { type: 'checkbox', events_change: setAutoHide }},title_label_text: 'Top 10 countries by case numbers',yAxis: { label_text: 'Cases', formatString: 'n' },series: [{name: 'Countries', points: [";
 
-             for (i = 0; i < chart1.values.length-1; i++) {
+             for (i = 0; i < chart1.values.length-1; i++) {//5
                 var region=chart1.values[i];
               js_chart1 += "{ name: '"+region.name+"', y: "+region.y+" },";
-              }
+              }//5
                var region=chart1.values[chart1.values.length-1];
               js_chart1 += "{ name: '"+region.name+"', y: "+region.y+" }";
 
             js_chart1+="]}]});function setMode(val) { chart.options({ defaultPoint: { label: { placement: val } } }); } function setAutoHide(val) {chart.options({ defaultPoint: { label: { autoHide: val } } }); }";
             eval(js_chart1);
-            //stopped there
+            }//4
             var chart2=obj.chart2;
-            if(chart2.update){
+            if(chart2.update){//6
             var js_chart2="var chart2 = JSC.chart('chartDiv2', {debug: true,type: 'line',title_label_text: 'Line Series Types',legend_position: 'inside bottom right',toolbar_items: {'Line Type': {type: 'select',label_style_fontSize: 13,margin: 5,items: 'Line,Step,Spline',events_change: function(val) {chart2.series().options({ type: val });}}},xAxis: { scale_type: 'time' },series: [{name: 'New Cases',points: [";
 
-             for (i = 0; i < chart1.values.length-1; i++) {
-                var region=chart1.values[i];
-              js_chart2 += "{ name: '"+region.name+"', y: "+region.y+" },";
-              }
-               var region=chart1.values[chart1.values.length-1];
-              js_chart2 += "{ name: '"+region.name+"', y: "+region.y+" }";
+             for (i = 0; i < chart2.values.length-1; i++) {//7
+                var region=chart2.values[i];
+              js_chart2 += "['"+region.key+"',"+region.value+"],";
+              }//7
+               var region=chart2.values[chart2.values.length-1];
+              js_chart2 += "['"+region.key+"',"+region.value+"]";
 
             js_chart2+="]}]});";
            eval(js_chart2);
+        }//6
 
-}
+		}//3
 
-		}
-
-		else{
+		else{//8
 		alert("No data for the selected region");
 		      document.getElementById('new_cases').innerHTML="-";
             document.getElementById('new_active').innerHTML="-";
@@ -357,13 +362,11 @@ var chart3 = JSC.chart('chartDiv3', {
             document.getElementById('total_active').innerHTML="-";
             document.getElementById('f_rate').innerHTML="-";
 
-		}
-	}
+		}//8
+	}//2
 });
-})
+});
 
-
-;
   $('#describe').hide();
     $('#world').bind('click', function() {
       $('#describe').empty();

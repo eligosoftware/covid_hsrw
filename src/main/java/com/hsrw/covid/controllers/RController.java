@@ -9,9 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 @RestController
 public class RController {
@@ -94,11 +92,26 @@ public class RController {
                 builder.append("]");//3
                 builder.append("},");//2
 
-                builder.append("}");//1
+                Map<String,Integer> hashmap = covidDataService.getStatsTotal_14days_continents(country);
+
                 builder.append("\"chart2\":{");//2
                 builder.append("\"update\":true,");
+                builder.append("\"values\":[");//3
 
+                String daily_plots="";
+                // setting up iterator.
+                SortedSet<String> keys = new TreeSet<>(hashmap.keySet());
+                for (String key : keys) {
+                    // do something
+                    builder.append("{");//4
+                    builder.append("\"key\":\""+key+"\",");
+                    builder.append("\"value\": "+hashmap.get(key));
+                    builder.append("},");//4
+                }
+
+                builder.append("]");//3
                 builder.append("}");//2
+                builder.append("}");
 
                 return builder.toString();
             } catch (IOException e) {
@@ -134,22 +147,23 @@ public class RController {
             builder.append("\"chart1\":{");//2
             builder.append("\"update\":false");
             builder.append("},");//2
+
+            Map<String,Integer> hashmap = covidDataService.getStatsTotal_14days_country(country);
+
             builder.append("\"chart2\":{");//2
             builder.append("\"update\":true,");
             builder.append("\"values\":[");//3
-            LocationStats region;
-            for(int i=0;i<9;i++){
-                region=regionStats.get(i);
+
+            String daily_plots="";
+            // setting up iterator.
+            SortedSet<String> keys = new TreeSet<>(hashmap.keySet());
+            for (String key : keys) {
+                // do something
                 builder.append("{");//4
-                builder.append("\"name\":\""+region.getRegion().getName()+"\",");
-                builder.append("\"y\": "+region.getTotalConfirmed());
+                builder.append("\"key\":\""+key+"\",");
+                builder.append("\"value\": "+hashmap.get(key));
                 builder.append("},");//4
             }
-            builder.append("{");//4
-            region=regionStats.get(9);
-            builder.append("\"name\":\""+region.getRegion().getName()+"\",");
-            builder.append("\"y\": "+region.getTotalConfirmed());
-            builder.append("}");//4
 
             builder.append("]");//3
             builder.append("}");//2

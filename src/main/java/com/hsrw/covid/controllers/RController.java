@@ -76,7 +76,10 @@ public class RController {
                 });
                 builder.append("\"values\":[");//3
                 LocationStats region;
-                for(int i=0;i<9;i++){
+                int upperbound=9;
+                if(regionStats.size()<10)
+                    upperbound=regionStats.size()-1;
+                for(int i=0;i<upperbound;i++){
                     region=regionStats.get(i);
                     builder.append("{");//4
                     builder.append("\"name\":\""+region.getRegion().getName()+"\",");
@@ -84,7 +87,7 @@ public class RController {
                     builder.append("},");//4
                 }
                 builder.append("{");//4
-                region=regionStats.get(9);
+                region=regionStats.get(upperbound);
                 builder.append("\"name\":\""+region.getRegion().getName()+"\",");
                 builder.append("\"y\": "+region.getTotalConfirmed());
                 builder.append("}");//4

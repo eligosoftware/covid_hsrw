@@ -57,7 +57,7 @@ public class DataService {
     public void fetchData() throws IOException, InterruptedException {
         //List<LocationStats> newStats = new ArrayList();
 
-       // config conf = config.newInstance();
+        // config conf = config.newInstance();
 
         //conf.connect();
 
@@ -81,6 +81,7 @@ public class DataService {
         coords.put("Bahrain",new Latlng(25.930414,50.637772));
         coords.put("Bangladesh",new Latlng(23.684994,90.356331));
         coords.put("Barbados",new Latlng(13.193887,-59.543198));
+        coords.put("Saint Martin",new Latlng(18.075277,-63.060001));
         coords.put("Belarus",new Latlng(53.709807,27.953389));
         coords.put("Belgium",new Latlng(50.503887,4.469936));
         coords.put("Belize",new Latlng(17.189877,-88.49765));
@@ -119,6 +120,8 @@ public class DataService {
         coords.put("Costa Rica",new Latlng(9.748917,-83.753428));
         coords.put("Cote d'Ivoire",new Latlng(7.539989,-5.54708));
         coords.put("Croatia",new Latlng(45.1,15.2));
+        coords.put("Curacao",new Latlng(12.169570,-68.990021));
+        coords.put("Channel Islands",new Latlng(	49.372284,-2.364351));
         coords.put("Cuba",new Latlng(21.521757,-77.781167));
         coords.put("Cyprus",new Latlng(35.126413,33.429859));
         coords.put("Czechia",new Latlng(49.817492,15.472962));
@@ -201,6 +204,7 @@ public class DataService {
         coords.put("Malaysia",new Latlng(4.210484,101.975766));
         coords.put("Maldives",new Latlng(3.202778,73.22068));
         coords.put("Mali",new Latlng(17.570692,-3.996166));
+        coords.put("Macao SAR",new Latlng(22.210928,113.552971));
         coords.put("Malta",new Latlng(35.937496,14.375416));
         coords.put("Marshall Islands",new Latlng(7.131474,171.184478));
         coords.put("Martinique",new Latlng(14.641528,-61.024174));
@@ -247,6 +251,7 @@ public class DataService {
         coords.put("Portugal",new Latlng(39.399872,-8.224454));
         coords.put("Puerto Rico",new Latlng(18.220833,-66.590149));
         coords.put("Qatar",new Latlng(25.354826,51.183884));
+        coords.put("Reunion",new Latlng(-21.115141,55.536384));
         coords.put("Romania",new Latlng(45.943161,24.96676));
         coords.put("Russia",new Latlng(61.52401,105.318756));
         coords.put("Rwanda",new Latlng(-1.940278,29.873888));
@@ -254,6 +259,8 @@ public class DataService {
         coords.put("Saint Helena",new Latlng(-24.143474,-10.030696));
         coords.put("Saint Kitts and Nevis",new Latlng(17.357822,-62.782998));
         coords.put("Saint Lucia",new Latlng(13.909444,-60.978893));
+        coords.put("Saint Barthelemy",new Latlng(17.9139,-62.8339));
+        coords.put("Taipei and environs",new Latlng(25.105497,121.597366));
         coords.put("Saint Pierre and Miquelon",new Latlng(46.941936,-56.27111));
         coords.put("Saint Vincent and the Grenadines",new Latlng(12.984305,-61.287228));
         coords.put("Samoa",new Latlng(-13.759029,-172.104629));
@@ -382,8 +389,8 @@ public class DataService {
 
                 }
                 newStats.add(stat);*/
-                //System.out.println(stat);
-            //}
+        //System.out.println(stat);
+        //}
 
 
         //}
@@ -548,12 +555,12 @@ public class DataService {
 
     public List<LocationStats> getStatsCountry_by_continent(String continent) throws IOException, InterruptedException, ParseException{
 
-        String europe="Albania;Andorra;Armenia;Austria;Azerbaijan;Belarus;Belgium;Bosnia and Herzegovina;Bulgaria;Croatia;Cyprus;Czechia;Denmark;Estonia;Faroe Islands;Finland;France;Georgia;Germany;Gibraltar;Greece;Hungary;Iceland;Ireland;Italy;Kosovo;Latvia;Liechtenstein;Lithuania;Luxembourg;Malta;Moldova;Monaco;Montenegro;Netherlands;North Macedonia;Norway;Poland;Portugal;Romania;Russia;San Marino;Serbia;Slovakia;Slovenia;Spain;Svalbard and Jan Mayen;Sweden;Switzerland;Turkey;Ukraine;United Kingdom;Vatican City;";
-        String asia="Afghanistan;Bahrain;Bangladesh;Bhutan;British Indian Ocean Territory;Brunei;Burma;Cambodia;China;Hong Kong;India;Indonesia;Iran;Iraq;Israel;Japan;Jordan;Kazakhstan;Korea, South;Laos;Lebanon;Macau;Malaysia;Maldives;Mongolia;Nepal;North Korea;Oman;Pakistan;Palestinian Territories;Philippines;Qatar;Saudi Arabia;Singapore;Sri Lanka;Syria;Taiwan;Tajikistan;Thailand;Timor-Leste;Turkmenistan:United Arab Emirates;Uzbekistan;Vietnam;Yemen;";
-        String africa="Algeria;Angola;Benin;Botswana;Burkina Faso;Burundi;Cabo Verde;Cameroon;Cape Verde;Central African Republic;Chad;Congo (Brazzaville);Congo (Kinshasa);Cote d'Ivoire;Djibouti;Egypt;Equatorial Guinea;Eritrea;Eswatini;Ethiopia;Gabon;Gambia;Ghana;Kenya;Lesotho;Liberia;Libya;Madagascar;Malawi;Mali;Mauritania;Mauritius;Morocco;Mozambique;Namibia;Niger;Nigeria;Rwanda;Senegal;Somalia:South Africa;Sudan;Togo;Tunisia;Uganda;Zambia;Zimbabwe";
-        String oceania="American Samoa;Australia;Christmas Island;Cocos [Keeling] Islands;Cook Islands;Fiji;French Polynesia;GuamHeard Island and McDonald Islands;Kiribati;Marshall Islands;Micronesia;Nauru;New Caledonia;New Zealand;Niue;Norfolk Island;Northern Mariana Islands;Palau;Papua New Guinea;Pitcairn Islands;Samoa;Solomon Islands;Tokelau;Tonga;Tuvalu;U.S. Minor Outlying Islands;Vanuatu;Wallis and Futuna;";
-        String north_america="Anguilla;Antigua and Barbuda;Aruba;Bahamas;Barbados;Belize;Bermuda;British Virgin Islands;Canada;Cayman Islands;Costa Rica;Cuba;Dominica;Dominican Republic;El Salvador;Greenland;Grenada;Guadeloupe;Haiti;Honduras;Jamaica;Martinique;Mexico;Montserrat;Netherlands Antilles;Nicaragua;Panama;Puerto Rico;Saint Kitts and Nevis;Saint LuciaSaint Pierre and Miquelon;Saint Vincent and the Grenadines;Trinidad and Tobago;Turks and Caicos Islands;U.S. Virgin Islands;US;";
-        String south_america="Antarctica;Argentina;Bolivia;Bouvet Island;Brazil;Chile;Colombia;Ecuador;Falkland Islands [Islas Malvinas];French Guiana;Guyana;Paraguay;Peru;Suriname;Uruguay;Venezuela;";
+        String europe= "Albania;Andorra;Armenia;Austria;Azerbaijan;Belarus;Belgium;Bosnia and Herzegovina;Bulgaria;Croatia;Cyprus;Channel Islands;Czechia;Denmark;Estonia;Faroe Islands;Finland;France;Georgia;Germany;Gibraltar;Guernsey;Greece;Holy See;Hungary;Iceland;Ireland;Italy;Jersey;Kosovo;Latvia;Liechtenstein;Lithuania;Luxembourg;Mayotte;Malta;Moldova;MS Zaandam;Monaco;Montenegro;Netherlands;North Macedonia;Norway;Poland;Portugal;Romania;Russia;San Marino;Serbia;Slovakia;Slovenia;Spain;Sweden;Switzerland;Turkey;Ukraine;United Kingdom;";
+        String asia="Afghanistan;Bahrain;Bangladesh;Bhutan;Brunei;Burma;Cambodia;China;India;Indonesia;Iran;Iraq;Israel;West Bank and Gaza;Japan;Jordan;Kazakhstan;Korea, South;Kyrgyzstan;Kuwait;Laos;Lebanon;Malaysia;Macao SAR;Maldives;Mongolia;Nepal;Oman;Pakistan;Philippines;Qatar;Saudi Arabia;Singapore;Sri Lanka;Syria;Taiwan;Tajikistan;Thailand;Timor-Leste;Turkmenistan;Taipei and environs;United Arab Emirates;Uzbekistan;Vietnam;Yemen;";
+        String africa="Algeria;Angola;Benin;Botswana;Tanzania;Burkina Faso;Western Sahara;Burundi;Cabo Verde;Cameroon;Central African Republic;Comoros;Chad;Malawi;Sierra Leone;Sao Tome and Principe;Seychelles;Congo (Brazzaville);Congo (Kinshasa);Cote d'Ivoire;Djibouti;Egypt;Equatorial Guinea;Guinea;Guinea-Bissau;Eritrea;Eswatini;South Sudan;Reunion;Ethiopia;Gabon;Gambia;Ghana;Kenya;Liberia;Libya;Lesotho;Madagascar;Mali;Mauritania;Mauritius;Morocco;Mozambique;Namibia;Niger;Nigeria;Rwanda;Senegal;Somalia;South Africa;Sudan;Togo;Tunisia;Uganda;Zambia;Zimbabwe;";
+        String oceania="Australia;Fiji;Guam;New Zealand;Papua New Guinea;Kiribati;Marshall Islands;Solomon Islands;Vanuatu;";
+        String north_america="Antigua and Barbuda;Aruba;Bahamas;Barbados;Belize;Canada;Cayman Islands;Costa Rica;Cuba;Dominica;Dominican Republic;El Salvador;Greenland;Grenada;Guadeloupe;Guatemala;Haiti;Honduras;Jamaica;Martinique;Mexico;Nicaragua;Panama;Puerto Rico;Saint Kitts and Nevis;Saint Lucia;Saint Martin;Saint Vincent and the Grenadines;Saint Barthelemy;Trinidad and Tobago;US;";
+        String south_america="Argentina;Bolivia;Brazil;Chile;Colombia;Curacao;Ecuador;French Guiana;Guyana;Paraguay;Peru;Suriname;Uruguay;Venezuela;";
 
         String selected_continent="";
         switch (continent){
@@ -796,11 +803,11 @@ public class DataService {
 
 
                         try{
-                        lastCountry=new Region(regionJson.getString("name"),
-                                regionJson.getString("iso"),
-                                "",
-                                coords.get(regionJson.getString("name")).getLat(),
-                                coords.get(regionJson.getString("name")).getLon());
+                            lastCountry=new Region(regionJson.getString("name"),
+                                    regionJson.getString("iso"),
+                                    "",
+                                    coords.get(regionJson.getString("name")).getLat(),
+                                    coords.get(regionJson.getString("name")).getLon());
                         }
                         catch (Exception e){
                             lastCountry=new Region(regionJson.getString("name"),
@@ -881,35 +888,38 @@ public class DataService {
             cal.add(Calendar.DAY_OF_MONTH, -1);
             date=cal.getTime();
 
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(DATA_URL_TOTALS+"?date="+simpleDateFormat.format(date)))
-                .header("accept","application/json")
-                .header("x-rapidapi-key", "7b0e4f3eefmsh9a199e54efe9595p1f6669jsn29c7d74d3974")
-                .header("x-rapidapi-host", "covid-19-statistics.p.rapidapi.com")
-                .header("useQueryString", String.valueOf(true))
-                .build();
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(DATA_URL_TOTALS+"?date="+simpleDateFormat.format(date)))
+                    .header("accept","application/json")
+                    .header("x-rapidapi-key", "7b0e4f3eefmsh9a199e54efe9595p1f6669jsn29c7d74d3974")
+                    .header("x-rapidapi-host", "covid-19-statistics.p.rapidapi.com")
+                    .header("useQueryString", String.valueOf(true))
+                    .build();
         /*mapping = new HashMap<String, Integer>();
         mapping.put("Province/State",0);
         mapping.put("Country/Region",1);
         mapping.put("Lat",2);
         mapping.put("Long",3);*/
 
-        HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        if(response.statusCode()==200){
+            HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            if(response.statusCode()==200){
 
-            String body=String.valueOf(response.body()).replace("\n","");
-            //body=body.replaceAll(" ","");
-            JSONObject obj = new JSONObject(body);
-            try {
-                JSONObject data=obj.getJSONObject("data");
+                String body=String.valueOf(response.body()).replace("\n","");
+                //body=body.replaceAll(" ","");
+                JSONObject obj = new JSONObject(body);
+                try {
+                    JSONObject data=obj.getJSONObject("data");
+                    if(data.getInt("confirmed_diff")>0) {
+                        result.put(simpleDateFormat2.format(date), data.getInt("confirmed_diff"));
+                    }
+                    else{
+                        result.put(simpleDateFormat2.format(date),0);
+                    }
+                } catch (Exception e){
+                    result.put(simpleDateFormat2.format(date),0);
+                }
 
-                result.put(simpleDateFormat2.format(date),data.getInt("confirmed_diff"));
-
-            } catch (Exception e){
-                result.put(simpleDateFormat2.format(date),0);
-            }
-
-        }}
+            }}
         return result;
     }
 
@@ -1020,12 +1030,12 @@ public class DataService {
         Map<String,Integer> result=new HashMap();
         Date date=null;
 
-        String europe="Albania;Andorra;Armenia;Austria;Azerbaijan;Belarus;Belgium;Bosnia and Herzegovina;Bulgaria;Croatia;Cyprus;Czechia;Denmark;Estonia;Faroe Islands;Finland;France;Georgia;Germany;Gibraltar;Greece;Hungary;Iceland;Ireland;Italy;Kosovo;Latvia;Liechtenstein;Lithuania;Luxembourg;Malta;Moldova;Monaco;Montenegro;Netherlands;North Macedonia;Norway;Poland;Portugal;Romania;Russia;San Marino;Serbia;Slovakia;Slovenia;Spain;Svalbard and Jan Mayen;Sweden;Switzerland;Turkey;Ukraine;United Kingdom;Vatican City;";
-        String asia="Afghanistan;Bahrain;Bangladesh;Bhutan;British Indian Ocean Territory;Brunei;Burma;Cambodia;China;Hong Kong;India;Indonesia;Iran;Iraq;Israel;Japan;Jordan;Kazakhstan;Korea, South;Laos;Lebanon;Macau;Malaysia;Maldives;Mongolia;Nepal;North Korea;Oman;Pakistan;Palestinian Territories;Philippines;Qatar;Saudi Arabia;Singapore;Sri Lanka;Syria;Taiwan;Tajikistan;Thailand;Timor-Leste;Turkmenistan:United Arab Emirates;Uzbekistan;Vietnam;Yemen;";
-        String africa="Algeria;Angola;Benin;Botswana;Burkina Faso;Burundi;Cabo Verde;Cameroon;Cape Verde;Central African Republic;Chad;Congo (Brazzaville);Congo (Kinshasa);Cote d'Ivoire;Djibouti;Egypt;Equatorial Guinea;Eritrea;Eswatini;Ethiopia;Gabon;Gambia;Ghana;Kenya;Lesotho;Liberia;Libya;Madagascar;Malawi;Mali;Mauritania;Mauritius;Morocco;Mozambique;Namibia;Niger;Nigeria;Rwanda;Senegal;Somalia:South Africa;Sudan;Togo;Tunisia;Uganda;Zambia;Zimbabwe";
-        String oceania="American Samoa;Australia;Christmas Island;Cocos [Keeling] Islands;Cook Islands;Fiji;French Polynesia;GuamHeard Island and McDonald Islands;Kiribati;Marshall Islands;Micronesia;Nauru;New Caledonia;New Zealand;Niue;Norfolk Island;Northern Mariana Islands;Palau;Papua New Guinea;Pitcairn Islands;Samoa;Solomon Islands;Tokelau;Tonga;Tuvalu;U.S. Minor Outlying Islands;Vanuatu;Wallis and Futuna;";
-        String north_america="Anguilla;Antigua and Barbuda;Aruba;Bahamas;Barbados;Belize;Bermuda;British Virgin Islands;Canada;Cayman Islands;Costa Rica;Cuba;Dominica;Dominican Republic;El Salvador;Greenland;Grenada;Guadeloupe;Haiti;Honduras;Jamaica;Martinique;Mexico;Montserrat;Netherlands Antilles;Nicaragua;Panama;Puerto Rico;Saint Kitts and Nevis;Saint LuciaSaint Pierre and Miquelon;Saint Vincent and the Grenadines;Trinidad and Tobago;Turks and Caicos Islands;U.S. Virgin Islands;US;";
-        String south_america="Antarctica;Argentina;Bolivia;Bouvet Island;Brazil;Chile;Colombia;Ecuador;Falkland Islands [Islas Malvinas];French Guiana;Guyana;Paraguay;Peru;Suriname;Uruguay;Venezuela;";
+        String europe= "Albania;Andorra;Armenia;Austria;Azerbaijan;Belarus;Belgium;Bosnia and Herzegovina;Bulgaria;Croatia;Cyprus;Channel Islands;Czechia;Denmark;Estonia;Faroe Islands;Finland;France;Georgia;Germany;Gibraltar;Guernsey;Greece;Holy See;Hungary;Iceland;Ireland;Italy;Jersey;Kosovo;Latvia;Liechtenstein;Lithuania;Luxembourg;Mayotte;Malta;Moldova;MS Zaandam;Monaco;Montenegro;Netherlands;North Macedonia;Norway;Poland;Portugal;Romania;Russia;San Marino;Serbia;Slovakia;Slovenia;Spain;Sweden;Switzerland;Turkey;Ukraine;United Kingdom;";
+        String asia="Afghanistan;Bahrain;Bangladesh;Bhutan;Brunei;Burma;Cambodia;China;India;Indonesia;Iran;Iraq;Israel;West Bank and Gaza;Japan;Jordan;Kazakhstan;Korea, South;Kyrgyzstan;Kuwait;Laos;Lebanon;Malaysia;Macao SAR;Maldives;Mongolia;Nepal;Oman;Pakistan;Philippines;Qatar;Saudi Arabia;Singapore;Sri Lanka;Syria;Taiwan;Tajikistan;Thailand;Timor-Leste;Turkmenistan;Taipei and environs;United Arab Emirates;Uzbekistan;Vietnam;Yemen;";
+        String africa="Algeria;Angola;Benin;Botswana;Tanzania;Burkina Faso;Western Sahara;Burundi;Cabo Verde;Cameroon;Central African Republic;Comoros;Chad;Malawi;Sierra Leone;Sao Tome and Principe;Seychelles;Congo (Brazzaville);Congo (Kinshasa);Cote d'Ivoire;Djibouti;Egypt;Equatorial Guinea;Guinea;Guinea-Bissau;Eritrea;Eswatini;South Sudan;Reunion;Ethiopia;Gabon;Gambia;Ghana;Kenya;Liberia;Libya;Lesotho;Madagascar;Mali;Mauritania;Mauritius;Morocco;Mozambique;Namibia;Niger;Nigeria;Rwanda;Senegal;Somalia;South Africa;Sudan;Togo;Tunisia;Uganda;Zambia;Zimbabwe;";
+        String oceania="Australia;Fiji;Guam;New Zealand;Papua New Guinea;Kiribati;Marshall Islands;Solomon Islands;Vanuatu;";
+        String north_america="Antigua and Barbuda;Aruba;Bahamas;Barbados;Belize;Canada;Cayman Islands;Costa Rica;Cuba;Dominica;Dominican Republic;El Salvador;Greenland;Grenada;Guadeloupe;Guatemala;Haiti;Honduras;Jamaica;Martinique;Mexico;Nicaragua;Panama;Puerto Rico;Saint Kitts and Nevis;Saint Lucia;Saint Martin;Saint Vincent and the Grenadines;Saint Barthelemy;Trinidad and Tobago;US;";
+        String south_america="Argentina;Bolivia;Brazil;Chile;Colombia;Curacao;Ecuador;French Guiana;Guyana;Paraguay;Peru;Suriname;Uruguay;Venezuela;";
 
         String selected_continent="";
         switch (continent){
@@ -1119,11 +1129,11 @@ public class DataService {
                 //System.out.println(regionJson.getString("lat"));
                 Region region;
                 try{
-                region=new Region(regionJson.getString("name"),
-                        regionJson.getString("iso"),
-                        regionJson.getString("province"),
-                        Double.parseDouble(regionJson.getString("lat")),
-                        Double.parseDouble(regionJson.getString("long")));
+                    region=new Region(regionJson.getString("name"),
+                            regionJson.getString("iso"),
+                            regionJson.getString("province"),
+                            Double.parseDouble(regionJson.getString("lat")),
+                            Double.parseDouble(regionJson.getString("long")));
                 }
                 catch (Exception e){
                     region=new Region(regionJson.getString("name"),
@@ -1148,7 +1158,7 @@ public class DataService {
                         row.getInt("confirmed_diff"),
                         row.getInt("recovered_diff"),
                         row.getDouble("fatality_rate")
-                        ));
+                ));
                 JSONArray cities=regionJson.getJSONArray("cities");
                 for(int j=0;j<cities.length();j++){
                     JSONObject row_city=cities.getJSONObject(j);
@@ -1159,7 +1169,7 @@ public class DataService {
                                 Double.valueOf(row_city.getString("long")));
                     } catch (Exception e){
                         city = new City(row_city.getString("name"),
-                               0,
+                                0,
                                 0);
                     }
                     cityStats.add(new LocationStats(region,
@@ -1188,7 +1198,7 @@ public class DataService {
                 .uri(URI.create(DATA_URL_TOTALS))
                 .header("accept","application/json")
                 .header("x-rapidapi-key", "7b0e4f3eefmsh9a199e54efe9595p1f6669jsn29c7d74d3974")
-                    .header("x-rapidapi-host", "covid-19-statistics.p.rapidapi.com")
+                .header("x-rapidapi-host", "covid-19-statistics.p.rapidapi.com")
                 .header("useQueryString", String.valueOf(true))
                 .build();
         /*mapping = new HashMap<String, Integer>();
@@ -1218,8 +1228,8 @@ public class DataService {
                     data.getInt("deaths"),
                     data.getInt("active"),
                     data.getInt("recovered")
-                    );
-          //  System.out.println("a");
+            );
+            //  System.out.println("a");
         }
     }
 

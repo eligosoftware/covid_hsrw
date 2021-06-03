@@ -49,6 +49,44 @@
 </head>
 
 <body>
+<!--<nav class="navbar navbar-inverse">-->
+<!--    <div class="container-fluid">-->
+<!--        <div class="navbar-header">-->
+<!--            <a class="navbar-brand" href="#">WebSiteName</a>-->
+<!--        </div>-->
+<!--        <ul class="nav navbar-nav">-->
+<!--            <li class="active"><a href="#">Home</a></li>-->
+<!--            <li><a href="#">Page 1</a></li>-->
+<!--            <li><a href="#">Page 2</a></li>-->
+<!--            <li><a href="#">Page 3</a></li>-->
+<!--        </ul>-->
+<!--    </div>-->
+
+<!--</nav> fixed-top-->
+
+
+
+
+<nav class="navbar fixed-top  navbar-expand-sm bg-dark navbar-dark">
+    <ul class="navbar-nav">
+        <li class="nav-item active">
+            <a class="nav-link" href="/">Covid Home</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#map">Map</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#stats">Statistics</a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" href="#numbers">Numbers</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#charts">Charts</a>
+        </li>
+    </ul>
+</nav>
 
 <div class="container">
     <div class="row">
@@ -64,8 +102,14 @@
             </div>
         </div>
     </div>
+    <span id="map"></span>
+    <br/>
+
+    <br/>
     <div class="row">
-    <select class="form-select"  aria-label="Default select example">
+        <div class="col">
+
+        <select class="form-select"  aria-label="Default select example">
         <option selected value="0">World</option>
         <option value="1">Europe</option>
         <option value="2">North America</option>
@@ -73,18 +117,21 @@
         <option value="4">Asia</option>
         <option value="5">Oceania</option>
         <option value="6">Africa</option>
-    </select>
+        </select></div>
     </div>
     <div class="row">
         <div class="col">
             <div id="mapContainer" style="width:100%;height:650px;"></div>
         </div>
     </div>
+    <span id="stats"></span>
+    <br/>
+
     <br/>
     <div class="row">
 
         <div class="col">
-
+    <h1>Statistics</h1>
     <table class="table table-striped table-bordered mydatatable">
     <thead>
 
@@ -121,9 +168,11 @@
 
 
 
+    <span id="numbers"></span>
+    <br/>
 
-<br/>
-    <h1>Numbers</h1>
+    <br/>
+    <h1 id="numbers">Numbers</h1>
 <div class="row">
     <div class="container">
         <div class="col-md-6">
@@ -222,6 +271,10 @@
 </div>
 <br/>
     <span style="font-size:15px; font-style: italic;">&#8432; - the negative number means, that more people recovered than infected</span><br/>
+    <span id="charts"></span>
+    <br/>
+
+    <br/>
     <h1>Charts</h1>
 <div class="row">
     <div class="col-sm">

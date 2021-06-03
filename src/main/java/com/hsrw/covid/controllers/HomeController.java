@@ -1,6 +1,6 @@
 package com.hsrw.covid.controllers;
 
-import com.hsrw.covid.database.config;
+import com.hsrw.covid.models.LineChartResult;
 import com.hsrw.covid.models.LocationStats;
 import com.hsrw.covid.models.Totals;
 import com.hsrw.covid.services.DataService;
@@ -9,16 +9,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Controller
 public class HomeController {
@@ -160,15 +156,102 @@ public class HomeController {
                         "}";
         model.addAttribute("js_script",js_script);
 
+        String js_script3=
+                "var chart3 = JSC.chart('chartDiv3', {" +
+                        "debug: true," +
+                        "defaultSeries_type: 'column'," +
+                        "title_label_text:'Top 10 Countries by Infections per 100.000'," +
+                        "yAxis:{" +
+                        "defaultTick_enabled:false," +
+                        "scale_range_padding:.15" +
+                        "}," +
+                        "legend_visible:false," +
+                        "toolbar_visible:false," +
+                        "series:[" +
+                        "{" +
+                        "name:'Infections per 100.000 population'," +
+                        "color:'turquoise'," +
+                        "defaultPoint:{" +
+                        "label:{" +
+                        "text:'%value'" +
+                        "}}," +
+                        "points:[";
+        Collections.sort(regionStats, new Comparator<LocationStats>() {
+            @Override
+            public int compare(LocationStats o1, LocationStats o2) {
+                return (int) (o2.getConfirmed_pro_100k() - o1.getConfirmed_pro_100k());
+            }
+        });
+        top_stats="";
+        for(int i=0;i<10;i++){
+            LocationStats region=regionStats.get(i);
+            top_stats+=
+                    "{ name: '"+region.getRegion().getName()+"', y: "+region.getConfirmed_pro_100k()+" },";
+        }
+        top_stats=top_stats.substring(0,top_stats.length()-1);
+        js_script3+=top_stats;
+        js_script3+=
+                "]}" +
+                        "]" +
+                        "});";
+        model.addAttribute("js_script3",js_script3);
+        try {
+        String js_script5=
+                "var chart5 = JSC.chart('chartDiv5', {" +
+                        "debug: true," +
+                        "defaultSeries_type: 'column'," +
+                        "title_label_text:'Death toll for the last 14 days'," +
+                        "yAxis:{" +
+                        "defaultTick_enabled:false," +
+                        "scale_range_padding:.15" +
+                        "}," +
+                        "legend_visible:false," +
+                        "toolbar_visible:false," +
+                        "series:[" +
+                        "{" +
+                        "name:'Number of deaths'," +
+                        "color:'black'," +
+                        "defaultPoint:{" +
+                        "label:{" +
+                        "text:'%value'" +
+                        "}}," +
+                        "points:[";
+        LineChartResult res2=covidDataService.getDeaths_14days();
+        Map<String,Integer> map_deaths=res2.getMap_cases();
+            String daily_plots2="";
+            // setting up iterator.
+            SortedSet<String> keys = new TreeSet<>(map_deaths.keySet());
+            for (String key : keys) {
+                daily_plots2+=
+                        //"['1/2/2020', 71.5]," +
+                "{ name: '"+key+"', y: "+map_deaths.get(key)+" },";
+
+                // do something
+            }
+
+            daily_plots2=daily_plots2.substring(0,daily_plots2.length()-1);
+            js_script5+=daily_plots2;
+            js_script5+=
+                    "]}" +
+                            "]" +
+                            "});";
+        model.addAttribute("js_script5",js_script5);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
     ///
-
+        LineChartResult res = null;
         try {
             String js_script2=
                     "var chart2 = JSC.chart('chartDiv2', {" +
                             "debug: true," +
                             "type: 'line'," +
-                            "title_label_text: 'Line Series Types'," +
+                            "title_label_text: 'New confirmed cases'," +
                             "legend_position: 'inside bottom right'," +
                             "toolbar_items: {" +
                             "'Line Type': {" +
@@ -186,8 +269,8 @@ public class HomeController {
                             "{" +
                             "name: 'New Cases'," +
                             "points: [";
-            Map<String, Integer> map=covidDataService.getStatsTotal_14days();
-
+            res=covidDataService.getStatsTotal_14days();
+            Map<String, Integer> map=res.getMap_cases();
             String daily_plots="";
             // setting up iterator.
             SortedSet<String> keys = new TreeSet<>(map.keySet());
@@ -220,6 +303,46 @@ public class HomeController {
                         "['1/7/2020', 144.0]," +
                         "['1/8/2020', 176.0]";*/
 
+
+            String js_script4=
+                    "var chart4 = JSC.chart('chartDiv4', {" +
+                            "debug: true," +
+                            "type: 'line'," +
+                            "title_label_text: 'New Cases to Recovered Cases'," +
+                            "legend_visible: false," +
+                            "xAxis_scale_type: 'time'," +
+                            "yAxis_markers: [{ value: 1, color: 'red', label_text: 'The risk line' }]," +
+                            "series: [" +
+                            "{" +
+                            "name: 'Value'," +
+                            "palette: {" +
+                            "pointValue: '%yValue'," +
+                            "stops: [" +
+                            "[0, '%color', 0.7]," +
+                            "[1, 'red']" +
+                            "]" +
+                            "}," +
+                            "points: [";
+            Map<String, Double> map=res.getMap_ratio();;
+
+            String daily_plots="";
+            // setting up iterator.
+            SortedSet<String> keys = new TreeSet<>(map.keySet());
+            for (String key : keys) {
+                daily_plots+=
+                        //"['1/2/2020', 71.5]," +
+                        "{ x: '"+key+"', y: "+map.get(key)+" },";
+                // do something
+            }
+
+            daily_plots=daily_plots.substring(0,daily_plots.length()-1);
+            js_script4+=daily_plots;
+            js_script4+=
+                    "]" +
+                            "}" +
+                            "]" +
+                            "});";
+            model.addAttribute("js_script4",js_script4);
 
 
 

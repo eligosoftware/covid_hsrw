@@ -25,7 +25,27 @@
     <!--PLEASE NOTE: As of June 22 2016, Google Maps require an API key.
     * GET YOUR API KEY FROM ... https://developers.google.com/maps/documentation/javascript/get-api-key
     * ONCE YOU GET THE KEY, REPLACE 'js?sensor=false' IN THE ABOVE URL WITH "js?key=YOUR_NEW_API_KEY".-->
-
+    <style>
+    .overlay{
+        display: none;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: 999;
+        background: rgba(255,255,255,0.8)
+        url("/img/loader.gif") center no-repeat;
+    }
+    /* Turn off scrollbar when body element has the loading class */
+    body.loading{
+        overflow: hidden;
+    }
+    /* Make spinner image visible when body element has the loading class */
+    body.loading .overlay{
+        display: block;
+    }
+</style>
 </head>
 
 <body>
@@ -214,13 +234,32 @@
     </div>
 </div>
     <div class="row">
+        <div class="col-sm">
     <div id="chartDiv3" style="max-width: 740px;height: 400px;margin: 0px auto">
     </div>
+    </div>
+        <div class="col-sm">
+            <div id="chartDiv4" style="max-width: 740px;height: 400px;margin: 0px auto">
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div class="row">
+        <div class="col-sm">
+            <div id="chartDiv5" style="max-width: 740px;height: 400px;margin: 0px auto">
+            </div>
+        </div>
     </div>
 </div>
 <script>
   var listA = [{name:'Europe', value:'europe'}, {name:'North America', value:'north_america'},{name:'South America', value:'south_america'},{name:'Asia', value:'asia'}, {name:'Oceania', value:'oceania'}, {name:'Africa', value:'africa'}];
-  var listB =[{name:'Afghanistan',value:'Afghanistan'},{name:'Albania',value:'Albania'},{name:'Algeria',value:'Algeria'},{name:'Andorra',value:'Andorra'},{name:'Angola',value:'Angola'},{name:'Antigua and Barbuda',value:'Antigua and Barbuda'},{name:'Argentina',value:'Argentina'},{name:'Armenia',value:'Armenia'},{name:'Aruba',value:'Aruba'},{name:'Australia',value:'Australia'},{name:'Austria',value:'Austria'},{name:'Azerbaijan',value:'Azerbaijan'},{name:'Bahamas',value:'Bahamas'},{name:'Bahrain',value:'Bahrain'},{name:'Bangladesh',value:'Bangladesh'},{name:'Barbados',value:'Barbados'},{name:'Belarus',value:'Belarus'},{name:'Belgium',value:'Belgium'},{name:'Belize',value:'Belize'},{name:'Benin',value:'Benin'},{name:'Bhutan',value:'Bhutan'},{name:'Bolivia',value:'Bolivia'},{name:'Bosnia and Herzegovina',value:'Bosnia and Herzegovina'},{name:'Botswana',value:'Botswana'},{name:'Brazil',value:'Brazil'},{name:'Brunei',value:'Brunei'},{name:'Bulgaria',value:'Bulgaria'},{name:'Burkina Faso',value:'Burkina Faso'},{name:'Burma',value:'Burma'},{name:'Burundi',value:'Burundi'},{name:'Cabo Verde',value:'Cabo Verde'},{name:'Cambodia',value:'Cambodia'},{name:'Cameroon',value:'Cameroon'},{name:'Canada',value:'Canada'},{name:'Cayman Islands',value:'Cayman Islands'},{name:'Central African Republic',value:'Central African Republic'},{name:'Chad',value:'Chad'},{name:'Channel Islands',value:'Channel Islands'},{name:'Chile',value:'Chile'},{name:'China',value:'China'},{name:'Colombia',value:'Colombia'},{name:'Comoros',value:'Comoros'},{name:'Congo (Brazzaville)',value:'Congo (Brazzaville)'},{name:'Congo (Kinshasa)',value:'Congo (Kinshasa)'},{name:'Costa Rica',value:'Costa Rica'},{name:'Cote d\'Ivoire',value:'Cote d\'Ivoire'},{name:'Croatia',value:'Croatia'},{name:'Cuba',value:'Cuba'},{name:'Curacao',value:'Curacao'},{name:'Cyprus',value:'Cyprus'},{name:'Czechia',value:'Czechia'},{name:'Denmark',value:'Denmark'},{name:'Djibouti',value:'Djibouti'},{name:'Dominica',value:'Dominica'},{name:'Dominican Republic',value:'Dominican Republic'},{name:'Ecuador',value:'Ecuador'},{name:'Egypt',value:'Egypt'},{name:'El Salvador',value:'El Salvador'},{name:'Equatorial Guinea',value:'Equatorial Guinea'},{name:'Eritrea',value:'Eritrea'},{name:'Estonia',value:'Estonia'},{name:'Eswatini',value:'Eswatini'},{name:'Ethiopia',value:'Ethiopia'},{name:'Faroe Islands',value:'Faroe Islands'},{name:'Fiji',value:'Fiji'},{name:'Finland',value:'Finland'},{name:'France',value:'France'},{name:'French Guiana',value:'French Guiana'},{name:'Gabon',value:'Gabon'},{name:'Gambia',value:'Gambia'},{name:'Georgia',value:'Georgia'},{name:'Germany',value:'Germany'},{name:'Ghana',value:'Ghana'},{name:'Gibraltar',value:'Gibraltar'},{name:'Greece',value:'Greece'},{name:'Greenland',value:'Greenland'},{name:'Grenada',value:'Grenada'},{name:'Guadeloupe',value:'Guadeloupe'},{name:'Guam',value:'Guam'},{name:'Guatemala',value:'Guatemala'},{name:'Guernsey',value:'Guernsey'},{name:'Guinea',value:'Guinea'},{name:'Guinea-Bissau',value:'Guinea-Bissau'},{name:'Guyana',value:'Guyana'},{name:'Haiti',value:'Haiti'},{name:'Holy See',value:'Holy See'},{name:'Honduras',value:'Honduras'},{name:'Hungary',value:'Hungary'},{name:'Iceland',value:'Iceland'},{name:'India',value:'India'},{name:'Indonesia',value:'Indonesia'},{name:'Iran',value:'Iran'},{name:'Iraq',value:'Iraq'},{name:'Ireland',value:'Ireland'},{name:'Israel',value:'Israel'},{name:'Italy',value:'Italy'},{name:'Jamaica',value:'Jamaica'},{name:'Japan',value:'Japan'},{name:'Jersey',value:'Jersey'},{name:'Jordan',value:'Jordan'},{name:'Kazakhstan',value:'Kazakhstan'},{name:'Kenya',value:'Kenya'},{name:'Kiribati',value:'Kiribati'},{name:'Korea, South',value:'Korea, South'},{name:'Kosovo',value:'Kosovo'},{name:'Kuwait',value:'Kuwait'},{name:'Kyrgyzstan',value:'Kyrgyzstan'},{name:'Laos',value:'Laos'},{name:'Latvia',value:'Latvia'},{name:'Lebanon',value:'Lebanon'},{name:'Lesotho',value:'Lesotho'},{name:'Liberia',value:'Liberia'},{name:'Libya',value:'Libya'},{name:'Liechtenstein',value:'Liechtenstein'},{name:'Lithuania',value:'Lithuania'},{name:'Luxembourg',value:'Luxembourg'},{name:'Macao SAR',value:'Macao SAR'},{name:'Madagascar',value:'Madagascar'},{name:'Malawi',value:'Malawi'},{name:'Malaysia',value:'Malaysia'},{name:'Maldives',value:'Maldives'},{name:'Mali',value:'Mali'},{name:'Malta',value:'Malta'},{name:'Marshall Islands',value:'Marshall Islands'},{name:'Martinique',value:'Martinique'},{name:'Mauritania',value:'Mauritania'},{name:'Mauritius',value:'Mauritius'},{name:'Mayotte',value:'Mayotte'},{name:'Mexico',value:'Mexico'},{name:'Moldova',value:'Moldova'},{name:'Monaco',value:'Monaco'},{name:'Mongolia',value:'Mongolia'},{name:'Montenegro',value:'Montenegro'},{name:'Morocco',value:'Morocco'},{name:'Mozambique',value:'Mozambique'},{name:'MS Zaandam',value:'MS Zaandam'},{name:'Namibia',value:'Namibia'},{name:'Nepal',value:'Nepal'},{name:'Netherlands',value:'Netherlands'},{name:'New Zealand',value:'New Zealand'},{name:'Nicaragua',value:'Nicaragua'},{name:'Niger',value:'Niger'},{name:'Nigeria',value:'Nigeria'},{name:'North Macedonia',value:'North Macedonia'},{name:'Norway',value:'Norway'},{name:'Oman',value:'Oman'},{name:'Pakistan',value:'Pakistan'},{name:'Panama',value:'Panama'},{name:'Papua New Guinea',value:'Papua New Guinea'},{name:'Paraguay',value:'Paraguay'},{name:'Peru',value:'Peru'},{name:'Philippines',value:'Philippines'},{name:'Poland',value:'Poland'},{name:'Portugal',value:'Portugal'},{name:'Puerto Rico',value:'Puerto Rico'},{name:'Qatar',value:'Qatar'},{name:'Reunion',value:'Reunion'},{name:'Romania',value:'Romania'},{name:'Russia',value:'Russia'},{name:'Rwanda',value:'Rwanda'},{name:'Saint Barthelemy',value:'Saint Barthelemy'},{name:'Saint Kitts and Nevis',value:'Saint Kitts and Nevis'},{name:'Saint Lucia',value:'Saint Lucia'},{name:'Saint Vincent and the Grenadines',value:'Saint Vincent and the Grenadines'},{name:'Saint Martin',value:'Saint Martin'},{name:'Samoa',value:'Samoa'},{name:'San Marino',value:'San Marino'},{name:'Sao Tome and Principe',value:'Sao Tome and Principe'},{name:'Saudi Arabia',value:'Saudi Arabia'},{name:'Senegal',value:'Senegal'},{name:'Serbia',value:'Serbia'},{name:'Seychelles',value:'Seychelles'},{name:'Sierra Leone',value:'Sierra Leone'},{name:'Singapore',value:'Singapore'},{name:'Slovakia',value:'Slovakia'},{name:'Slovenia',value:'Slovenia'},{name:'Solomon Islands',value:'Solomon Islands'},{name:'Somalia',value:'Somalia'},{name:'South Africa',value:'South Africa'},{name:'South Sudan',value:'South Sudan'},{name:'Spain',value:'Spain'},{name:'Sri Lanka',value:'Sri Lanka'},{name:'Sudan',value:'Sudan'},{name:'Suriname',value:'Suriname'},{name:'Sweden',value:'Sweden'},{name:'Switzerland',value:'Switzerland'},{name:'Syria',value:'Syria'},{name:'Taipei and environs',value:'Taipei and environs'},{name:'Taiwan',value:'Taiwan'},{name:'Tajikistan',value:'Tajikistan'},{name:'Tanzania',value:'Tanzania'},{name:'Thailand',value:'Thailand'},{name:'Timor-Leste',value:'Timor-Leste'},{name:'Togo',value:'Togo'},{name:'Trinidad and Tobago',value:'Trinidad and Tobago'},{name:'Tunisia',value:'Tunisia'},{name:'Turkey',value:'Turkey'},{name:'Uganda',value:'Uganda'},{name:'Ukraine',value:'Ukraine'},{name:'United Arab Emirates',value:'United Arab Emirates'},{name:'United Kingdom',value:'United Kingdom'},{name:'Uruguay',value:'Uruguay'},{name:'US',value:'US'},{name:'Uzbekistan',value:'Uzbekistan'},{name:'Vanuatu',value:'Vanuatu'},{name:'Venezuela',value:'Venezuela'},{name:'Vietnam',value:'Vietnam'},{name:'West Bank and Gaza',value:'West Bank and Gaza'},{name:'Western Sahara',value:'Western Sahara'},{name:'Yemen',value:'Yemen'},{name:'Zambia',value:'Zambia'},{name:'Zimbabwe',value:'Zimbabwe'}];
+  var listB_europe =[{name:'Albania',value:'Albania'},{name:'Andorra',value:'Andorra'},{name:'Armenia',value:'Armenia'},{name:'Austria',value:'Austria'},{name:'Azerbaijan',value:'Azerbaijan'},{name:'Belarus',value:'Belarus'},{name:'Belgium',value:'Belgium'},{name:'Bosnia and Herzegovina',value:'Bosnia and Herzegovina'},{name:'Bulgaria',value:'Bulgaria'},{name:'Croatia',value:'Croatia'},{name:'Cyprus',value:'Cyprus'},{name:'Channel Islands',value:'Channel Islands'},{name:'Czechia',value:'Czechia'},{name:'Denmark',value:'Denmark'},{name:'Estonia',value:'Estonia'},{name:'Faroe Islands',value:'Faroe Islands'},{name:'Finland',value:'Finland'},{name:'France',value:'France'},{name:'Georgia',value:'Georgia'},{name:'Germany',value:'Germany'},{name:'Gibraltar',value:'Gibraltar'},{name:'Guernsey',value:'Guernsey'},{name:'Greece',value:'Greece'},{name:'Holy See',value:'Holy See'},{name:'Hungary',value:'Hungary'},{name:'Iceland',value:'Iceland'},{name:'Ireland',value:'Ireland'},{name:'Italy',value:'Italy'},{name:'Jersey',value:'Jersey'},{name:'Kosovo',value:'Kosovo'},{name:'Latvia',value:'Latvia'},{name:'Liechtenstein',value:'Liechtenstein'},{name:'Lithuania',value:'Lithuania'},{name:'Luxembourg',value:'Luxembourg'},{name:'Mayotte',value:'Mayotte'},{name:'Malta',value:'Malta'},{name:'Moldova',value:'Moldova'},{name:'MS Zaandam',value:'MS Zaandam'},{name:'Monaco',value:'Monaco'},{name:'Montenegro',value:'Montenegro'},{name:'Netherlands',value:'Netherlands'},{name:'North Macedonia',value:'North Macedonia'},{name:'Norway',value:'Norway'},{name:'Poland',value:'Poland'},{name:'Portugal',value:'Portugal'},{name:'Romania',value:'Romania'},{name:'Russia',value:'Russia'},{name:'San Marino',value:'San Marino'},{name:'Serbia',value:'Serbia'},{name:'Slovakia',value:'Slovakia'},{name:'Slovenia',value:'Slovenia'},{name:'Spain',value:'Spain'},{name:'Sweden',value:'Sweden'},{name:'Switzerland',value:'Switzerland'},{name:'Turkey',value:'Turkey'},{name:'Ukraine',value:'Ukraine'},{name:'United Kingdom',value:'United Kingdom'}];
+   var listB_asia =[{name:'Afghanistan',value:'Afghanistan'},{name:'Bahrain',value:'Bahrain'},{name:'Bangladesh',value:'Bangladesh'},{name:'Bhutan',value:'Bhutan'},{name:'Brunei',value:'Brunei'},{name:'Burma',value:'Burma'},{name:'Cambodia',value:'Cambodia'},{name:'China',value:'China'},{name:'India',value:'India'},{name:'Indonesia',value:'Indonesia'},{name:'Iran',value:'Iran'},{name:'Iraq',value:'Iraq'},{name:'Israel',value:'Israel'},{name:'West Bank and Gaza',value:'West Bank and Gaza'},{name:'Japan',value:'Japan'},{name:'Jordan',value:'Jordan'},{name:'Kazakhstan',value:'Kazakhstan'},{name:'Korea',value:'Korea'},{name:' South',value:' South'},{name:'Kyrgyzstan',value:'Kyrgyzstan'},{name:'Kuwait',value:'Kuwait'},{name:'Laos',value:'Laos'},{name:'Lebanon',value:'Lebanon'},{name:'Malaysia',value:'Malaysia'},{name:'Macao SAR',value:'Macao SAR'},{name:'Maldives',value:'Maldives'},{name:'Mongolia',value:'Mongolia'},{name:'Nepal',value:'Nepal'},{name:'Oman',value:'Oman'},{name:'Pakistan',value:'Pakistan'},{name:'Philippines',value:'Philippines'},{name:'Qatar',value:'Qatar'},{name:'Saudi Arabia',value:'Saudi Arabia'},{name:'Singapore',value:'Singapore'},{name:'Sri Lanka',value:'Sri Lanka'},{name:'Syria',value:'Syria'},{name:'Taiwan',value:'Taiwan'},{name:'Tajikistan',value:'Tajikistan'},{name:'Thailand',value:'Thailand'},{name:'Timor-Leste',value:'Timor-Leste'},{name:'Turkmenistan',value:'Turkmenistan'},{name:'Taipei and environs',value:'Taipei and environs'},{name:'United Arab Emirates',value:'United Arab Emirates'},{name:'Uzbekistan',value:'Uzbekistan'},{name:'Vietnam',value:'Vietnam'},{name:'Yemen',value:'Yemen'}];
+   var listB_north_america =[{name:'Antigua and Barbuda',value:'Antigua and Barbuda'},{name:'Aruba',value:'Aruba'},{name:'Bahamas',value:'Bahamas'},{name:'Barbados',value:'Barbados'},{name:'Belize',value:'Belize'},{name:'Canada',value:'Canada'},{name:'Cayman Islands',value:'Cayman Islands'},{name:'Costa Rica',value:'Costa Rica'},{name:'Cuba',value:'Cuba'},{name:'Dominica',value:'Dominica'},{name:'Dominican Republic',value:'Dominican Republic'},{name:'El Salvador',value:'El Salvador'},{name:'Greenland',value:'Greenland'},{name:'Grenada',value:'Grenada'},{name:'Guadeloupe',value:'Guadeloupe'},{name:'Guatemala',value:'Guatemala'},{name:'Haiti',value:'Haiti'},{name:'Honduras',value:'Honduras'},{name:'Jamaica',value:'Jamaica'},{name:'Martinique',value:'Martinique'},{name:'Mexico',value:'Mexico'},{name:'Nicaragua',value:'Nicaragua'},{name:'Panama',value:'Panama'},{name:'Puerto Rico',value:'Puerto Rico'},{name:'Saint Kitts and Nevis',value:'Saint Kitts and Nevis'},{name:'Saint Lucia',value:'Saint Lucia'},{name:'Saint Martin',value:'Saint Martin'},{name:'Saint Vincent and the Grenadines',value:'Saint Vincent and the Grenadines'},{name:'Saint Barthelemy',value:'Saint Barthelemy'},{name:'Trinidad and Tobago',value:'Trinidad and Tobago'},{name:'US',value:'US'}];
+  var listB_south_america =[{name:'Argentina',value:'Argentina'},{name:'Bolivia',value:'Bolivia'},{name:'Brazil',value:'Brazil'},{name:'Chile',value:'Chile'},{name:'Colombia',value:'Colombia'},{name:'Curacao',value:'Curacao'},{name:'Ecuador',value:'Ecuador'},{name:'French Guiana',value:'French Guiana'},{name:'Guyana',value:'Guyana'},{name:'Paraguay',value:'Paraguay'},{name:'Peru',value:'Peru'},{name:'Suriname',value:'Suriname'},{name:'Uruguay',value:'Uruguay'},{name:'Venezuela',value:'Venezuela'}];
+    var listB_africa =[{name:'Algeria',value:'Algeria'},{name:'Angola',value:'Angola'},{name:'Benin',value:'Benin'},{name:'Botswana',value:'Botswana'},{name:'Tanzania',value:'Tanzania'},{name:'Burkina Faso',value:'Burkina Faso'},{name:'Western Sahara',value:'Western Sahara'},{name:'Burundi',value:'Burundi'},{name:'Cabo Verde',value:'Cabo Verde'},{name:'Cameroon',value:'Cameroon'},{name:'Central African Republic',value:'Central African Republic'},{name:'Comoros',value:'Comoros'},{name:'Chad',value:'Chad'},{name:'Malawi',value:'Malawi'},{name:'Sierra Leone',value:'Sierra Leone'},{name:'Sao Tome and Principe',value:'Sao Tome and Principe'},{name:'Seychelles',value:'Seychelles'},{name:'Congo (Brazzaville)',value:'Congo (Brazzaville)'},{name:'Congo (Kinshasa)',value:'Congo (Kinshasa)'},{name:'Cote d\'Ivoire',value:'Cote d\'Ivoire'},{name:'Djibouti',value:'Djibouti'},{name:'Egypt',value:'Egypt'},{name:'Equatorial Guinea',value:'Equatorial Guinea'},{name:'Guinea',value:'Guinea'},{name:'Guinea-Bissau',value:'Guinea-Bissau'},{name:'Eritrea',value:'Eritrea'},{name:'Eswatini',value:'Eswatini'},{name:'South Sudan',value:'South Sudan'},{name:'Reunion',value:'Reunion'},{name:'Ethiopia',value:'Ethiopia'},{name:'Gabon',value:'Gabon'},{name:'Gambia',value:'Gambia'},{name:'Ghana',value:'Ghana'},{name:'Kenya',value:'Kenya'},{name:'Liberia',value:'Liberia'},{name:'Libya',value:'Libya'},{name:'Lesotho',value:'Lesotho'},{name:'Madagascar',value:'Madagascar'},{name:'Mali',value:'Mali'},{name:'Mauritania',value:'Mauritania'},{name:'Mauritius',value:'Mauritius'},{name:'Morocco',value:'Morocco'},{name:'Mozambique',value:'Mozambique'},{name:'Namibia',value:'Namibia'},{name:'Niger',value:'Niger'},{name:'Nigeria',value:'Nigeria'},{name:'Rwanda',value:'Rwanda'},{name:'Senegal',value:'Senegal'},{name:'Somalia',value:'Somalia'},{name:'South Africa',value:'South Africa'},{name:'Sudan',value:'Sudan'},{name:'Togo',value:'Togo'},{name:'Tunisia',value:'Tunisia'},{name:'Uganda',value:'Uganda'},{name:'Zambia',value:'Zambia'},{name:'Zimbabwe',value:'Zimbabwe'}];
+  var listB_oceania =[{name:'Australia',value:'Australia'},{name:'Fiji',value:'Fiji'},{name:'Guam',value:'Guam'},{name:'New Zealand',value:'New Zealand'},{name:'Papua New Guinea',value:'Papua New Guinea'},{name:'Kiribati',value:'Kiribati'},{name:'Marshall Islands',value:'Marshall Islands'},{name:'Solomon Islands',value:'Solomon Islands'},{name:'Vanuatu',value:'Vanuatu'}];
+
 </script>
  <script>
      $('.mydatatable').DataTable({
@@ -237,6 +276,9 @@
  </script>
 
 <script>
+
+
+
 var js_scr="[[${js_script}]]";
 js_scr=js_scr.replaceAll("&#39;","\'");
 js_scr=js_scr.replaceAll("&lt;","<");
@@ -255,37 +297,33 @@ js_scr2=js_scr2.replaceAll("&gt;",">");
 
 eval(js_scr2);
 
+var js_scr3="[[${js_script3}]]";
+js_scr3=js_scr3.replaceAll("&#39;","\'");
+js_scr3=js_scr3.replaceAll("&lt;","<");
+js_scr3=js_scr3.replaceAll("&gt;",">");
 
-var chart3 = JSC.chart('chartDiv3', {
-	debug: true,
-	defaultSeries_type: 'column',
-	title_label_text:'US Social Network Users in 2016',
-	yAxis:{
-		defaultTick_enabled:false,
-		scale_range_padding:.15
-	},
-	legend_visible:false,
-	toolbar_visible:false,
-	series:[
-		{
-			name:'Social Network Users',
-			color:'turquoise',
-			defaultPoint:{
+//console.log(js_scr);
 
+eval(js_scr3);
 
-				label:{
-					text:'%valueM'
-				}},
+var js_scr4="[[${js_script4}]]";
+js_scr4=js_scr4.replaceAll("&#39;","\'");
+js_scr4=js_scr4.replaceAll("&lt;","<");
+js_scr4=js_scr4.replaceAll("&gt;",">");
 
-			points:[
-				{name:'Facebook',y:166.8},
-				{name:'Instagram',y:67.2},
-				{name:'Twitter',y:52.2},
-				{name:'Pinterest',y:54.3},
-				{name:'Tumblr',y:23.2},
-			]}
-	]
-});
+//console.log(js_scr);
+//console.log(js_scr4);
+eval(js_scr4);
+
+var js_scr5="[[${js_script5}]]";
+js_scr5=js_scr5.replaceAll("&#39;","\'");
+js_scr5=js_scr5.replaceAll("&lt;","<");
+js_scr5=js_scr5.replaceAll("&gt;",">");
+
+//console.log(js_scr);
+//console.log(js_scr5);
+eval(js_scr5);
+
 </script>
 
 <script>
@@ -293,6 +331,7 @@ var chart3 = JSC.chart('chartDiv3', {
 
   $('#describe').on('change', function() {
 
+    $("body").addClass("loading");
   $.ajax({//1
 	url: '/updateNumbers',
 	method: 'post',
@@ -349,6 +388,54 @@ var chart3 = JSC.chart('chartDiv3', {
            eval(js_chart2);
         }//6
 
+        var chart3=obj.chart3;
+            if(chart3.update){//6
+            var js_chart3="JSC.chart('chartDiv3', {debug: true,defaultSeries_type: 'column',title_label_text:'Top 10 Countries by Infections per 100.000',yAxis:{defaultTick_enabled:false,scale_range_padding:.15},legend_visible:false,toolbar_visible:false,series:[{name:'Infections per 100.000 population',color:'turquoise',defaultPoint:{label:{text:'%value'}},points:[";
+
+             for (i = 0; i < chart3.values.length-1; i++) {//7
+                var region=chart3.values[i];
+              js_chart3 += "{ name: '"+region.key+"', y: "+region.value+"},";
+              }//7
+               var region=chart3.values[chart3.values.length-1];
+              js_chart3 += "{ name: '"+region.key+"', y: "+region.value+" }";
+
+            js_chart3+="]}]});";
+            //console.log(js_chart3);
+           eval(js_chart3);
+        }//6
+
+var chart4=obj.chart4;
+            if(chart4.update){//6
+            var js_chart4="var chart4 = JSC.chart('chartDiv4', {debug: true,type: 'line',title_label_text: 'New Cases to Recovered Cases',legend_visible: false,xAxis_scale_type: 'time',yAxis_markers: [{ value: 1, color: 'red', label_text: 'The risk line' }],series: [{name: 'Value',palette: {pointValue: '%yValue',stops: [  [0, '%color', 0.7],[1, 'red']]},points: [";
+
+             for (i = 0; i < chart4.values.length-1; i++) {//7
+                var region=chart4.values[i];
+              js_chart4 += "['"+region.key+"',"+region.value+"],";
+              }//7
+               var region=chart4.values[chart4.values.length-1];
+              js_chart4 += "['"+region.key+"',"+region.value+"]";
+
+            js_chart4+="]}]});";
+            //console.log(js_chart4);
+           eval(js_chart4);
+        }//6
+
+var chart5=obj.chart5;
+            if(chart5.update){//6
+            var js_chart5="var chart5 = JSC.chart('chartDiv5', {debug: true,defaultSeries_type: 'column',title_label_text:'Death toll for the last 14 days',yAxis:{defaultTick_enabled:false,scale_range_padding:.15},legend_visible:false,toolbar_visible:false,series:[{name:'Number of deaths',color:'black',defaultPoint:{label:{text:'%value'}},points:[";
+
+             for (i = 0; i < chart5.values.length-1; i++) {//7
+                var region=chart5.values[i];
+              js_chart5 += "['"+region.key+"',"+region.value+"],";
+              }//7
+               var region=chart5.values[chart5.values.length-1];
+              js_chart5 += "['"+region.key+"',"+region.value+"]";
+
+            js_chart5+="]}]});";
+            //console.log(js_chart5);
+           eval(js_chart5);
+        }//6
+
 		}//3
 
 		else{//8
@@ -364,10 +451,10 @@ var chart3 = JSC.chart('chartDiv3', {
             document.getElementById('f_rate').innerHTML="-";
 
 		}//8
+		$("body").removeClass("loading");
 	}//2
 });
 });
-
   $('#describe').hide();
     $('#world').bind('click', function() {
       $('#describe').empty();
@@ -379,9 +466,41 @@ var chart3 = JSC.chart('chartDiv3', {
 
       $('#describe').empty();
       $('#describe').show();
-      $.each(listB, function(index, value) {
+      $('#describe').append('<optgroup label="Europe">');
+      $.each(listB_europe, function(index, value) {
         $('#describe').append('<option value="'+value.value+'">'+value.name+'</option>');
       });
+      $('#describe').append('</optgroup>');
+
+      $('#describe').append('<optgroup label="North America">');
+      $.each(listB_north_america, function(index, value) {
+        $('#describe').append('<option value="'+value.value+'">'+value.name+'</option>');
+      });
+      $('#describe').append('</optgroup>');
+
+      $('#describe').append('<optgroup label="South America">');
+      $.each(listB_south_america, function(index, value) {
+        $('#describe').append('<option value="'+value.value+'">'+value.name+'</option>');
+      });
+      $('#describe').append('</optgroup>');
+
+      $('#describe').append('<optgroup label="Asia">');
+      $.each(listB_asia, function(index, value) {
+        $('#describe').append('<option value="'+value.value+'">'+value.name+'</option>');
+      });
+      $('#describe').append('</optgroup>');
+
+      $('#describe').append('<optgroup label="Oceania">');
+      $.each(listB_oceania, function(index, value) {
+        $('#describe').append('<option value="'+value.value+'">'+value.name+'</option>');
+      });
+      $('#describe').append('</optgroup>');
+
+        $('#describe').append('<optgroup label="Africa">');
+      $.each(listB_africa, function(index, value) {
+        $('#describe').append('<option value="'+value.value+'">'+value.name+'</option>');
+      });
+      $('#describe').append('</optgroup>');
     });
 
     $('#continents').bind('click', function(){
@@ -554,7 +673,7 @@ $( "select" )
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 }
  </script>
-
+<div class="overlay"></div>
  </body>
 
  </html>

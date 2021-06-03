@@ -1,5 +1,6 @@
 package com.hsrw.covid.controllers;
 
+import com.hsrw.covid.models.LineChartResult;
 import com.hsrw.covid.models.LocationStats;
 import com.hsrw.covid.services.DataService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,6 +77,7 @@ public class RController {
                 });
                 builder.append("\"values\":[");//3
                 LocationStats region;
+
                 int upperbound=9;
                 if(regionStats.size()<10)
                     upperbound=regionStats.size()-1;
@@ -95,14 +97,13 @@ public class RController {
                 builder.append("]");//3
                 builder.append("},");//2
 
-                Map<String,Integer> hashmap = covidDataService.getStatsTotal_14days_continents(country);
-
+                LineChartResult result = covidDataService.getStatsTotal_14days_continents(country);
+                Map<String,Integer> hashmap=result.getMap_cases();
                 builder.append("\"chart2\":{");//2
                 builder.append("\"update\":true,");
                 builder.append("\"values\":[");//3
 
-                String daily_plots="";
-                // setting up iterator.
+
                 SortedSet<String> keys = new TreeSet<>(hashmap.keySet());
                 for (String key : keys) {
                     // do something
@@ -113,7 +114,81 @@ public class RController {
                 }
 
                 builder.append("]");//3
+                builder.append("},");//2
+
+                //chart3
+
+                builder.append("\"chart3\":{");//2
+                builder.append("\"update\":true,");
+                builder.append("\"values\":[");//3
+
+                Collections.sort(regionStats, new Comparator<LocationStats>() {
+                    @Override
+                    public int compare(LocationStats o1, LocationStats o2) {
+                        return (int) (o2.getConfirmed_pro_100k() - o1.getConfirmed_pro_100k());
+                    }
+                });
+                if(regionStats.size()<10)
+                    upperbound=regionStats.size()-1;
+                for(int i=0;i<upperbound;i++){
+                    region=regionStats.get(i);
+                    builder.append("{");//4
+                    builder.append("\"key\":\""+region.getRegion().getName()+"\",");
+                    builder.append("\"value\": "+region.getConfirmed_pro_100k());
+                    builder.append("},");//4
+                }
+                builder.append("{");//4
+                region=regionStats.get(upperbound);
+                builder.append("\"key\":\""+region.getRegion().getName()+"\",");
+                builder.append("\"value\": "+region.getConfirmed_pro_100k());
+                builder.append("}");//4
+
+                builder.append("]");//3
+                builder.append("},");//2
+
+
+                //chart4
+                Map<String,Double> hashmap2 =result.getMap_ratio();
+                builder.append("\"chart4\":{");//2
+                builder.append("\"update\":true,");
+                builder.append("\"values\":[");//3
+
+
+                keys = new TreeSet<>(hashmap2.keySet());
+                for (String key : keys) {
+                    // do something
+                    builder.append("{");//4
+                    builder.append("\"key\":\""+key+"\",");
+                    builder.append("\"value\": "+hashmap2.get(key));
+                    builder.append("},");//4
+                }
+                builder.setLength(builder.length() - 1);
+                builder.append("]");//3
+                builder.append("},");//2
+
+
+                //chart5
+
+                builder.append("\"chart5\":{");//2
+                builder.append("\"update\":true,");
+                builder.append("\"values\":[");//3
+
+                LineChartResult res2=covidDataService.getDeaths_14days_continent(country);
+                Map<String,Integer> map_deaths=res2.getMap_cases();
+                SortedSet<String> keys2 = new TreeSet<>(map_deaths.keySet());
+                for (String key : keys2) {
+                    // do something
+                    builder.append("{");//4
+                    builder.append("\"key\":\""+key+"\",");
+                    builder.append("\"value\": "+map_deaths.get(key));
+                    builder.append("},");//4
+                }
+                builder.setLength(builder.length() - 1);
+                builder.append("]");//3
                 builder.append("}");//2
+
+
+
                 builder.append("}");
 
                 return builder.toString();
@@ -148,11 +223,40 @@ public class RController {
                 builder.append("\"fatalityRate\":"+String.format("%.3g%n", stat.getFatality_rate())+",");
 
             builder.append("\"chart1\":{");//2
-            builder.append("\"update\":false");
+            builder.append("\"update\":true,");//dcdc
+
+            String continent=covidDataService.getContinentByCountry(country);
+            List<LocationStats> regionStatsContinent = covidDataService.getStatsCountry_by_continent(continent);
+
+            Collections.sort(regionStatsContinent, new Comparator<LocationStats>() {
+                @Override
+                public int compare(LocationStats o1, LocationStats o2) {
+                    return o2.getTotalConfirmed() - o1.getTotalConfirmed();
+                }
+            });
+            builder.append("\"values\":[");//3
+            LocationStats region;
+            int upperbound=9;
+            if(regionStatsContinent.size()<10)
+                upperbound=regionStatsContinent.size()-1;
+            for(int i=0;i<upperbound;i++){
+                region=regionStatsContinent.get(i);
+                builder.append("{");//4
+                builder.append("\"name\":\""+region.getRegion().getName()+"\",");
+                builder.append("\"y\": "+region.getTotalConfirmed());
+                builder.append("},");//4
+            }
+            builder.append("{");//4
+            region=regionStatsContinent.get(upperbound);
+            builder.append("\"name\":\""+region.getRegion().getName()+"\",");
+            builder.append("\"y\": "+region.getTotalConfirmed());
+            builder.append("}");//4
+
+            builder.append("]");//3
             builder.append("},");//2
 
-            Map<String,Integer> hashmap = covidDataService.getStatsTotal_14days_country(country);
-
+            LineChartResult result = covidDataService.getStatsTotal_14days_country(country.replace(" ","%20"));
+            Map<String,Integer> hashmap =result.getMap_cases();
             builder.append("\"chart2\":{");//2
             builder.append("\"update\":true,");
             builder.append("\"values\":[");//3
@@ -169,8 +273,83 @@ public class RController {
             }
 
             builder.append("]");//3
+            builder.append("},");//2
+
+            //chart3
+
+            builder.append("\"chart3\":{");//2
+            builder.append("\"update\":true,");
+            builder.append("\"values\":[");//3
+
+            Collections.sort(regionStatsContinent, new Comparator<LocationStats>() {
+                @Override
+                public int compare(LocationStats o1, LocationStats o2) {
+                    return (int) (o2.getConfirmed_pro_100k() - o1.getConfirmed_pro_100k());
+                }
+            });
+            if(regionStatsContinent.size()<10)
+                upperbound=regionStatsContinent.size()-1;
+            for(int i=0;i<upperbound;i++){
+                region=regionStatsContinent.get(i);
+                builder.append("{");//4
+                builder.append("\"key\":\""+region.getRegion().getName()+"\",");
+                builder.append("\"value\": "+region.getConfirmed_pro_100k());
+                builder.append("},");//4
+            }
+            builder.append("{");//4
+            region=regionStatsContinent.get(upperbound);
+            builder.append("\"key\":\""+region.getRegion().getName()+"\",");
+            builder.append("\"value\": "+region.getConfirmed_pro_100k());
+            builder.append("}");//4
+
+            builder.append("]");//3
+            builder.append("},");//2
+
+
+            //chart4
+            Map<String,Double> hashmap2 =result.getMap_ratio();
+            builder.append("\"chart4\":{");//2
+            builder.append("\"update\":true,");
+            builder.append("\"values\":[");//3
+
+
+            keys = new TreeSet<>(hashmap2.keySet());
+            for (String key : keys) {
+                // do something
+                builder.append("{");//4
+                builder.append("\"key\":\""+key+"\",");
+                builder.append("\"value\": "+hashmap2.get(key));
+                builder.append("},");//4
+            }
+            builder.setLength(builder.length() - 1);
+            builder.append("]");//3
+            builder.append("},");//2
+
+
+            //chart5
+
+            builder.append("\"chart5\":{");//2
+            builder.append("\"update\":true,");
+            builder.append("\"values\":[");//3
+
+            LineChartResult res2=covidDataService.getDeaths_14days_country(country.replace(" ","%20"));
+            Map<String,Integer> map_deaths=res2.getMap_cases();
+            SortedSet<String> keys2 = new TreeSet<>(map_deaths.keySet());
+            for (String key : keys2) {
+                // do something
+                builder.append("{");//4
+                builder.append("\"key\":\""+key+"\",");
+                builder.append("\"value\": "+map_deaths.get(key));
+                builder.append("},");//4
+            }
+            builder.setLength(builder.length() - 1);
+            builder.append("]");//3
             builder.append("}");//2
-                builder.append("}");
+
+
+
+            builder.append("}");
+
 
             return builder.toString();
 

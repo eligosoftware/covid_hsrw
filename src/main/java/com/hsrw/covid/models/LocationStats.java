@@ -17,8 +17,9 @@ public class LocationStats {
     private int confirmed;
     private int recovered;
     private double fatality_rate;
+    private double confirmed_pro_100k;
 
-    public LocationStats(Region region, City city, Date date,Date last_update, int totalDeaths, int totalConfirmed, int totalRecovered, int totalActive, int active, int deaths, int confirmed, int recovered, double fatality_rate) {
+    public LocationStats(Region region, City city, Date date,Date last_update, int totalDeaths, int totalConfirmed, int totalRecovered, int totalActive, int active, int deaths, int confirmed, int recovered,double confirmed_pro_100k, double fatality_rate) {
         this.region = region;
         this.city = city;
         this.date = date;
@@ -32,6 +33,7 @@ public class LocationStats {
         this.confirmed = confirmed;
         this.recovered = recovered;
         this.fatality_rate = fatality_rate;
+        this.confirmed_pro_100k=confirmed_pro_100k;
     }
 
     @Override
@@ -52,6 +54,10 @@ public class LocationStats {
 
     public int getTotalConfirmed() {
         return totalConfirmed;
+    }
+
+    public double getConfirmed_pro_100k() {
+        return confirmed_pro_100k;
     }
 
     public int getConfirmed() {

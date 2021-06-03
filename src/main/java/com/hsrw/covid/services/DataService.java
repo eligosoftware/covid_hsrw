@@ -46,8 +46,8 @@ public class DataService {
 
     private SimpleDateFormat simpleDateFormatHours = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
-    private HashMap<String, Integer> mapping;
     private HashMap<String, Latlng> coords;
+    private HashMap<String, Integer> population;
     public int getMax_stat() {
         return max_stat;
     }
@@ -60,6 +60,9 @@ public class DataService {
         // config conf = config.newInstance();
 
         //conf.connect();
+
+
+
 
         coords=new HashMap();
         coords.put("Afghanistan",new Latlng(33.93911,67.709953));
@@ -320,6 +323,266 @@ public class DataService {
         coords.put("Zambia",new Latlng(-13.133897,27.849332));
         coords.put("Zimbabwe",new Latlng(-19.015438,29.154857));
 
+        population=new HashMap();
+        population.put("Afghanistan",38928346);
+        population.put("Albania",2877797);
+        population.put("Algeria",43851044);
+        population.put("American Samoa",55191);
+        population.put("Andorra",77265);
+        population.put("Angola",32866272);
+        population.put("Anguilla",15003);
+        population.put("Antigua and Barbuda",97929);
+        population.put("Argentina",45195774);
+        population.put("Armenia",2963243);
+        population.put("Aruba",106766);
+        population.put("Australia",25499884);
+        population.put("Austria",9006398);
+        population.put("Azerbaijan",10139177);
+        population.put("Bahamas",393244);
+        population.put("Bahrain",1701575);
+        population.put("Bangladesh",164689383);
+        population.put("Barbados",287375);
+        population.put("Belarus",9449323);
+        population.put("Belgium",11589623);
+        population.put("Belize",397628);
+        population.put("Benin",12123200);
+        population.put("Bermuda",62278);
+        population.put("Bhutan",771608);
+        population.put("Bolivia",11673021);
+        population.put("Bosnia and Herzegovina",3280819);
+        population.put("Botswana",2351627);
+        population.put("Bouvet Island",0);
+        population.put("Brazil",212559417);
+        population.put("British Indian Ocean Territory",0);
+        population.put("British Virgin Islands",30231);
+        population.put("Brunei",437479);
+        population.put("Bulgaria",6948445);
+        population.put("Burkina Faso",20903273);
+        population.put("Burma",54409800);
+        population.put("Burundi",11890784);
+        population.put("Cabo Verde",555987);
+        population.put("Cambodia",16718965);
+        population.put("Cameroon",26545863);
+        population.put("Canada",37742154);
+        population.put("Cape Verde",0);
+        population.put("Cayman Islands",65722);
+        population.put("Central African Republic",4829767);
+        population.put("Chad",16425864);
+        population.put("Channel Islands",173863);
+        population.put("Chile",19116201);
+        population.put("China",1439323776);
+        population.put("Christmas Island",0);
+        population.put("Cocos [Keeling] Islands",0);
+        population.put("Colombia",50882891);
+        population.put("Comoros",869601);
+        population.put("Congo (Brazzaville)",5518087);
+        population.put("Congo (Kinshasa)",89561403);
+        population.put("Cook Islands",17564);
+        population.put("Costa Rica",5094118);
+        population.put("Cote d'Ivoire",26378274);
+        population.put("Croatia",4105267);
+        population.put("Cuba",11326616);
+        population.put("Curacao",164093);
+        population.put("Cyprus",1207359);
+        population.put("Czechia",10708981);
+        population.put("Denmark",5792202);
+        population.put("Diamond Princess",0);
+        population.put("Djibouti",988000);
+        population.put("Dominica",71986);
+        population.put("Dominican Republic",10847910);
+        population.put("Ecuador",17643054);
+        population.put("Egypt",102334404);
+        population.put("El Salvador",6486205);
+        population.put("Equatorial Guinea",1402985);
+        population.put("Eritrea",3546421);
+        population.put("Estonia",1326535);
+        population.put("Eswatini",1160164);
+        population.put("Ethiopia",114963588);
+        population.put("Falkland Islands [Islas Malvinas]",3480);
+        population.put("Faroe Islands",48863);
+        population.put("Fiji",896445);
+        population.put("Finland",5540720);
+        population.put("France",65273511);
+        population.put("French Guiana",298682);
+        population.put("French Polynesia",280908);
+        population.put("French Southern Territories",0);
+        population.put("Gabon",2225734);
+        population.put("Gambia",2416668);
+        population.put("Gaza Strip",0);
+        population.put("Georgia",3989167);
+        population.put("Germany",83783942);
+        population.put("Ghana",31072940);
+        population.put("Gibraltar",33691);
+        population.put("Greece",10423054);
+        population.put("Greenland",56770);
+        population.put("Grenada",112523);
+        population.put("Guadeloupe",400124);
+        population.put("Guam",168775);
+        population.put("Guatemala",17915568);
+        population.put("Guernsey",0);
+        population.put("Guinea",13132795);
+        population.put("Guinea-Bissau",1968001);
+        population.put("Guyana",786552);
+        population.put("Haiti",11402528);
+        population.put("Heard Island and McDonald Islands",0);
+        population.put("Holy See ",801);
+        population.put("Honduras",9904607);
+        population.put("Hong Kong",7496981);
+        population.put("Hungary",9660351);
+        population.put("Iceland",341243);
+        population.put("India",1380004385);
+        population.put("Indonesia",273523615);
+        population.put("Iran",83992949);
+        population.put("Iraq",40222493);
+        population.put("Ireland",4937786);
+        population.put("Isle of Man",85033);
+        population.put("Israel",8655535);
+        population.put("Italy",60461826);
+        population.put("Jamaica",2961167);
+        population.put("Japan",126476461);
+        population.put("Jersey",0);
+        population.put("Jordan",10203134);
+        population.put("Kazakhstan",18776707);
+        population.put("Kenya",53771296);
+        population.put("Kiribati",119449);
+        population.put("Korea,South",51269185);
+        population.put("Kosovo",0);
+        population.put("Kuwait",4270571);
+        population.put("Kyrgyzstan",6524195);
+        population.put("Laos",7275560);
+        population.put("Latvia",1886198);
+        population.put("Lebanon",6825445);
+        population.put("Lesotho",2142249);
+        population.put("Liberia",5057681);
+        population.put("Libya",6871292);
+        population.put("Liechtenstein",38128);
+        population.put("Lithuania",2722289);
+        population.put("Luxembourg",625978);
+        population.put("Macao SAR",0);
+        population.put("Macau",649335);
+        population.put("Madagascar",27691018);
+        population.put("Malawi",19129952);
+        population.put("Malaysia",32365999);
+        population.put("Maldives",540544);
+        population.put("Mali",20250833);
+        population.put("Malta",441543);
+        population.put("Marshall Islands",59190);
+        population.put("Martinique",375265);
+        population.put("Mauritania",4649658);
+        population.put("Mauritius",1271768);
+        population.put("Mayotte",272815);
+        population.put("Mexico",128932753);
+        population.put("Micronesia",548914);
+        population.put("Moldova",4033963);
+        population.put("Monaco",39242);
+        population.put("Mongolia",3278290);
+        population.put("Montenegro",628066);
+        population.put("Montserrat",4992);
+        population.put("Morocco",36910560);
+        population.put("Mozambique",31255435);
+        population.put("MS Zaandam",0);
+        population.put("Namibia",2540905);
+        population.put("Nauru",10824);
+        population.put("Nepal",29136808);
+        population.put("Netherlands",17134872);
+        population.put("Netherlands Antilles",0);
+        population.put("New Caledonia",285498);
+        population.put("New Zealand",4822233);
+        population.put("Nicaragua",6624554);
+        population.put("Niger",24206644);
+        population.put("Nigeria",206139589);
+        population.put("Niue",1626);
+        population.put("Norfolk Island",0);
+        population.put("North Korea",25778816);
+        population.put("North Macedonia",2083374);
+        population.put("Northern Mariana Islands",57559);
+        population.put("Norway",5421241);
+        population.put("Oman",5106626);
+        population.put("Pakistan",220892340);
+        population.put("Palau",18094);
+        population.put("Palestinian Territories",5101414);
+        population.put("Panama",4314767);
+        population.put("Papua New Guinea",8947024);
+        population.put("Paraguay",7132538);
+        population.put("Peru",32971854);
+        population.put("Philippines",109581078);
+        population.put("Pitcairn Islands",0);
+        population.put("Poland",37846611);
+        population.put("Portugal",10196709);
+        population.put("Puerto Rico",2860853);
+        population.put("Qatar",2881053);
+        population.put("Reunion",895312);
+        population.put("Romania",19237691);
+        population.put("Russia",145934462);
+        population.put("Rwanda",12952218);
+        population.put("Saint Barthelemy",9877);
+        population.put("Saint Helena",6077);
+        population.put("Saint Kitts and Nevis",53199);
+        population.put("Saint Lucia",183627);
+        population.put("Saint Martin",38666);
+        population.put("Saint Pierre and Miquelon",5794);
+        population.put("Saint Vincent and the Grenadines",110940);
+        population.put("Samoa",198414);
+        population.put("San Marino",33931);
+        population.put("Sao Tome and Principe ",219159);
+        population.put("Saudi Arabia",34813871);
+        population.put("Senegal",16743927);
+        population.put("Serbia",8737371);
+        population.put("Seychelles",98347);
+        population.put("Sierra Leone",7976983);
+        population.put("Singapore",5850342);
+        population.put("Sint Maarten",42876);
+        population.put("Slovakia",5459642);
+        population.put("Slovenia",2078938);
+        population.put("Solomon Islands",686884);
+        population.put("Somalia",15893222);
+        population.put("South Africa",59308690);
+        population.put("South Georgia and the South Sandwich Islands",0);
+        population.put("South Sudan",11193725);
+        population.put("Spain",46754778);
+        population.put("Sri Lanka",21413249);
+        population.put("Sudan",43849260);
+        population.put("Suriname",586632);
+        population.put("Svalbard and Jan Mayen",0);
+        population.put("Sweden",10099265);
+        population.put("Switzerland",8654622);
+        population.put("Syria",17500658);
+        population.put("Taipei and environs",0);
+        population.put("Taiwan",23816775);
+        population.put("Tajikistan",9537645);
+        population.put("Tanzania",59734218);
+        population.put("Thailand",69799978);
+        population.put("Timor-Leste",1318445);
+        population.put("Togo",8278724);
+        population.put("Tokelau",1357);
+        population.put("Tonga",105695);
+        population.put("Trinidad and Tobago",1399488);
+        population.put("Tunisia",11818619);
+        population.put("Turkey",84339067);
+        population.put("Turkmenistan",6031200);
+        population.put("Turks and Caicos Islands",38717);
+        population.put("Tuvalu",11792);
+        population.put("U.S. Minor Outlying Islands",0);
+        population.put("U.S. Virgin Islands",104425);
+        population.put("Uganda",45741007);
+        population.put("Ukraine",43733762);
+        population.put("United Arab Emirates",9890402);
+        population.put("United Kingdom",67886011);
+        population.put("Uruguay",3473730);
+        population.put("US",331002651);
+        population.put("Uzbekistan",33469203);
+        population.put("Vanuatu",307145);
+        population.put("Vatican City",0);
+        population.put("Venezuela",28435940);
+        population.put("Vietnam",97338579);
+        population.put("Wallis and Futuna",11239);
+        population.put("West Bank and Gaza",0);
+        population.put("Western Sahara",597339);
+        population.put("Yemen",29825964);
+        population.put("Zambia",18383955);
+        population.put("Zimbabwe",14862924);
+
+
         client = HttpClient.newHttpClient();
 
         try {
@@ -439,6 +702,7 @@ public class DataService {
             int t_confirmed_diff=0;
             int t_recovered_diff=0;
             double t_fatality_rate=0;
+            double cp1k;
             for(int i = 0 ; i < data.length() ; i++){
                 JSONObject row=data.getJSONObject(i);//getString("interestKey");
                 JSONObject regionJson=row.getJSONObject("region");
@@ -457,6 +721,10 @@ public class DataService {
                 } else {
 
                     if(lastCountry!=null){
+                        if(population.get(lastCountry.getName())==null || population.get(lastCountry.getName())==0)
+                            cp1k=-88888;
+                        else
+                            cp1k=Math.round((t_confirmed*1.0/population.get(lastCountry.getName())*100000)*100.0)/100.0;
 
                         regionStats.add(new LocationStats(lastCountry,
                                 null,
@@ -469,7 +737,7 @@ public class DataService {
                                 t_active_diff,
                                 t_deaths_diff,
                                 t_confirmed_diff,
-                                t_recovered_diff,
+                                t_recovered_diff,cp1k,
                                 t_fatality_rate/regions_count
                         ));
 
@@ -532,6 +800,10 @@ public class DataService {
                 }
 
             }
+            if(population.get(lastCountry.getName())==null || population.get(lastCountry.getName())==0)
+                cp1k=-88888;
+            else
+                cp1k=Math.round((t_confirmed*1.0/population.get(lastCountry.getName())*100000)*100.0)/100.0;
 
             regionStats.add(new LocationStats(lastCountry,
                     null,
@@ -544,7 +816,8 @@ public class DataService {
                     t_active_diff,
                     t_deaths_diff,
                     t_confirmed_diff,
-                    t_recovered_diff,
+                    t_recovered_diff,cp1k
+                    ,
                     t_fatality_rate/regions_count
             ));
 
@@ -592,11 +865,7 @@ public class DataService {
                 .header("x-rapidapi-host", "covid-19-statistics.p.rapidapi.com")
                 .header("useQueryString", String.valueOf(true))
                 .build();
-        /*mapping = new HashMap<String, Integer>();
-        mapping.put("Province/State",0);
-        mapping.put("Country/Region",1);
-        mapping.put("Lat",2);
-        mapping.put("Long",3);*/
+
 
         List<LocationStats> regionStats =new ArrayList();
 
@@ -618,6 +887,7 @@ public class DataService {
             int t_confirmed_diff=0;
             int t_recovered_diff=0;
             double t_fatality_rate=0;
+            double cp1k=0;
             for(int i = 0 ; i < data.length() ; i++){
 
                 JSONObject row=data.getJSONObject(i);//getString("interestKey");
@@ -640,6 +910,10 @@ public class DataService {
                 } else {
 
                     if(lastCountry!=null){
+                        if(population.get(lastCountry.getName())==null || population.get(lastCountry.getName())==0)
+                            cp1k=-88888;
+                        else
+                            cp1k=Math.round((t_confirmed*1.0/population.get(lastCountry.getName())*100000)*100.0)/100.0;
 
                         regionStats.add(new LocationStats(lastCountry,
                                 null,
@@ -652,7 +926,7 @@ public class DataService {
                                 t_active_diff,
                                 t_deaths_diff,
                                 t_confirmed_diff,
-                                t_recovered_diff,
+                                t_recovered_diff,cp1k,
                                 t_fatality_rate/regions_count
                         ));
 
@@ -715,6 +989,10 @@ public class DataService {
                 }
 
             }
+            if(population.get(lastCountry.getName())==null || population.get(lastCountry.getName())==0)
+                cp1k=-88888;
+            else
+                cp1k=Math.round((t_confirmed*1.0/population.get(lastCountry.getName())*100000)*100.0)/100.0;
 
             regionStats.add(new LocationStats(lastCountry,
                     null,
@@ -727,7 +1005,7 @@ public class DataService {
                     t_active_diff,
                     t_deaths_diff,
                     t_confirmed_diff,
-                    t_recovered_diff,
+                    t_recovered_diff,cp1k,
                     t_fatality_rate/regions_count
             ));
 
@@ -766,6 +1044,7 @@ public class DataService {
             int t_confirmed_diff=0;
             int t_recovered_diff=0;
             double t_fatality_rate=0;
+            double cp1k;
             for(int i = 0 ; i < data.length() ; i++){
                 JSONObject row=data.getJSONObject(i);//getString("interestKey");
                 JSONObject regionJson=row.getJSONObject("region");
@@ -786,6 +1065,10 @@ public class DataService {
                         if(t_confirmed>max_stat){
                             max_stat=t_confirmed;
                         }
+                        if(population.get(lastCountry.getName())==null || population.get(lastCountry.getName())==0)
+                            cp1k=-88888;
+                        else
+                            cp1k=Math.round((t_confirmed*1.0/population.get(lastCountry.getName())*100000)*100.0)/100.0;
                         regionStatsCountry.add(new LocationStats(lastCountry,
                                 null,
                                 simpleDateFormat.parse(lastCountryDate),//row.getString("date")),
@@ -797,7 +1080,7 @@ public class DataService {
                                 t_active_diff,
                                 t_deaths_diff,
                                 t_confirmed_diff,
-                                t_recovered_diff,
+                                t_recovered_diff,cp1k,
                                 t_fatality_rate
                         ));
 
@@ -860,6 +1143,11 @@ public class DataService {
                 }
 
             }
+            if(population.get(lastCountry.getName())==null || population.get(lastCountry.getName())==0)
+
+                cp1k=-88888;
+            else
+                cp1k=Math.round((t_confirmed*1.0/population.get(lastCountry.getName())*100000)*100.0)/100.0;
 
             regionStatsCountry.add(new LocationStats(lastCountry,
                     null,
@@ -872,18 +1160,20 @@ public class DataService {
                     t_active_diff,
                     t_deaths_diff,
                     t_confirmed_diff,
-                    t_recovered_diff,
+                    t_recovered_diff,cp1k,
                     t_fatality_rate
             ));
 
         }
     }
 
-    public Map<String, Integer> getStatsTotal_14days() throws IOException, InterruptedException, ParseException{
+    public LineChartResult getStatsTotal_14days() throws IOException, InterruptedException, ParseException{
         Calendar cal = new GregorianCalendar();
-
-        Map<String,Integer> result=new HashMap();
+        LineChartResult result=new LineChartResult();
+        Map<String,Integer> result1=new HashMap();
+        Map<String,Double> result2=new HashMap();
         Date date=null;
+        cal.add(Calendar.DAY_OF_MONTH, -1);
         for(int j=0;j<14;j++){
             cal.add(Calendar.DAY_OF_MONTH, -1);
             date=cal.getTime();
@@ -910,24 +1200,208 @@ public class DataService {
                 try {
                     JSONObject data=obj.getJSONObject("data");
                     if(data.getInt("confirmed_diff")>0) {
-                        result.put(simpleDateFormat2.format(date), data.getInt("confirmed_diff"));
+                        result1.put(simpleDateFormat2.format(date), data.getInt("confirmed_diff"));
+                        if(data.getInt("recovered_diff")==0)
+                            result2.put(simpleDateFormat2.format(date), 0.0);
+                        else
+                            result2.put(simpleDateFormat2.format(date), Math.round(data.getInt("confirmed_diff")*1.0/data.getInt("recovered_diff")*100.0)/100.0);
+
                     }
                     else{
-                        result.put(simpleDateFormat2.format(date),0);
+                        result1.put(simpleDateFormat2.format(date),0);
+                        result2.put(simpleDateFormat2.format(date), 0.0);
+
+
                     }
                 } catch (Exception e){
-                    result.put(simpleDateFormat2.format(date),0);
+                    result1.put(simpleDateFormat2.format(date),0);
+                    result2.put(simpleDateFormat2.format(date), 0.0);
+
                 }
 
             }}
+        result.setMap_cases(result1);
+        result.setMap_ratio(result2);
+
+        return result;
+    }
+    public LineChartResult getDeaths_14days_continent(String continent) throws IOException, InterruptedException, ParseException{
+        Calendar cal = new GregorianCalendar();
+        LineChartResult result=new LineChartResult();
+        Map<String,Integer> result1=new HashMap();
+
+
+        String europe= "Albania;Andorra;Armenia;Austria;Azerbaijan;Belarus;Belgium;Bosnia and Herzegovina;Bulgaria;Croatia;Cyprus;Channel Islands;Czechia;Denmark;Estonia;Faroe Islands;Finland;France;Georgia;Germany;Gibraltar;Guernsey;Greece;Holy See;Hungary;Iceland;Ireland;Italy;Jersey;Kosovo;Latvia;Liechtenstein;Lithuania;Luxembourg;Mayotte;Malta;Moldova;MS Zaandam;Monaco;Montenegro;Netherlands;North Macedonia;Norway;Poland;Portugal;Romania;Russia;San Marino;Serbia;Slovakia;Slovenia;Spain;Sweden;Switzerland;Turkey;Ukraine;United Kingdom;";
+        String asia="Afghanistan;Bahrain;Bangladesh;Bhutan;Brunei;Burma;Cambodia;China;India;Indonesia;Iran;Iraq;Israel;West Bank and Gaza;Japan;Jordan;Kazakhstan;Korea, South;Kyrgyzstan;Kuwait;Laos;Lebanon;Malaysia;Macao SAR;Maldives;Mongolia;Nepal;Oman;Pakistan;Philippines;Qatar;Saudi Arabia;Singapore;Sri Lanka;Syria;Taiwan;Tajikistan;Thailand;Timor-Leste;Turkmenistan;Taipei and environs;United Arab Emirates;Uzbekistan;Vietnam;Yemen;";
+        String africa="Algeria;Angola;Benin;Botswana;Tanzania;Burkina Faso;Western Sahara;Burundi;Cabo Verde;Cameroon;Central African Republic;Comoros;Chad;Malawi;Sierra Leone;Sao Tome and Principe;Seychelles;Congo (Brazzaville);Congo (Kinshasa);Cote d'Ivoire;Djibouti;Egypt;Equatorial Guinea;Guinea;Guinea-Bissau;Eritrea;Eswatini;South Sudan;Reunion;Ethiopia;Gabon;Gambia;Ghana;Kenya;Liberia;Libya;Lesotho;Madagascar;Mali;Mauritania;Mauritius;Morocco;Mozambique;Namibia;Niger;Nigeria;Rwanda;Senegal;Somalia;South Africa;Sudan;Togo;Tunisia;Uganda;Zambia;Zimbabwe;";
+        String oceania="Australia;Fiji;Guam;New Zealand;Papua New Guinea;Kiribati;Marshall Islands;Solomon Islands;Vanuatu;";
+        String north_america="Antigua and Barbuda;Aruba;Bahamas;Barbados;Belize;Canada;Cayman Islands;Costa Rica;Cuba;Dominica;Dominican Republic;El Salvador;Greenland;Grenada;Guadeloupe;Guatemala;Haiti;Honduras;Jamaica;Martinique;Mexico;Nicaragua;Panama;Puerto Rico;Saint Kitts and Nevis;Saint Lucia;Saint Martin;Saint Vincent and the Grenadines;Saint Barthelemy;Trinidad and Tobago;US;";
+        String south_america="Argentina;Bolivia;Brazil;Chile;Colombia;Curacao;Ecuador;French Guiana;Guyana;Paraguay;Peru;Suriname;Uruguay;Venezuela;";
+
+        String selected_continent="";
+        switch (continent){
+            case "europe":
+                selected_continent=europe;
+                break;
+            case "asia":
+                selected_continent=asia;
+                break;
+            case "africa":
+                selected_continent=africa;
+                break;
+            case "oceania":
+                selected_continent=oceania;
+                break;
+            case "north_america":
+                selected_continent=north_america;
+                break;
+            case "south_america":
+                selected_continent=south_america;
+                break;
+
+        }
+
+        Date date=null;
+        cal.add(Calendar.DAY_OF_MONTH, -1);
+        for(int j=0;j<14;j++){
+            cal.add(Calendar.DAY_OF_MONTH, -1);
+            date=cal.getTime();
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(DATA_URL_STATS+"?date="+simpleDateFormat.format(date)))
+                    .header("accept","application/json")
+                    .header("x-rapidapi-key", "7b0e4f3eefmsh9a199e54efe9595p1f6669jsn29c7d74d3974")
+                    .header("x-rapidapi-host", "covid-19-statistics.p.rapidapi.com")
+                    .header("useQueryString", String.valueOf(true))
+                    .build();
+
+            HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            if(response.statusCode()==200){
+
+                String body=String.valueOf(response.body()).replace("\n","");
+                JSONObject obj = new JSONObject(body);
+                JSONArray data=obj.getJSONArray("data");
+                int deaths=0;
+                for(int i = 0 ; i < data.length() ; i++) {
+                    JSONObject row = data.getJSONObject(i);//getString("interestKey");
+                    JSONObject regionJson = row.getJSONObject("region");
+
+                    if (!selected_continent.contains(regionJson.getString("name") + ";"))
+                        continue;
+                    try {
+                        if(row.getInt("deaths_diff")>0) {
+                              deaths+= row.getInt("deaths_diff");
+                        }
+                    } catch (Exception e){
+
+
+                    }
+                }
+                result1.put(simpleDateFormat.format(date), deaths);
+                deaths=0;
+            }}
+        result.setMap_cases(result1);
+
         return result;
     }
 
-    public Map<String, Integer> getStatsTotal_14days_country(String country) throws IOException, InterruptedException, ParseException{
+    public LineChartResult getDeaths_14days_country(String country) throws IOException, InterruptedException, ParseException{
+        Calendar cal = new GregorianCalendar();
+        LineChartResult result=new LineChartResult();
+        Map<String,Integer> result1=new HashMap();
+
+        Date date=null;
+        cal.add(Calendar.DAY_OF_MONTH, -1);
+        for(int j=0;j<14;j++){
+            cal.add(Calendar.DAY_OF_MONTH, -1);
+            date=cal.getTime();
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(DATA_URL_STATS+"?date="+simpleDateFormat.format(date)+"&region_name="+country))
+                    .header("accept","application/json")
+                    .header("x-rapidapi-key", "7b0e4f3eefmsh9a199e54efe9595p1f6669jsn29c7d74d3974")
+                    .header("x-rapidapi-host", "covid-19-statistics.p.rapidapi.com")
+                    .header("useQueryString", String.valueOf(true))
+                    .build();
+
+            HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            if(response.statusCode()==200){
+
+                String body=String.valueOf(response.body()).replace("\n","");
+                JSONObject obj = new JSONObject(body);
+                JSONArray data=obj.getJSONArray("data");
+                int deaths=0;
+                for(int i = 0 ; i < data.length() ; i++) {
+                    JSONObject row = data.getJSONObject(i);//getString("interestKey");
+
+                    try {
+                        if(row.getInt("deaths_diff")>0) {
+                            deaths+= row.getInt("deaths_diff");
+                        }
+                    } catch (Exception e){
+
+
+                    }
+                }
+                result1.put(simpleDateFormat.format(date), deaths);
+            }}
+        result.setMap_cases(result1);
+
+        return result;
+    }
+
+
+    public LineChartResult getDeaths_14days() throws IOException, InterruptedException, ParseException{
+        Calendar cal = new GregorianCalendar();
+        LineChartResult result=new LineChartResult();
+        Map<String,Integer> result1=new HashMap();
+        Date date=null;
+        cal.add(Calendar.DAY_OF_MONTH, -1);
+        for(int j=0;j<14;j++){
+            cal.add(Calendar.DAY_OF_MONTH, -1);
+            date=cal.getTime();
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(DATA_URL_TOTALS+"?date="+simpleDateFormat.format(date)))
+                    .header("accept","application/json")
+                    .header("x-rapidapi-key", "7b0e4f3eefmsh9a199e54efe9595p1f6669jsn29c7d74d3974")
+                    .header("x-rapidapi-host", "covid-19-statistics.p.rapidapi.com")
+                    .header("useQueryString", String.valueOf(true))
+                    .build();
+
+            HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            if(response.statusCode()==200){
+
+                String body=String.valueOf(response.body()).replace("\n","");
+                //body=body.replaceAll(" ","");
+                JSONObject obj = new JSONObject(body);
+                try {
+                    JSONObject data=obj.getJSONObject("data");
+                    if(data.getInt("confirmed_diff")>0) {
+                        result1.put(simpleDateFormat.format(date), data.getInt("deaths_diff"));
+                    }
+                    else{
+                        result1.put(simpleDateFormat.format(date),0);
+                    }
+                } catch (Exception e){
+                    result1.put(simpleDateFormat.format(date),0);
+
+                }
+
+            }}
+        result.setMap_cases(result1);
+
+        return result;
+    }
+
+    public LineChartResult getStatsTotal_14days_country(String country) throws IOException, InterruptedException, ParseException{
         Calendar cal = new GregorianCalendar();
 
-        Map<String,Integer> result=new HashMap();
         Date date=null;
+        LineChartResult result=new LineChartResult();
+        Map<String,Integer> result1=new HashMap();
+        Map<String,Double> result2=new HashMap();
+        cal.add(Calendar.DAY_OF_MONTH, -1);
         for(int j=0;j<14;j++){
             cal.add(Calendar.DAY_OF_MONTH, -1);
             date=cal.getTime();
@@ -960,6 +1434,7 @@ public class DataService {
                 String lastCountryDate="";
                 String lastCountryUpdated="";
                 int t_confirmed_diff=0;
+                int t_recovered_diff=0;
 
                 for(int i = 0 ; i < data.length() ; i++){
                     JSONObject row=data.getJSONObject(i);//getString("interestKey");
@@ -969,12 +1444,17 @@ public class DataService {
 
 
                         t_confirmed_diff+=row.getInt("confirmed_diff");
+                        t_recovered_diff+=row.getInt("recovered_diff");
                     } else {
 
                         if(lastCountry!=null){
 
-                            result.put(simpleDateFormat2.format(date),t_confirmed_diff);
-
+                            result1.put(simpleDateFormat2.format(date),t_confirmed_diff);
+                            if(t_recovered_diff==0) {
+                                result2.put(simpleDateFormat2.format(date),0.0);
+                            }else {
+                                result2.put(simpleDateFormat2.format(date), Math.round(t_confirmed_diff * 1.0 / t_recovered_diff * 100.0) / 100.0);
+                            }
                             try{
                                 lastCountry=new Region(regionJson.getString("name"),
                                         regionJson.getString("iso"),
@@ -993,6 +1473,7 @@ public class DataService {
                             lastCountryUpdated=row.getString("last_update");
 
                             t_confirmed_diff=row.getInt("confirmed_diff");
+                            t_recovered_diff=row.getInt("recovered_diff");
                         }
                         else{
                             try{
@@ -1012,22 +1493,31 @@ public class DataService {
                             lastCountryDate=row.getString("date");
                             lastCountryUpdated=row.getString("last_update");
                             t_confirmed_diff=row.getInt("confirmed_diff");
+                            t_recovered_diff=row.getInt("recovered_diff");
                         }
                     }
 
                 }
 
-                result.put(simpleDateFormat2.format(date),t_confirmed_diff);
-
+                result1.put(simpleDateFormat2.format(date),t_confirmed_diff);
+                if(t_recovered_diff==0) {
+                    result2.put(simpleDateFormat2.format(date),0.0);
+                }else {
+                    result2.put(simpleDateFormat2.format(date), Math.round(t_confirmed_diff * 1.0 / t_recovered_diff * 100.0) / 100.0);
+                }
             }
 
         }
+        result.setMap_cases(result1);
+        result.setMap_ratio(result2);
         return result;
     }
-    public Map<String, Integer> getStatsTotal_14days_continents(String continent) throws IOException, InterruptedException, ParseException{
+    public LineChartResult getStatsTotal_14days_continents(String continent) throws IOException, InterruptedException, ParseException{
         Calendar cal = new GregorianCalendar();
 
-        Map<String,Integer> result=new HashMap();
+        LineChartResult result=new LineChartResult();
+        Map<String,Integer> result1=new HashMap();
+        Map<String,Double> result2=new HashMap();
         Date date=null;
 
         String europe= "Albania;Andorra;Armenia;Austria;Azerbaijan;Belarus;Belgium;Bosnia and Herzegovina;Bulgaria;Croatia;Cyprus;Channel Islands;Czechia;Denmark;Estonia;Faroe Islands;Finland;France;Georgia;Germany;Gibraltar;Guernsey;Greece;Holy See;Hungary;Iceland;Ireland;Italy;Jersey;Kosovo;Latvia;Liechtenstein;Lithuania;Luxembourg;Mayotte;Malta;Moldova;MS Zaandam;Monaco;Montenegro;Netherlands;North Macedonia;Norway;Poland;Portugal;Romania;Russia;San Marino;Serbia;Slovakia;Slovenia;Spain;Sweden;Switzerland;Turkey;Ukraine;United Kingdom;";
@@ -1059,6 +1549,7 @@ public class DataService {
                 break;
 
         }
+        cal.add(Calendar.DAY_OF_MONTH, -1);
         for(int j=0;j<14;j++){
             cal.add(Calendar.DAY_OF_MONTH, -1);
             date=cal.getTime();
@@ -1084,7 +1575,8 @@ public class DataService {
                 JSONObject obj = new JSONObject(body);
                 JSONArray data=obj.getJSONArray("data");
                 int t_confirmed_diff=0;
-
+                int t_recovered_diff=0;
+                double ratio=0;
                 for(int i = 0 ; i < data.length() ; i++) {
                     JSONObject row = data.getJSONObject(i);//getString("interestKey");
                     JSONObject regionJson = row.getJSONObject("region");
@@ -1093,13 +1585,20 @@ public class DataService {
                         continue;
 
                     t_confirmed_diff += row.getInt("confirmed_diff");
-
+                    t_recovered_diff += row.getInt("recovered_diff");
                 }
-                result.put(simpleDateFormat2.format(date),t_confirmed_diff);
-
-            }
+                result1.put(simpleDateFormat2.format(date),t_confirmed_diff);
+                if(t_recovered_diff==0) {
+                    result2.put(simpleDateFormat2.format(date),0.0);
+                }else{
+                    result2.put(simpleDateFormat2.format(date),Math.round(t_confirmed_diff*1.0/t_recovered_diff*100.0)/100.0);
+                }
+             }
 
         }
+        result.setMap_cases(result1);
+        result.setMap_ratio(result2);
+
         return result;
     }
 
@@ -1145,20 +1644,21 @@ public class DataService {
                 if(row.getInt("confirmed")>max_stat){
                     max_stat=row.getInt("confirmed");
                 }
-                regionStats.add(new LocationStats(region,
-                        null,
-                        simpleDateFormat.parse(row.getString("date")),
-                        simpleDateFormatHours.parse(row.getString("last_update")),
-                        row.getInt("deaths"),
-                        row.getInt("confirmed"),
-                        row.getInt("recovered"),
-                        row.getInt("active"),
-                        row.getInt("active_diff"),
-                        row.getInt("deaths_diff"),
-                        row.getInt("confirmed_diff"),
-                        row.getInt("recovered_diff"),
-                        row.getDouble("fatality_rate")
-                ));
+
+//                regionStats.add(new LocationStats(region,
+//                        null,
+//                        simpleDateFormat.parse(row.getString("date")),
+//                        simpleDateFormatHours.parse(row.getString("last_update")),
+//                        row.getInt("deaths"),
+//                        row.getInt("confirmed"),
+//                        row.getInt("recovered"),
+//                        row.getInt("active"),
+//                        row.getInt("active_diff"),
+//                        row.getInt("deaths_diff"),
+//                        row.getInt("confirmed_diff"),
+//                        row.getInt("recovered_diff"),
+//                        row.getDouble("fatality_rate")
+//                ));
                 JSONArray cities=regionJson.getJSONArray("cities");
                 for(int j=0;j<cities.length();j++){
                     JSONObject row_city=cities.getJSONObject(j);
@@ -1172,20 +1672,20 @@ public class DataService {
                                 0,
                                 0);
                     }
-                    cityStats.add(new LocationStats(region,
-                            city,
-                            simpleDateFormat.parse(row_city.getString("date")),
-                            simpleDateFormatHours.parse(row_city.getString("last_update")),
-                            row_city.getInt("deaths"),
-                            row_city.getInt("confirmed"),
-                            0,//row_city.getInt("recovered"),
-                            0,//row_city.getInt("active"),
-                            0,//row_city.getInt("active_diff"),
-                            row_city.getInt("deaths_diff"),
-                            row_city.getInt("confirmed_diff"),
-                            0,//row_city.getInt("recovered_diff"),
-                            0//row_city.getDouble("fatality_rate")
-                    ));
+//                    cityStats.add(new LocationStats(region,
+//                            city,
+//                            simpleDateFormat.parse(row_city.getString("date")),
+//                            simpleDateFormatHours.parse(row_city.getString("last_update")),
+//                            row_city.getInt("deaths"),
+//                            row_city.getInt("confirmed"),
+//                            0,//row_city.getInt("recovered"),
+//                            0,//row_city.getInt("active"),
+//                            0,//row_city.getInt("active_diff"),
+//                            row_city.getInt("deaths_diff"),
+//                            row_city.getInt("confirmed_diff"),
+//                            0,//row_city.getInt("recovered_diff"),
+//                            0//row_city.getDouble("fatality_rate")
+//                    ));
                 }
                 //allStats.add(stat);
                 //System.out.println("a");
@@ -1248,4 +1748,27 @@ public class DataService {
         return regionStatsCountry;
     }
 
+    public String getContinentByCountry(String country){
+        String europe= "Albania;Andorra;Armenia;Austria;Azerbaijan;Belarus;Belgium;Bosnia and Herzegovina;Bulgaria;Croatia;Cyprus;Channel Islands;Czechia;Denmark;Estonia;Faroe Islands;Finland;France;Georgia;Germany;Gibraltar;Guernsey;Greece;Holy See;Hungary;Iceland;Ireland;Italy;Jersey;Kosovo;Latvia;Liechtenstein;Lithuania;Luxembourg;Mayotte;Malta;Moldova;MS Zaandam;Monaco;Montenegro;Netherlands;North Macedonia;Norway;Poland;Portugal;Romania;Russia;San Marino;Serbia;Slovakia;Slovenia;Spain;Sweden;Switzerland;Turkey;Ukraine;United Kingdom;";
+        String asia="Afghanistan;Bahrain;Bangladesh;Bhutan;Brunei;Burma;Cambodia;China;India;Indonesia;Iran;Iraq;Israel;West Bank and Gaza;Japan;Jordan;Kazakhstan;Korea, South;Kyrgyzstan;Kuwait;Laos;Lebanon;Malaysia;Macao SAR;Maldives;Mongolia;Nepal;Oman;Pakistan;Philippines;Qatar;Saudi Arabia;Singapore;Sri Lanka;Syria;Taiwan;Tajikistan;Thailand;Timor-Leste;Turkmenistan;Taipei and environs;United Arab Emirates;Uzbekistan;Vietnam;Yemen;";
+        String africa="Algeria;Angola;Benin;Botswana;Tanzania;Burkina Faso;Western Sahara;Burundi;Cabo Verde;Cameroon;Central African Republic;Comoros;Chad;Malawi;Sierra Leone;Sao Tome and Principe;Seychelles;Congo (Brazzaville);Congo (Kinshasa);Cote d'Ivoire;Djibouti;Egypt;Equatorial Guinea;Guinea;Guinea-Bissau;Eritrea;Eswatini;South Sudan;Reunion;Ethiopia;Gabon;Gambia;Ghana;Kenya;Liberia;Libya;Lesotho;Madagascar;Mali;Mauritania;Mauritius;Morocco;Mozambique;Namibia;Niger;Nigeria;Rwanda;Senegal;Somalia;South Africa;Sudan;Togo;Tunisia;Uganda;Zambia;Zimbabwe;";
+        String oceania="Australia;Fiji;Guam;New Zealand;Papua New Guinea;Kiribati;Marshall Islands;Solomon Islands;Vanuatu;";
+        String north_america="Antigua and Barbuda;Aruba;Bahamas;Barbados;Belize;Canada;Cayman Islands;Costa Rica;Cuba;Dominica;Dominican Republic;El Salvador;Greenland;Grenada;Guadeloupe;Guatemala;Haiti;Honduras;Jamaica;Martinique;Mexico;Nicaragua;Panama;Puerto Rico;Saint Kitts and Nevis;Saint Lucia;Saint Martin;Saint Vincent and the Grenadines;Saint Barthelemy;Trinidad and Tobago;US;";
+        String south_america="Argentina;Bolivia;Brazil;Chile;Colombia;Curacao;Ecuador;French Guiana;Guyana;Paraguay;Peru;Suriname;Uruguay;Venezuela;";
+
+        if (europe.contains(country+";"))
+            return "europe";
+        else if (asia.contains(country+";"))
+            return "asia";
+        else if (africa.contains(country+";"))
+            return "africa";
+        else if (oceania.contains(country+";"))
+            return "oceania";
+        else if (north_america.contains(country+";"))
+            return "north_america";
+        else if (south_america.contains(country+";"))
+            return "south_america";
+
+        return "continent_not_found";
+    }
 }

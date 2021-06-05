@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.json.*;
 
 import javax.annotation.PostConstruct;
-import java.io.IOException;
+import java.io.*;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -14,6 +14,7 @@ import java.net.http.HttpResponse;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class DataService {
@@ -36,6 +37,19 @@ public class DataService {
         return mTotals;
     }
 
+    final String TAG1="0001";
+    final String TAG2="0002";
+    final String TAG3="0003";
+    final String TAG4="0004";
+    final String TAG5="0005";
+    final String TAG6="0006";
+    final String TAG7="0007";
+    final String TAG8="0008";
+    final String TAG9="0009";
+    final String TAG10="0010";
+    final String TAG11="0011";
+    final String TAG12="0012";
+
     public List<LocationStats> getCityStats() {
         return cityStats;
     }
@@ -44,7 +58,7 @@ public class DataService {
     //"['1/3/2020', 106.4],"
     private SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("MM/dd/yyyy");
 
-    private SimpleDateFormat simpleDateFormatHours = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+    private SimpleDateFormat simpleDateFormatHours = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     private HashMap<String, Latlng> coords;
     private HashMap<String, Integer> population;
@@ -586,88 +600,331 @@ public class DataService {
         client = HttpClient.newHttpClient();
 
         try {
-            getTotals();
+            getData_void(10);
             //getStats();
-            getStatsCountry();
+            getData_void(9);
         } catch (ParseException e) {
             e.printStackTrace();
         }
 
-        // csv part --
-        //        StringReader csvBodyReader = new StringReader(response.body().toString());
-//
-//        //Iterable<CSVRecord> records = CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(csvBodyReader);
-//        Iterable<CSVRecord> records = CSVFormat.DEFAULT.parse(csvBodyReader);
-//        boolean headerRow = true;
-//        ArrayList<Date> dates=new ArrayList();
-//        SimpleDateFormat sdf=new SimpleDateFormat("MM/dd/yy");
-//        int start_index=-1;
-//        for (CSVRecord record : records) {
-//
-//            if (headerRow) {
-//                if (start_index==-1)
-//                    try{
-//                        //Date startDate=subtractDays(sdf.parse(record.get(4)),1);
-//                        Date startDate=sdf.parse(record.get(4));
-//
-//                        start_index=4+db_ops.getStartIndex(startDate);
-//                    }catch (ParseException pe){
-//                        System.out.println(pe.getMessage());
-//                    }
-//                for(int i=start_index;i<record.size();i++){
-//                    try{
-//                    dates.add(sdf.parse(record.get(i)));
-//                    }catch (Exception pe){
-//                        System.out.println("error on column "+(i+4)+" "+record.get(4+i));
-//                    }
-//                }
-//                headerRow = false;
-//                continue;
-//            } else {
-//                int value;
-//                for(int i=0;i<dates.size();i++){
-//                   if(start_index+i==0){
-//                       value=Integer.parseInt(record.get(4+0));
-//                   }
-//                   else{
-//                       value=Integer.parseInt(record.get(start_index+i))-Integer.parseInt(record.get(start_index+i-1));
-//                   }
-//                  db_ops.registerRow(record.get(mapping.get("Country/Region")),record.get(mapping.get("Province/State")),Double.parseDouble(record.get(mapping.get("Lat")).equals("")?"0":record.get(mapping.get("Lat"))),Double.parseDouble(record.get(mapping.get("Long")).equals("")?"0":record.get(mapping.get("Long"))),dates.get(i),value);
-//                }
-        //-- csv part
-                /*if (Integer.parseInt(record.get(record.size() - 1)) > max_stat) {
-                    max_stat = Integer.parseInt(record.get(record.size() - 1));
-                }
-                String state = record.get(mapping.get("Province/State"));
-                String country = record.get(mapping.get("Country/Region"));
-                LocationStats stat = new LocationStats(state, country);
-                stat.setLatestTotalCases(Integer.parseInt(record.get(record.size() - 1)));
-                stat.setDiffFromPreviousDay(Integer.parseInt(record.get(record.size() - 1)) - Integer.parseInt(record.get(record.size() - 2)));
-                try {
-                    stat.setLat(Double.parseDouble(record.get(mapping.get("Lat"))));
-                    stat.setLong(Double.parseDouble(record.get(mapping.get("Long"))));
-                } catch (Exception e) {
-                    System.out.println(record.get(mapping.get("Lat")));
-                    System.out.println(record.get(mapping.get("Long")));
-
-                }
-                newStats.add(stat);*/
-        //System.out.println(stat);
-        //}
-
-
-        //}
-
-
-
-
-        //this.allStats = db_ops.returnStats();
-        //max_stat=db_ops.getMax_stat();
-        //conf.disconnect();
-
-
-
     }
+
+    public List<LocationStats> getData_locstat_list(String parameter, int type)  throws IOException, InterruptedException, ParseException{
+
+            switch(type){
+            case 1:
+                if (getFromApi(TAG1+parameter)) {
+                return getStatsCountry_by_country(parameter);
+                }else{
+                    try{
+                    return  readFromCache_List(TAG1+parameter); //getStatsCountry_by_country(parameter);
+                }
+                catch (Exception e){
+                    return getStatsCountry_by_country(parameter);
+                }
+                }
+            case 2:
+                if (getFromApi(TAG2+parameter)) {
+                return getStatsCountry_by_continent(parameter);
+                }else{
+                    try{
+                    return readFromCache_List(TAG2+parameter);}
+                    catch (Exception e){
+                        return getStatsCountry_by_continent(parameter);
+                    }
+                }
+
+            }
+
+
+        return null;
+    }
+
+    public LineChartResult getData_lin_chart_data(String parameter, int type)  throws IOException, InterruptedException, ParseException{
+
+        switch(type){
+            case 3:
+                if(getFromApi(TAG3)){
+                return getStatsTotal_14days();
+                }else{
+                    try{
+                    return readFromCache_LineChart(TAG3);}
+                    catch (Exception e){
+                        return getStatsTotal_14days();
+                    }
+                }
+            case 4:
+                if(getFromApi(TAG4+parameter)){
+                return getDeaths_14days_continent(parameter);
+                }else{try{
+                    return readFromCache_LineChart(TAG4+parameter);}
+                catch (Exception e){
+                    return getDeaths_14days_continent(parameter);
+                }}
+            case 5:
+                if(getFromApi(TAG5+parameter)){
+                    return getDeaths_14days_country(parameter);
+                }else{try{
+                    return readFromCache_LineChart(TAG5+parameter);}
+                catch (Exception e){
+                    return getDeaths_14days_country(parameter);
+                }
+                }
+            case 6:
+                if(getFromApi(TAG6)){
+                    return getDeaths_14days();
+                }else{try{
+                    return readFromCache_LineChart(TAG6);}
+                catch (Exception e){
+                    return getDeaths_14days();
+                }
+                }
+
+            case 7:
+                if(getFromApi(TAG7+parameter)){
+                    return getStatsTotal_14days_country(parameter);
+                }else{try{
+                    return readFromCache_LineChart(TAG7+parameter);}
+                catch (Exception e){
+                    return getStatsTotal_14days_country(parameter);
+                }
+                }
+
+            case 8:
+                if(getFromApi(TAG8)){
+                    return getStatsTotal_14days_continents(parameter);
+                }else{try{
+                    return readFromCache_LineChart(TAG8+parameter);}
+                catch (Exception e){
+                    return getStatsTotal_14days_continents(parameter);
+                }
+                }
+
+        }
+        return null;
+    }
+    public void getData_void
+            (int type) throws InterruptedException, ParseException, IOException {
+
+            switch(type) {
+                case 9:
+                    if(getFromApi(TAG9)){
+                        getStatsCountry();
+                    }else{try{
+                        readMaxStat();
+                        regionStatsCountry=readFromCache_List(TAG9);}
+                        catch (Exception e){
+                            getStatsCountry();
+                        }
+                    }
+                    break;
+                case 10:
+                    if(getFromApi(TAG10)){
+                        getTotals();
+                    }else{
+                        try{
+                            readFromCache_Total(TAG10);}
+                        catch (Exception e){
+                            getTotals();
+                        }
+                    }
+                    break;
+            }
+        }
+
+    
+    private boolean getFromApi(String obj){
+        try {
+            Date date=readLastTimeFromMemory(obj);
+            Date currentDate=new Date();
+
+            return TimeUnit.MILLISECONDS.toMinutes(currentDate.getTime()-date.getTime())>15;
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return true;
+    }
+
+    private Date readLastTimeFromMemory(String obj) throws IOException, ParseException {
+        String fileName="lastReadfname_"+obj;
+        BufferedReader reader = new BufferedReader(new FileReader(fileName));
+        String currentLine = reader.readLine();
+        reader.close();
+        return simpleDateFormatHours.parse(currentLine);
+    }
+    private void readMaxStat() throws IOException, ParseException {
+        String fileName="max_stat";
+        BufferedReader reader = new BufferedReader(new FileReader(fileName));
+        String currentLine = reader.readLine();
+        reader.close();
+        max_stat=Integer.parseInt(currentLine);
+    }
+    private void writeLastTimeToMemory(String obj,Date date) throws IOException {
+        String fileName="lastReadfname_"+obj;
+        BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
+        writer.write(simpleDateFormatHours.format(date));
+
+        writer.close();
+    }
+    private void writeMaxStat() throws IOException {
+        String fileName="max_stat";
+        BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
+        writer.write(max_stat);
+
+        writer.close();
+    }
+
+
+    private void saveToCache(List<LocationStats> object,String filename){
+        FileOutputStream   fos  = null;
+        ObjectOutputStream oos  = null;
+
+        try {
+            fos = new FileOutputStream(filename);
+            oos = new ObjectOutputStream(fos);
+            oos.writeObject(object);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        finally {
+            try{
+            if (oos != null)   oos.close();
+            if (fos != null)   fos.close();
+            }catch (IOException io){
+
+            }
+        }
+    }
+
+    private void saveToCache(Totals object,String filename){
+        FileOutputStream   fos  = null;
+        ObjectOutputStream oos  = null;
+
+        try {
+            fos = new FileOutputStream(filename);
+            oos = new ObjectOutputStream(fos);
+            oos.writeObject(object);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        finally {
+            try{
+                if (oos != null)   oos.close();
+                if (fos != null)   fos.close();
+            }catch (IOException io){
+
+            }
+        }
+    }
+
+    private List<LocationStats> readFromCache_List(String filename){
+        FileInputStream   fis  = null;
+        ObjectInputStream  in  = null;
+        Object object=null;
+        try {
+            fis = new FileInputStream(filename);
+            in = new ObjectInputStream (fis);
+            object=in.readObject();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        finally {
+            try{
+                if (in != null)   in.close();
+                if (fis != null)   fis.close();
+            }catch (IOException io){
+
+            }
+        }
+        return (List<LocationStats>)object;
+    }
+
+    private void readFromCache_Total(String filename){
+        FileInputStream   fis  = null;
+        ObjectInputStream  in  = null;
+        Object object=null;
+        try {
+            fis = new FileInputStream(filename);
+            in = new ObjectInputStream (fis);
+            object=in.readObject();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        finally {
+            try{
+                if (in != null)   in.close();
+                if (fis != null)   fis.close();
+            }catch (IOException io){
+
+            }
+        }
+        mTotals= (Totals)object;
+    }
+
+
+    private LineChartResult readFromCache_LineChart(String filename){
+        FileInputStream   fis  = null;
+        ObjectInputStream  in  = null;
+        Object object=null;
+        try {
+            fis = new FileInputStream(filename);
+            in = new ObjectInputStream (fis);
+            object=in.readObject();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        finally {
+            try{
+                if (in != null)   in.close();
+                if (fis != null)   fis.close();
+            }catch (IOException io){
+
+            }
+        }
+        return (LineChartResult)object;
+    }
+
+    private void saveToCache(LineChartResult object, String filename){
+        FileOutputStream   fos  = null;
+        ObjectOutputStream oos  = null;
+
+        try {
+            fos = new FileOutputStream(filename);
+            oos = new ObjectOutputStream(fos);
+            oos.writeObject(object);
+        }
+        catch (Exception e)
+        {
+
+        }
+        finally {
+            try{
+                if (oos != null)   oos.close();
+                if (fos != null)   fos.close();
+            }catch (IOException io){
+
+            }
+        }
+    }
+
+//    private LineChartResult readFromCache_LineChartResult(){
+//
+//    }
+
+    //1
     public List<LocationStats> getStatsCountry_by_country(String country) throws IOException, InterruptedException, ParseException{
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(DATA_URL_STATS+"?region_name="+country))
@@ -800,32 +1057,35 @@ public class DataService {
                 }
 
             }
-            if(population.get(lastCountry.getName())==null || population.get(lastCountry.getName())==0)
-                cp1k=-88888;
-            else
-                cp1k=Math.round((t_confirmed*1.0/population.get(lastCountry.getName())*100000)*100.0)/100.0;
+            if(lastCountry!=null) {
+                if (population.get(lastCountry.getName()) == null || population.get(lastCountry.getName()) == 0)
+                    cp1k = -88888;
+                else
+                    cp1k = Math.round((t_confirmed * 1.0 / population.get(lastCountry.getName()) * 100000) * 100.0) / 100.0;
 
-            regionStats.add(new LocationStats(lastCountry,
-                    null,
-                    simpleDateFormat.parse(lastCountryDate),//row.getString("date")),
-                    simpleDateFormatHours.parse(lastCountryUpdated),//row.getString("last_update")),
-                    t_deaths,
-                    t_confirmed,
-                    t_recovered,
-                    t_active,
-                    t_active_diff,
-                    t_deaths_diff,
-                    t_confirmed_diff,
-                    t_recovered_diff,cp1k
-                    ,
-                    t_fatality_rate/regions_count
-            ));
+                regionStats.add(new LocationStats(lastCountry,
+                        null,
+                        simpleDateFormat.parse(lastCountryDate),//row.getString("date")),
+                        simpleDateFormatHours.parse(lastCountryUpdated),//row.getString("last_update")),
+                        t_deaths,
+                        t_confirmed,
+                        t_recovered,
+                        t_active,
+                        t_active_diff,
+                        t_deaths_diff,
+                        t_confirmed_diff,
+                        t_recovered_diff, cp1k
+                        ,
+                        t_fatality_rate / regions_count
+                ));
+            }
 
         }
+        saveToCache(regionStats,TAG1+country);
+        writeLastTimeToMemory(TAG1+country,new Date());
         return regionStats;
     }
-
-
+    //2
     public List<LocationStats> getStatsCountry_by_continent(String continent) throws IOException, InterruptedException, ParseException{
 
         String europe= "Albania;Andorra;Armenia;Austria;Azerbaijan;Belarus;Belgium;Bosnia and Herzegovina;Bulgaria;Croatia;Cyprus;Channel Islands;Czechia;Denmark;Estonia;Faroe Islands;Finland;France;Georgia;Germany;Gibraltar;Guernsey;Greece;Holy See;Hungary;Iceland;Ireland;Italy;Jersey;Kosovo;Latvia;Liechtenstein;Lithuania;Luxembourg;Mayotte;Malta;Moldova;MS Zaandam;Monaco;Montenegro;Netherlands;North Macedonia;Norway;Poland;Portugal;Romania;Russia;San Marino;Serbia;Slovakia;Slovenia;Spain;Sweden;Switzerland;Turkey;Ukraine;United Kingdom;";
@@ -1010,9 +1270,12 @@ public class DataService {
             ));
 
         }
+        saveToCache(regionStats,TAG2+continent);
+        writeLastTimeToMemory(TAG2+continent,new Date());
         return regionStats;
     }
 
+    //9
     private void getStatsCountry() throws IOException, InterruptedException, ParseException{
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(DATA_URL_STATS))
@@ -1165,8 +1428,12 @@ public class DataService {
             ));
 
         }
+        saveToCache(regionStatsCountry,TAG9);
+        writeMaxStat();
+        writeLastTimeToMemory(TAG9,new Date());
     }
 
+    //3
     public LineChartResult getStatsTotal_14days() throws IOException, InterruptedException, ParseException{
         Calendar cal = new GregorianCalendar();
         LineChartResult result=new LineChartResult();
@@ -1223,8 +1490,11 @@ public class DataService {
         result.setMap_cases(result1);
         result.setMap_ratio(result2);
 
+        saveToCache(result,TAG3);
+        writeLastTimeToMemory(TAG3,new Date());
         return result;
     }
+    //4
     public LineChartResult getDeaths_14days_continent(String continent) throws IOException, InterruptedException, ParseException{
         Calendar cal = new GregorianCalendar();
         LineChartResult result=new LineChartResult();
@@ -1301,10 +1571,11 @@ public class DataService {
                 deaths=0;
             }}
         result.setMap_cases(result1);
-
+        saveToCache(result,TAG4+continent);
+        writeLastTimeToMemory(TAG4+continent,new Date());
         return result;
     }
-
+    //5
     public LineChartResult getDeaths_14days_country(String country) throws IOException, InterruptedException, ParseException{
         Calendar cal = new GregorianCalendar();
         LineChartResult result=new LineChartResult();
@@ -1346,11 +1617,12 @@ public class DataService {
                 result1.put(simpleDateFormat.format(date), deaths);
             }}
         result.setMap_cases(result1);
-
+        saveToCache(result,TAG5+country);
+        writeLastTimeToMemory(TAG5+country,new Date());
         return result;
     }
 
-
+    //6
     public LineChartResult getDeaths_14days() throws IOException, InterruptedException, ParseException{
         Calendar cal = new GregorianCalendar();
         LineChartResult result=new LineChartResult();
@@ -1390,10 +1662,12 @@ public class DataService {
 
             }}
         result.setMap_cases(result1);
-
+        saveToCache(result,TAG6);
+        writeLastTimeToMemory(TAG6,new Date());
         return result;
     }
 
+    //7
     public LineChartResult getStatsTotal_14days_country(String country) throws IOException, InterruptedException, ParseException{
         Calendar cal = new GregorianCalendar();
 
@@ -1510,8 +1784,11 @@ public class DataService {
         }
         result.setMap_cases(result1);
         result.setMap_ratio(result2);
+        saveToCache(result,TAG7+country);
+        writeLastTimeToMemory(TAG7+country,new Date());
         return result;
     }
+    //8
     public LineChartResult getStatsTotal_14days_continents(String continent) throws IOException, InterruptedException, ParseException{
         Calendar cal = new GregorianCalendar();
 
@@ -1598,11 +1875,12 @@ public class DataService {
         }
         result.setMap_cases(result1);
         result.setMap_ratio(result2);
-
+        saveToCache(result,TAG8+continent);
+        writeLastTimeToMemory(TAG8+continent,new Date());
         return result;
     }
 
-
+    //--
     private void getStats() throws IOException, InterruptedException, ParseException{
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(DATA_URL_STATS))
@@ -1693,6 +1971,7 @@ public class DataService {
 
         }
     }
+    //10
     private void getTotals() throws IOException, InterruptedException, ParseException {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(DATA_URL_TOTALS))
@@ -1701,11 +1980,6 @@ public class DataService {
                 .header("x-rapidapi-host", "covid-19-statistics.p.rapidapi.com")
                 .header("useQueryString", String.valueOf(true))
                 .build();
-        /*mapping = new HashMap<String, Integer>();
-        mapping.put("Province/State",0);
-        mapping.put("Country/Region",1);
-        mapping.put("Lat",2);
-        mapping.put("Long",3);*/
 
         HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
         if(response.statusCode()==200){
@@ -1729,11 +2003,12 @@ public class DataService {
                     data.getInt("active"),
                     data.getInt("recovered")
             );
-            //  System.out.println("a");
         }
+        saveToCache(mTotals,TAG10);
+        writeLastTimeToMemory(TAG10,new Date());
     }
 
-
+    //--
     private static Date subtractDays(Date date, int days) {
         GregorianCalendar cal = new GregorianCalendar();
         cal.setTime(date);
@@ -1741,13 +2016,15 @@ public class DataService {
 
         return cal.getTime();
     }
+    //--
     public List<LocationStats> getRegionStats() {
         return regionStats;
     }
+    //--
     public List<LocationStats> getRegionStatsCountry() {
         return regionStatsCountry;
     }
-
+    //--
     public String getContinentByCountry(String country){
         String europe= "Albania;Andorra;Armenia;Austria;Azerbaijan;Belarus;Belgium;Bosnia and Herzegovina;Bulgaria;Croatia;Cyprus;Channel Islands;Czechia;Denmark;Estonia;Faroe Islands;Finland;France;Georgia;Germany;Gibraltar;Guernsey;Greece;Holy See;Hungary;Iceland;Ireland;Italy;Jersey;Kosovo;Latvia;Liechtenstein;Lithuania;Luxembourg;Mayotte;Malta;Moldova;MS Zaandam;Monaco;Montenegro;Netherlands;North Macedonia;Norway;Poland;Portugal;Romania;Russia;San Marino;Serbia;Slovakia;Slovenia;Spain;Sweden;Switzerland;Turkey;Ukraine;United Kingdom;";
         String asia="Afghanistan;Bahrain;Bangladesh;Bhutan;Brunei;Burma;Cambodia;China;India;Indonesia;Iran;Iraq;Israel;West Bank and Gaza;Japan;Jordan;Kazakhstan;Korea, South;Kyrgyzstan;Kuwait;Laos;Lebanon;Malaysia;Macao SAR;Maldives;Mongolia;Nepal;Oman;Pakistan;Philippines;Qatar;Saudi Arabia;Singapore;Sri Lanka;Syria;Taiwan;Tajikistan;Thailand;Timor-Leste;Turkmenistan;Taipei and environs;United Arab Emirates;Uzbekistan;Vietnam;Yemen;";

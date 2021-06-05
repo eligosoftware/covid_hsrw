@@ -29,7 +29,7 @@ public class RController {
                 country.equals("south_america")){
 
             try {
-                List<LocationStats> regionStats = covidDataService.getStatsCountry_by_continent(country);
+                List<LocationStats> regionStats = covidDataService.getData_locstat_list(country,2);//covidDataService.getStatsCountry_by_continent(country);
 
                 double fatality_rate=0;
                 int new_confirmed=0;
@@ -97,7 +97,7 @@ public class RController {
                 builder.append("]");//3
                 builder.append("},");//2
 
-                LineChartResult result = covidDataService.getStatsTotal_14days_continents(country);
+                LineChartResult result = covidDataService.getData_lin_chart_data(country,8);// covidDataService.getStatsTotal_14days_continents(country);
                 Map<String,Integer> hashmap=result.getMap_cases();
                 builder.append("\"chart2\":{");//2
                 builder.append("\"update\":true,");
@@ -173,7 +173,7 @@ public class RController {
                 builder.append("\"update\":true,");
                 builder.append("\"values\":[");//3
 
-                LineChartResult res2=covidDataService.getDeaths_14days_continent(country);
+                LineChartResult res2=covidDataService.getData_lin_chart_data(country,4);// covidDataService.getDeaths_14days_continent(country);
                 Map<String,Integer> map_deaths=res2.getMap_cases();
                 SortedSet<String> keys2 = new TreeSet<>(map_deaths.keySet());
                 for (String key : keys2) {
@@ -205,7 +205,7 @@ public class RController {
 
         String country_param=country.replace(" ","%20");
         try {
-            List<LocationStats> regionStats = covidDataService.getStatsCountry_by_country(country_param);
+            List<LocationStats> regionStats = covidDataService.getData_locstat_list(country_param,1); //covidDataService.getStatsCountry_by_country(country_param);
 
             LocationStats stat=regionStats.get(0);
             StringBuilder builder = new StringBuilder();
@@ -226,7 +226,7 @@ public class RController {
             builder.append("\"update\":true,");//dcdc
 
             String continent=covidDataService.getContinentByCountry(country);
-            List<LocationStats> regionStatsContinent = covidDataService.getStatsCountry_by_continent(continent);
+            List<LocationStats> regionStatsContinent =covidDataService.getData_locstat_list(continent,2);//  covidDataService.getStatsCountry_by_continent(continent);
 
             Collections.sort(regionStatsContinent, new Comparator<LocationStats>() {
                 @Override
@@ -255,7 +255,7 @@ public class RController {
             builder.append("]");//3
             builder.append("},");//2
 
-            LineChartResult result = covidDataService.getStatsTotal_14days_country(country.replace(" ","%20"));
+            LineChartResult result =covidDataService.getData_lin_chart_data(country.replace(" ","%20"),7); //covidDataService.getStatsTotal_14days_country(country.replace(" ","%20"));
             Map<String,Integer> hashmap =result.getMap_cases();
             builder.append("\"chart2\":{");//2
             builder.append("\"update\":true,");
@@ -332,7 +332,7 @@ public class RController {
             builder.append("\"update\":true,");
             builder.append("\"values\":[");//3
 
-            LineChartResult res2=covidDataService.getDeaths_14days_country(country.replace(" ","%20"));
+            LineChartResult res2=covidDataService.getData_lin_chart_data(country.replace(" ","%20"),5); //covidDataService.getDeaths_14days_country(country.replace(" ","%20"));
             Map<String,Integer> map_deaths=res2.getMap_cases();
             SortedSet<String> keys2 = new TreeSet<>(map_deaths.keySet());
             for (String key : keys2) {

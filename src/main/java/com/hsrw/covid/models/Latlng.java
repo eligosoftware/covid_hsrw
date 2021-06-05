@@ -1,6 +1,8 @@
 package com.hsrw.covid.models;
 
-public class Latlng {
+import java.io.Serializable;
+
+public class Latlng implements Serializable {
     private double lat;
     private double lon;
 

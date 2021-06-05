@@ -1,8 +1,9 @@
 package com.hsrw.covid.models;
 
+import java.io.Serializable;
 import java.util.Map;
 
-public class LineChartResult {
+public class LineChartResult implements Serializable {
     private Map<String,Integer> map_cases;
     private Map<String,Double> map_ratio;
 

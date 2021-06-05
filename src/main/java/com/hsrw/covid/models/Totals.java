@@ -1,8 +1,9 @@
 package com.hsrw.covid.models;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Totals {
+public class Totals implements Serializable {
     private Date forDate;
     private int newCases;
     private int newDeaths;

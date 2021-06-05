@@ -1,7 +1,9 @@
 package com.hsrw.covid.models;
 
 
-public class Region {
+import java.io.Serializable;
+
+public class Region implements Serializable {
     private String name;
     private String iso;
     private String province;

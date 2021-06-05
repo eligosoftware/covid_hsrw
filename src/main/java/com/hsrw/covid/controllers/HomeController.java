@@ -216,7 +216,8 @@ public class HomeController {
                         "text:'%value'" +
                         "}}," +
                         "points:[";
-        LineChartResult res2=covidDataService.getDeaths_14days();
+
+        LineChartResult res2=covidDataService.getData_lin_chart_data(null,6); //covidDataService.getDeaths_14days();
         Map<String,Integer> map_deaths=res2.getMap_cases();
             String daily_plots2="";
             // setting up iterator.
@@ -269,7 +270,7 @@ public class HomeController {
                             "{" +
                             "name: 'New Cases'," +
                             "points: [";
-            res=covidDataService.getStatsTotal_14days();
+            res=covidDataService.getData_lin_chart_data(null,3);//covidDataService.getStatsTotal_14days();
             Map<String, Integer> map=res.getMap_cases();
             String daily_plots="";
             // setting up iterator.

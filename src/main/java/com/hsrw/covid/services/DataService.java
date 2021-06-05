@@ -1078,7 +1078,8 @@ public class DataService {
                         ,
                         t_fatality_rate / regions_count
                 ));
-            }
+            } else
+                regionStats.add(null);
 
         }
         saveToCache(regionStats,TAG1+country);

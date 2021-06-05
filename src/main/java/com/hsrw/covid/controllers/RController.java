@@ -208,6 +208,10 @@ public class RController {
             List<LocationStats> regionStats = covidDataService.getData_locstat_list(country_param,1); //covidDataService.getStatsCountry_by_country(country_param);
 
             LocationStats stat=regionStats.get(0);
+
+            if(stat==null)
+                return "error";
+
             StringBuilder builder = new StringBuilder();
 
                 builder.append("{");

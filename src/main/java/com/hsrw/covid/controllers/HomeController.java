@@ -31,7 +31,7 @@ public class HomeController {
         ArrayList<String> outliers=new ArrayList<>();
 
         outliers.add("Negative number of confirmed cases found "
-                +" on 11/02/2020");
+                +" on 11/02/2020 (test message)");
 
        // config conf=config.newInstance();
         //conf.connect();

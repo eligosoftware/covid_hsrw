@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @RestController
@@ -20,7 +21,9 @@ public class RController {
 
     @PostMapping("/updateNumbers")
     public String updateNumbers(@RequestParam String country ){
+        ArrayList<String> outliers=new ArrayList<>();
 
+        SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("dd MMM, yyyy HH:mm:ss");
         if(country.equals("europe") ||
                 country.equals("asia") ||
                 country.equals("africa") ||
@@ -111,6 +114,13 @@ public class RController {
                     builder.append("\"key\":\""+key+"\",");
                     builder.append("\"value\": "+hashmap.get(key));
                     builder.append("},");//4
+
+                    if(hashmap.get(key)<0) {
+
+                        outliers.add("Negative number of confirmed cases found"
+                                +" on "+key);
+
+                    }
                 }
 
                 builder.append("]");//3
@@ -161,6 +171,10 @@ public class RController {
                     builder.append("\"key\":\""+key+"\",");
                     builder.append("\"value\": "+hashmap2.get(key));
                     builder.append("},");//4
+
+                    if(hashmap2.get(key)<0)
+                        outliers.add("Negative number of confirmed cases found"
+                                +" on "+key);
                 }
                 builder.setLength(builder.length() - 1);
                 builder.append("]");//3
@@ -182,12 +196,26 @@ public class RController {
                     builder.append("\"key\":\""+key+"\",");
                     builder.append("\"value\": "+map_deaths.get(key));
                     builder.append("},");//4
+                    if(map_deaths.get(key)<0) {
+                        outliers.add("Negative number of deaths found "
+                                +" on "+key);
+                    }
                 }
                 builder.setLength(builder.length() - 1);
                 builder.append("]");//3
-                builder.append("}");//2
+                builder.append("},");//2
 
+                builder.append("\"dataSource\":\""+(covidDataService.getReadFrom().equals("API")?"Read from the online resource":"Read from cache")+"\",");
+                builder.append("\"updatedAt\":\""+(covidDataService.getReadFrom().equals("API")?"Time: Now":"Time: "+simpleDateFormat2.format(covidDataService.getReadCashDate()))+"\",");
 
+                StringBuilder outlierSB=new StringBuilder();
+                for (String outlier:outliers){
+                    outlierSB.append("<div class=\"alert alert-danger alert-dismissible fade show\" role=\"alert\">"+
+                            outlier+
+                            "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">x</span></button></div>");
+                    outlierSB.append("<br/>");
+                }
+                builder.append("\"outliers\":\""+outlierSB.toString().replaceAll("\"","\\\\\"")+"\"");
 
                 builder.append("}");
 
@@ -274,6 +302,12 @@ public class RController {
                 builder.append("\"key\":\""+key+"\",");
                 builder.append("\"value\": "+hashmap.get(key));
                 builder.append("},");//4
+                if(hashmap.get(key)<0) {
+
+                    outliers.add("Negative number of confirmed cases found"
+                            +" on "+key);
+
+                }
             }
 
             builder.append("]");//3
@@ -324,6 +358,9 @@ public class RController {
                 builder.append("\"key\":\""+key+"\",");
                 builder.append("\"value\": "+hashmap2.get(key));
                 builder.append("},");//4
+                if(hashmap2.get(key)<0)
+                    outliers.add("Negative number of confirmed cases found"
+                            +" on "+key);
             }
             builder.setLength(builder.length() - 1);
             builder.append("]");//3
@@ -345,12 +382,26 @@ public class RController {
                 builder.append("\"key\":\""+key+"\",");
                 builder.append("\"value\": "+map_deaths.get(key));
                 builder.append("},");//4
+                if(map_deaths.get(key)<0) {
+                    outliers.add("Negative number of deaths found "
+                            +" on "+key);
+                }
             }
             builder.setLength(builder.length() - 1);
             builder.append("]");//3
-            builder.append("}");//2
+            builder.append("},");//2
 
+            builder.append("\"dataSource\":\""+(covidDataService.getReadFrom().equals("API")?"Read from the online resource":"Read from cache")+"\",");
+            builder.append("\"updatedAt\":\""+(covidDataService.getReadFrom().equals("API")?"Time: Now":"Time: "+simpleDateFormat2.format(covidDataService.getReadCashDate()))+"\",");
 
+            StringBuilder outlierSB=new StringBuilder();
+            for (String outlier:outliers){
+                outlierSB.append("<div class=\"alert alert-danger alert-dismissible fade show\" role=\"alert\">"+
+                        outlier+
+                        "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">x</span></button></div>");
+                outlierSB.append("<br/>");
+            }
+            builder.append("\"outliers\":\""+outlierSB.toString().replaceAll("\"","\\\\\"")+"\"");
 
             builder.append("}");
 
@@ -364,6 +415,346 @@ public class RController {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+        }
+
+
+        return "error";
+    }
+
+
+    @PostMapping("/updateDates")
+    public String updateDates(@RequestParam String start,@RequestParam String end ,String chartName,String country){
+
+        ArrayList<String> outliers=new ArrayList<>();
+
+        StringBuilder builder = new StringBuilder();
+        builder.append("{");//1
+        builder.append("\"chartName\":\""+chartName+"\",");//2
+        builder.append("\"values\":[");//3
+
+        if(country.equals("europe") ||
+                country.equals("asia") ||
+                country.equals("africa") ||
+                country.equals("oceania") ||
+                country.equals("north_america") ||
+                country.equals("south_america")){
+
+            LineChartResult result = null;// covidDataService.getStatsTotal_14days_continents(country);
+            try {
+                Map<String,Integer> hashmap1;
+                Map<String,Double> hashmap2;
+                if(chartName.equals("chartDiv2")) {
+
+                    result = covidDataService.getData_lin_chart_data_period(country, 12, start, end);
+                    hashmap1 = result.getMap_cases();
+                    SortedSet<String> keys = new TreeSet<>(hashmap1.keySet());
+                    for (String key : keys) {
+                        // do something
+                        builder.append("{");//4
+                        builder.append("\"key\":\""+key+"\",");
+                        builder.append("\"value\": "+hashmap1.get(key));
+                        builder.append("},");//4
+                        if(hashmap1.get(key)<0) {
+
+                            outliers.add("Negative number of confirmed cases found"
+                                    +" on "+key);
+                        }
+                    }
+                    builder.setLength(builder.length() - 1);
+                    builder.append("],");//3
+
+                    StringBuilder outlierSB=new StringBuilder();
+                    for (String outlier:outliers){
+                        outlierSB.append("<div class=\"alert alert-danger alert-dismissible fade show\" role=\"alert\">"+
+                                outlier+
+                                "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">x</span></button></div>");
+                        outlierSB.append("<br/>");
+                    }
+                    builder.append("\"outliers\":\""+outlierSB.toString().replaceAll("\"","\\\\\"")+"\"");
+
+
+                    builder.append("}");//3
+
+
+                    return builder.toString();
+                }
+                    else if(chartName.equals("chartDiv4")) {
+                    result = covidDataService.getData_lin_chart_data_period(country, 15, start, end);
+                    hashmap2 = result.getMap_ratio();
+
+                    SortedSet<String> keys = new TreeSet<>(hashmap2.keySet());
+                    for (String key : keys) {
+                        // do something
+                        builder.append("{");//4
+                        builder.append("\"key\":\""+key+"\",");
+                        builder.append("\"value\": "+hashmap2.get(key));
+                        builder.append("},");//4
+                        if(hashmap2.get(key)<0)
+                            outliers.add("Negative number of confirmed cases found"
+                                    +" on "+key);
+                    }
+                    builder.setLength(builder.length() - 1);
+                    builder.append("],");//3
+                    StringBuilder outlierSB=new StringBuilder();
+                    for (String outlier:outliers){
+                        outlierSB.append("<div class=\"alert alert-danger alert-dismissible fade show\" role=\"alert\">"+
+                                outlier+
+                                "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">x</span></button></div>");
+                        outlierSB.append("<br/>");
+                    }
+                    builder.append("\"outliers\":\""+outlierSB.toString().replaceAll("\"","\\\\\"")+"\"");
+                    builder.append("}");//3
+
+                    return builder.toString();
+                    }else if(chartName.equals("chartDiv5")) {
+                    result = covidDataService.getData_lin_chart_data_period(country, 18, start, end);
+                    hashmap1 = result.getMap_cases();
+                    SortedSet<String> keys = new TreeSet<>(hashmap1.keySet());
+                    for (String key : keys) {
+                        // do something
+                        builder.append("{");//4
+                        builder.append("\"key\":\""+key+"\",");
+                        builder.append("\"value\": "+hashmap1.get(key));
+                        builder.append("},");//4
+
+                        if(hashmap1.get(key)<0)
+                            outliers.add("Negative number of deaths found "
+                                    +" on "+key);
+                    }
+                    builder.setLength(builder.length() - 1);
+                    builder.append("],");//3
+
+                    StringBuilder outlierSB=new StringBuilder();
+                    for (String outlier:outliers){
+                        outlierSB.append("<div class=\"alert alert-danger alert-dismissible fade show\" role=\"alert\">"+
+                                outlier+
+                                "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">x</span></button></div>");
+                        outlierSB.append("<br/>");
+                    }
+                    builder.append("\"outliers\":\""+outlierSB.toString().replaceAll("\"","\\\\\"")+"\"");
+
+
+                    builder.append("}");//3
+
+                    return builder.toString();
+                    }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+        }
+        else if(country.equals("")){
+
+            LineChartResult result = null;// covidDataService.getStatsTotal_14days_continents(country);
+            try {
+                Map<String,Integer> hashmap1;
+                Map<String,Double> hashmap2;
+                if(chartName.equals("chartDiv2")) {
+                    result = covidDataService.getData_lin_chart_data_period(null, 11, start, end);
+                    hashmap1=result.getMap_cases();
+
+                    SortedSet<String> keys = new TreeSet<>(hashmap1.keySet());
+                    for (String key : keys) {
+                        // do something
+                        builder.append("{");//4
+                        builder.append("\"key\":\""+key+"\",");
+                        builder.append("\"value\": "+hashmap1.get(key));
+                        builder.append("},");//4
+
+                        if(hashmap1.get(key)<0)
+
+                            outliers.add("Negative number of confirmed cases found"
+                                    +" on "+key);
+                    }
+                    builder.setLength(builder.length() - 1);
+                    builder.append("],");//3
+                    StringBuilder outlierSB=new StringBuilder();
+                    for (String outlier:outliers){
+                        outlierSB.append("<div class=\"alert alert-danger alert-dismissible fade show\" role=\"alert\">"+
+                                outlier+
+                                "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">x</span></button></div>");
+                        outlierSB.append("<br/>");
+                    }
+                    builder.append("\"outliers\":\""+outlierSB.toString().replaceAll("\"","\\\\\"")+"\"");
+
+                    builder.append("}");//3
+                    return builder.toString();
+                }else if(chartName.equals("chartDiv4")) {
+                    result = covidDataService.getData_lin_chart_data_period(null, 14, start, end);
+                    hashmap2=result.getMap_ratio();
+                    SortedSet<String> keys = new TreeSet<>(hashmap2.keySet());
+                    for (String key : keys) {
+                        // do something
+                        builder.append("{");//4
+                        builder.append("\"key\":\""+key+"\",");
+                        builder.append("\"value\": "+hashmap2.get(key));
+                        builder.append("},");//4
+                        if(hashmap2.get(key)<0)
+                            outliers.add("Negative number of confirmed cases found"
+                                    +" on "+key);
+                    }
+                    builder.setLength(builder.length() - 1);
+                    builder.append("],");//3
+                    StringBuilder outlierSB=new StringBuilder();
+                    for (String outlier:outliers){
+                        outlierSB.append("<div class=\"alert alert-danger alert-dismissible fade show\" role=\"alert\">"+
+                                outlier+
+                                "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">x</span></button></div>");
+                        outlierSB.append("<br/>");
+                    }
+                    builder.append("\"outliers\":\""+outlierSB.toString().replaceAll("\"","\\\\\"")+"\"");
+
+                    builder.append("}");//3
+                    return builder.toString();
+                }else if(chartName.equals("chartDiv5")) {
+                    result = covidDataService.getData_lin_chart_data_period(null, 17, start, end);
+                    hashmap1=result.getMap_cases();
+                    SortedSet<String> keys = new TreeSet<>(hashmap1.keySet());
+                    for (String key : keys) {
+                        // do something
+                        builder.append("{");//4
+                        builder.append("\"key\":\""+key+"\",");
+                        builder.append("\"value\": "+hashmap1.get(key));
+                        builder.append("},");//4
+                        if(hashmap1.get(key)<0) {
+                            outliers.add("Negative number of deaths found "
+                                    +" on "+key);
+                        }
+                    }
+                    builder.setLength(builder.length() - 1);
+                    builder.append("],");//3
+
+                    StringBuilder outlierSB=new StringBuilder();
+                    for (String outlier:outliers){
+                        outlierSB.append("<div class=\"alert alert-danger alert-dismissible fade show\" role=\"alert\">"+
+                                outlier+
+                                "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">x</span></button></div>");
+                        outlierSB.append("<br/>");
+                    }
+                    builder.append("\"outliers\":\""+outlierSB.toString().replaceAll("\"","\\\\\"")+"\"");
+                    builder.append("}");//3
+                    return builder.toString();
+                }
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+        }
+        else {
+
+            LineChartResult result = null;// covidDataService.getStatsTotal_14days_continents(country);
+            try {
+                Map<String,Integer> hashmap1;
+                Map<String,Double> hashmap2;
+                if(chartName.equals("chartDiv2")) {
+
+                    result = covidDataService.getData_lin_chart_data_period(country, 13, start, end);
+                    hashmap1 = result.getMap_cases();
+                    SortedSet<String> keys = new TreeSet<>(hashmap1.keySet());
+                    for (String key : keys) {
+                        // do something
+                        builder.append("{");//4
+                        builder.append("\"key\":\""+key+"\",");
+                        builder.append("\"value\": "+hashmap1.get(key));
+                        builder.append("},");//4
+
+                        if(hashmap1.get(key)<0)
+
+                            outliers.add("Negative number of confirmed cases found"
+                                    +" on "+key);
+                    }
+                    builder.setLength(builder.length() - 1);
+                    builder.append("],");//3
+                    StringBuilder outlierSB=new StringBuilder();
+                    for (String outlier:outliers){
+                        outlierSB.append("<div class=\"alert alert-danger alert-dismissible fade show\" role=\"alert\">"+
+                                outlier+
+                                "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">x</span></button></div>");
+                        outlierSB.append("<br/>");
+
+                    }
+                    builder.append("\"outliers\":\""+outlierSB.toString().replaceAll("\"","\\\\\"")+"\"");
+                    builder.append("}");//3
+
+                    return builder.toString();
+                }
+                else if(chartName.equals("chartDiv4")) {
+                    result = covidDataService.getData_lin_chart_data_period(country, 16, start, end);
+                    hashmap2 = result.getMap_ratio();
+
+                    SortedSet<String> keys = new TreeSet<>(hashmap2.keySet());
+                    for (String key : keys) {
+                        // do something
+                        builder.append("{");//4
+                        builder.append("\"key\":\""+key+"\",");
+                        builder.append("\"value\": "+hashmap2.get(key));
+                        builder.append("},");//4
+                        if(hashmap2.get(key)<0)
+                            outliers.add("Negative number of confirmed cases found"
+                                    +" on "+key);
+                    }
+                    builder.setLength(builder.length() - 1);
+                    builder.append("],");//3
+                    StringBuilder outlierSB=new StringBuilder();
+                    for (String outlier:outliers){
+                        outlierSB.append("<div class=\"alert alert-danger alert-dismissible fade show\" role=\"alert\">"+
+                                outlier+
+                                "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">x</span></button></div>");
+                        outlierSB.append("<br/>");
+                    }
+                    builder.append("\"outliers\":\""+outlierSB.toString().replaceAll("\"","\\\\\"")+"\"");
+                    builder.append("}");//3
+
+                    return builder.toString();
+                }else if(chartName.equals("chartDiv5")) {
+                    result = covidDataService.getData_lin_chart_data_period(country, 19, start, end);
+                    hashmap1 = result.getMap_cases();
+                    SortedSet<String> keys = new TreeSet<>(hashmap1.keySet());
+                    for (String key : keys) {
+                        // do something
+                        builder.append("{");//4
+                        builder.append("\"key\":\""+key+"\",");
+                        builder.append("\"value\": "+hashmap1.get(key));
+                        builder.append("},");//4
+                        if(hashmap1.get(key)<0) {
+                            outliers.add("Negative number of deaths found "
+                                    +" on "+key);
+                    }
+                    builder.setLength(builder.length() - 1);
+                    builder.append("],");//3
+                    StringBuilder outlierSB=new StringBuilder();
+                    for (String outlier:outliers){
+                        outlierSB.append("<div class=\"alert alert-danger alert-dismissible fade show\" role=\"alert\">"+
+                                outlier+
+                                "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">x</span></button></div>");
+                        outlierSB.append("<br/>");
+                    }
+                    builder.append("\"outliers\":\""+outlierSB.toString().replaceAll("\"","\\\\\"")+"\"");
+                    builder.append("}");//3
+
+                    return builder.toString();
+                }
+
+            }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
         }
         return "error";
     }

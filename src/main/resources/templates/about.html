@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>About Page</title>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+      <script
+            src="https://code.jquery.com/jquery-3.6.0.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+            crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>
+
+    <link rel="shortcut icon" type="image/png" th:href="@{/img/favicon.png}"/>
+</head>
+<body>
+<nav class="navbar fixed-top  navbar-expand-sm bg-dark navbar-dark">
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/#map">Map</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/#stats">Statistics</a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" href="/#numbers">Numbers</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/#charts">Charts</a>
+        </li>
+        <li class="nav-item active">
+            <a class="nav-link" href="about">About</a>
+        </li>
+    </ul>
+    <span style="color: white">Support</span><a href = "mailto:covid.info.page2021@gmail.com"><img src="/img/email.jpg" width="30" height="30" style="background-color:#302e2e" alt="covid.info.page2021@gmail.com"></a>
+</nav>
+<div class="container">
+    <br/><br/><br/>
+    <div class="row">
+        <div class="col-md-6">
+    <h1>Data Source</h1>
+    <p>
+        The data about the numbers of the new confirmed cases, deaths, recpvered persons is get from the COVID-19 Statistics API. It is
+        the Coronavirus COVID-19 Statistics API Based on public data by Johns Hopkins CSSE. It includes search by country, province, and date. Returns diff for confirmed, deaths, and recovered, compared with the previous day. To learn more click
+        <a href="https://rapidapi.com/axisbits-axisbits-default/api/covid-19-statistics/">here</a>.
+    </p>
+    <p>The population of the countries was collected from <a href="https://www.worldometers.info/world-population/population-by-country/">Worldometers</a> website for 2021. This information was used for the per 100.000 population chart</p>
+
+    <h1>Used Libraries</h1>
+    <p>The Javascript library <a href="https://jscharting.com/">JS Charting</a> (free edition) was used for plotting.
+    </p>
+    <h1>Negative values</h1>
+    <p>The number of negative values was detected during testing. They were not hidden and data was not modified. The user is notified when a negative value is detected.
+    </p>
+    <h1>Information Caching</h1>
+    <p>The API renews data with some interval (unknown from the API documentation). To save time and not reach the same data every time,
+        all the information from the API is cached for 15 minutes. After this period, new data is fetched from the API server.
+    </p>
+</div>
+    </div>
+</div>
+</body><!-- Footer -->
+<footer class="text-center text-lg-start bg-dark text-muted">
+    <!-- Copyright -->
+    <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);">
+        © 2021 Copyright: COVID Info Portal<br/>
+        Support: <a href = "mailto:covid.info.page2021@gmail.com">covid.info.page2021@gmail.com</a>
+    </div>
+    <!-- Copyright -->
+</footer>
+<!-- Footer -->
+</html>

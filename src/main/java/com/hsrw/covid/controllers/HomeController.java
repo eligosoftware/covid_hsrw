@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Controller
@@ -22,11 +23,16 @@ public class HomeController {
     @Autowired
     DataService covidDataService;
 
-
-
+    private SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("dd MMM, yyyy HH:mm:ss");
 
     @GetMapping("/")
     public String home(Model model){
+
+        ArrayList<String> outliers=new ArrayList<>();
+
+        outliers.add("Negative number of confirmed cases found "
+                +" on 11/02/2020");
+
        // config conf=config.newInstance();
         //conf.connect();
         List<LocationStats> regionStats = covidDataService.getRegionStatsCountry();
@@ -226,7 +232,10 @@ public class HomeController {
                 daily_plots2+=
                         //"['1/2/2020', 71.5]," +
                 "{ name: '"+key+"', y: "+map_deaths.get(key)+" },";
-
+                if(map_deaths.get(key)<0) {
+                    outliers.add("Negative number of deaths found "
+                            +" on "+key);
+                }
                 // do something
             }
 
@@ -279,6 +288,12 @@ public class HomeController {
                 daily_plots+=
                         //"['1/2/2020', 71.5]," +
                         "['"+key+"', "+map.get(key)+"],";
+                if(map.get(key)<0) {
+
+                    outliers.add("Negative number of confirmed cases found"
+                            +" on "+key);
+
+                }
                 // do something
             }
 
@@ -333,6 +348,9 @@ public class HomeController {
                 daily_plots+=
                         //"['1/2/2020', 71.5]," +
                         "{ x: '"+key+"', y: "+map.get(key)+" },";
+                if(map.get(key)<0)
+                    outliers.add("Negative number of confirmed cases found"
+                            +" on "+key);
                 // do something
             }
 
@@ -346,9 +364,25 @@ public class HomeController {
             model.addAttribute("js_script4",js_script4);
 
 
+        model.addAttribute("dataSource",covidDataService.getReadFrom().equals("API")?"Read from the online resource":"Read from cache");
+        model.addAttribute("updatedAt",covidDataService.getReadFrom().equals("API")?"Time: Now":"Time: "+simpleDateFormat2.format(covidDataService.getReadCashDate()));
 
+
+        StringBuilder outlierSB=new StringBuilder();
+        for (String outlier:outliers){
+            outlierSB.append("<div class=\"alert alert-danger alert-dismissible fade show\" role=\"alert\">"+
+                    outlier+
+                    "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">x</span></button></div>");
+            outlierSB.append("<br/>");
+        }
+        model.addAttribute("outliers",outlierSB.toString());
 
        // conf.disconnect();
         return "home";
+    }
+
+    @GetMapping("/about")
+    public String about(){
+        return "about";
     }
 }

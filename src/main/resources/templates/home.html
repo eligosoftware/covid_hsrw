@@ -21,6 +21,11 @@
     <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>
 
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+
     <link rel="shortcut icon" type="image/png" th:href="@{/img/favicon.png}"/>
     <!--PLEASE NOTE: As of June 22 2016, Google Maps require an API key.
     * GET YOUR API KEY FROM ... https://developers.google.com/maps/documentation/javascript/get-api-key
@@ -70,7 +75,7 @@
 <nav class="navbar fixed-top  navbar-expand-sm bg-dark navbar-dark">
     <ul class="navbar-nav">
         <li class="nav-item active">
-            <a class="nav-link" href="/">Covid Home</a>
+            <a class="nav-link" href="/">Home</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="#map">Map</a>
@@ -85,7 +90,14 @@
         <li class="nav-item">
             <a class="nav-link" href="#charts">Charts</a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link" href="about">About</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="about">About</a>
+        </li>
     </ul>
+    <span style="color: white">Support</span><a href = "mailto:covid.info.page2021@gmail.com"><img src="/img/email.jpg" width="30" height="30" style="background-color:#302e2e" alt="covid.info.page2021@gmail.com"></a>
 </nav>
 
 <div class="container">
@@ -99,6 +111,7 @@
                     <span th:text="${totalNewCases}"></span>
                 </p>
 
+
             </div>
         </div>
     </div>
@@ -109,15 +122,15 @@
     <div class="row">
         <div class="col">
 
-        <select class="form-select"  aria-label="Default select example">
-        <option selected value="0">World</option>
-        <option value="1">Europe</option>
-        <option value="2">North America</option>
-        <option value="3">South America</option>
-        <option value="4">Asia</option>
-        <option value="5">Oceania</option>
-        <option value="6">Africa</option>
-        </select></div>
+            <select class="form-select"  aria-label="Default select example">
+                <option selected value="0">World</option>
+                <option value="1">Europe</option>
+                <option value="2">North America</option>
+                <option value="3">South America</option>
+                <option value="4">Asia</option>
+                <option value="5">Oceania</option>
+                <option value="6">Africa</option>
+            </select></div>
     </div>
     <div class="row">
         <div class="col">
@@ -131,167 +144,169 @@
     <div class="row">
 
         <div class="col">
-    <h1>Statistics</h1>
-    <table class="table table-striped table-bordered mydatatable">
-    <thead>
+            <h1>Statistics</h1>
+            <table class="table table-striped table-bordered mydatatable">
+                <thead>
 
-    <tr>
-        <th>Country</th>
-       <!-- <th>Province</th>-->
-        <!--  <th>City</th>>-->
-         <th>Total stats</th>
-         <th>New cases</th>
-     </tr>
-     </thead>
-     <tr th:each="locationStat : ${locationStats}">
-         <td th:text="${locationStat.region.name}"></td>
-         <!-- <td th:text="${locationStat.region.province}"></td>-->
-         <!-- <td th:text="${locationStat.city==null} ? '':${locationStat.city.name}"></td>-->
-         <td th:text="${locationStat.totalConfirmed}">0</td>
-         <td th:text="${locationStat.confirmed}">0</td>
-     </tr>
+                <tr>
+                    <th>Country</th>
+                    <!-- <th>Province</th>-->
+                    <!--  <th>City</th>>-->
+                    <th>Total stats</th>
+                    <th>New cases</th>
+                </tr>
+                </thead>
+                <tr th:each="locationStat : ${locationStats}">
+                    <td th:text="${locationStat.region.name}"></td>
+                    <!-- <td th:text="${locationStat.region.province}"></td>-->
+                    <!-- <td th:text="${locationStat.city==null} ? '':${locationStat.city.name}"></td>-->
+                    <td th:text="${locationStat.totalConfirmed}">0</td>
+                    <td th:text="${locationStat.confirmed}">0</td>
+                </tr>
 
-         <tfoot>
-         <tr>
-             <th>Country</th>
-             <!--<th>Province</th>-->
-             <!--<th>City</th>-->
-             <th>Total stats</th>
-             <th>New cases</th>
-         </tr>
-         </tfoot>
- </table>
- </div>
+                <tfoot>
+                <tr>
+                    <th>Country</th>
+                    <!--<th>Province</th>-->
+                    <!--<th>City</th>-->
+                    <th>Total stats</th>
+                    <th>New cases</th>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
 
-     </div>
-
-
-
-
-    <span id="numbers"></span>
-    <br/>
+    </div>
 
     <br/>
     <h1 id="numbers">Numbers</h1>
-<div class="row">
-    <div class="container">
-        <div class="col-md-6">
-            <div class="bg-light p-5 rounded-lg m-3">
+    <div class="row">
+        <div class="container">
+            <div class="col-md-6">
+                <div class="bg-light p-5 rounded-lg m-3">
 
-                <div>
-                    <input type="radio" id="world" name="type" value="1" checked>World
-                    <input type="radio" id="continents" name="type" value="2" >Continents
-                    <input type="radio" id="countries" name="type" value="3" >Countries<br/>
+                    <div>
+                        <input type="radio" id="world" name="type" value="1" checked>World
+                        <input type="radio" id="continents" name="type" value="2" >Continents
+                        <input type="radio" id="countries" name="type" value="3" >Countries<br/>
 
+                    </div>
+                    <div>
+                        <select id="describe">
+                        </select>
+                    </div>
+                    <h1 id="f_rate" class="display-4" th:text="${fatalityRate}"></h1>
+                    <p class="lead">Fatality rate</p>
+                    <p>
+                        <span id="dataSource" th:text="${dataSource}"></span><br>
+                        <span id="updatedAt" th:text="${updatedAt}"></span>
+                    </p>
                 </div>
-                <div>
-                    <select id="describe">
-                    </select>
+            </div>
+            <div id="outliers"></div>
+
+            <div class="card-deck">
+                <div class="card text-center">
+                    <div class="card-block text-light bg-primary">
+                        <h4 class="card-title">Last Day Cases</h4>
+                        <p id="new_cases" class="card-text">
+                            [[${new_cases}]]
+                        </p>
+                    </div>
                 </div>
-                <h1 id="f_rate" class="display-4" th:text="${fatalityRate}"></h1>
-                <p class="lead">Fatality rate</p>
+
+                <div class="card text-center">
+                    <div class="card-block text-light bg-dark">
+                        <h4 class="card-title">Last Day Deaths</h4>
+                        <p id="new_deaths" class="card-text">
+                            [[${new_deaths}]]
+                        </p>
+                    </div>
+                </div>
+
+                <div class="card text-center">
+                    <div class="card-block text-light bg-success">
+                        <h4 class="card-title">Last Day Recovered</h4>
+                        <p id="new_recovered" class="card-text">
+                            [[${new_recovered}]]
+                        </p>
+                    </div>
+                </div>
+
+                <div class="card text-center">
+                    <div class="card-block text-dark bg-warning">
+                        <h4 class="card-title">Last Day Active</h4>
+                        <p id="new_active" class="card-text">
+                            [[${new_active}]]&nbsp;&nbsp;&nbsp;&#8432;
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+            <div class="card-deck mt-5">
+                <div class="card text-center">
+                    <div class="card-block text-light bg-primary">
+                        <h4 class="card-title">Total Cases</h4>
+                        <p id="total_cases" class="card-text">
+                            [[${total_cases}]]
+                        </p>
+                    </div>
+                </div>
+
+                <div class="card text-center">
+                    <div class="card-block text-light bg-dark">
+                        <h4 class="card-title">Total Deaths</h4>
+                        <p id="total_deaths" class="card-text">
+                            [[${total_deaths}]]
+                        </p>
+                    </div>
+                </div>
+
+                <div class="card text-center">
+                    <div class="card-block text-light bg-success">
+                        <h4 class="card-title">Total Recovered</h4>
+                        <p id="total_recovered" class="card-text">
+                            [[${total_recovered}]]
+                        </p>
+                    </div>
+                </div>
+
+                <div class="card text-center">
+                    <div class="card-block text-dark bg-warning">
+                        <h4 class="card-title">Total Active</h4>
+                        <p id="total_active" class="card-text">
+                            [[${total_active}]]&nbsp;&nbsp;&nbsp;&#8432;
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="card-deck">
-            <div class="card text-center">
-                <div class="card-block text-light bg-primary">
-                    <h4 class="card-title">Last Day Cases</h4>
-                    <p id="new_cases" class="card-text">
-                        [[${new_cases}]]
-                    </p>
-                </div>
-            </div>
-
-            <div class="card text-center">
-                <div class="card-block text-light bg-dark">
-                    <h4 class="card-title">Last Day Deaths</h4>
-                    <p id="new_deaths" class="card-text">
-                        [[${new_deaths}]]
-                    </p>
-                </div>
-            </div>
-
-            <div class="card text-center">
-                <div class="card-block text-light bg-success">
-                    <h4 class="card-title">Last Day Recovered</h4>
-                    <p id="new_recovered" class="card-text">
-                        [[${new_recovered}]]
-                    </p>
-                </div>
-            </div>
-
-            <div class="card text-center">
-                <div class="card-block text-dark bg-warning">
-                    <h4 class="card-title">Last Day Active</h4>
-                    <p id="new_active" class="card-text">
-                        [[${new_active}]]&nbsp;&nbsp;&nbsp;&#8432;
-                    </p>
-                </div>
-            </div>
-
-        </div>
-        <div class="card-deck mt-5">
-            <div class="card text-center">
-                <div class="card-block text-light bg-primary">
-                    <h4 class="card-title">Total Cases</h4>
-                    <p id="total_cases" class="card-text">
-                        [[${total_cases}]]
-                    </p>
-                </div>
-            </div>
-
-            <div class="card text-center">
-                <div class="card-block text-light bg-dark">
-                    <h4 class="card-title">Total Deaths</h4>
-                    <p id="total_deaths" class="card-text">
-                        [[${total_deaths}]]
-                    </p>
-                </div>
-            </div>
-
-            <div class="card text-center">
-                <div class="card-block text-light bg-success">
-                    <h4 class="card-title">Total Recovered</h4>
-                    <p id="total_recovered" class="card-text">
-                        [[${total_recovered}]]
-                    </p>
-                </div>
-            </div>
-
-            <div class="card text-center">
-                <div class="card-block text-dark bg-warning">
-                    <h4 class="card-title">Total Active</h4>
-                    <p id="total_active" class="card-text">
-                        [[${total_active}]]&nbsp;&nbsp;&nbsp;&#8432;
-                    </p>
-                </div>
-            </div>
-        </div>
-</div>
-</div>
-<br/>
+    </div>
+    <br/>
     <span style="font-size:15px; font-style: italic;">&#8432; - the negative number means, that more people recovered than infected</span><br/>
     <span id="charts"></span>
     <br/>
 
     <br/>
     <h1>Charts</h1>
-<div class="row">
-    <div class="col-sm">
- <div id="chartDiv" style="max-width: 740px;height: 290px;margin: 0px auto">
-</div>
-    </div>
-    <div class="col-sm">
-    <div id="chartDiv2" style="max-width: 740px;height: 400px;margin: 0px auto">
-    </div>
-    </div>
-</div>
     <div class="row">
         <div class="col-sm">
-    <div id="chartDiv3" style="max-width: 740px;height: 400px;margin: 0px auto">
-    </div>
-    </div>
+            <div id="chartDiv" style="max-width: 740px;height: 290px;margin: 0px auto">
+            </div>
+        </div>
         <div class="col-sm">
+            <span>Selected dates: </span><input type="text" name="daterange" value="" />
+            <div id="chartDiv2" style="max-width: 740px;height: 400px;margin: 0px auto">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            <div id="chartDiv3" style="max-width: 740px;height: 400px;margin: 0px auto">
+            </div>
+        </div>
+        <div class="col-sm">
+            <span>Selected dates: </span><input type="text" name="daterange2" value="" />
             <div id="chartDiv4" style="max-width: 740px;height: 400px;margin: 0px auto">
             </div>
         </div>
@@ -299,11 +314,138 @@
     <br/>
     <div class="row">
         <div class="col-sm">
+            <span>Selected dates: </span><input type="text" name="daterange3" value="" />
             <div id="chartDiv5" style="max-width: 740px;height: 400px;margin: 0px auto">
             </div>
         </div>
     </div>
 </div>
+<script>
+function formatDate(date) {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2)
+        month = '0' + month;
+    if (day.length < 2)
+        day = '0' + day;
+
+    return [day, month, year].join('/');
+}
+$(function() {
+var start = moment().subtract(15, 'days');
+var end = moment().subtract(2,'days');
+
+ $('input[name="daterange"]').daterangepicker({
+    opens: 'left',
+    locale: {
+      format: 'DD/MM/YYYY'
+    },
+    startDate: start,
+    endDate: end,
+    maxDate: end
+  }, function(start, end, label) {
+		$.ajax({//1
+	url: '/updateDates',
+	method: 'post',
+	data: {country: selectedArea, start:moment(start).format('DD/MM/Y'), end:moment(end).format('DD/MM/Y'),chartName:'chartDiv2'},
+	success: function(data){//2
+
+        //console.log(data);
+        if (data!="error"){//3
+        var json_dat = JSON.parse(data);
+
+        var chart="var chart2 = JSC.chart('chartDiv2', {debug: true,type: 'line',title_label_text: 'New confirmed cases',legend_position: 'inside bottom right',toolbar_items: {'Line Type': {type: 'select',label_style_fontSize: 13,margin: 5,items: 'Line,Step,Spline',events_change: function(val) {chart2.series().options({ type: val });}}},xAxis: { scale_type: 'time' },series: [{name: 'New Cases',points: [";
+
+             for (i = 0; i < json_dat.values.length-1; i++) {//7
+                var region=json_dat.values[i];
+              chart += "['"+region.key+"',"+region.value+"],";
+              }//7
+               var region=json_dat.values[json_dat.values.length-1];
+              chart += "['"+region.key+"',"+region.value+"]";
+
+            chart+="]}]});";
+           eval(chart);
+           }
+	}
+    });
+});
+
+$('input[name="daterange2"]').daterangepicker({
+    opens: 'left',
+    locale: {
+      format: 'DD/MM/YYYY'
+    },
+    startDate: start,
+    endDate: end,
+    maxDate: end
+  }, function(start, end, label) {
+		$.ajax({//1
+	url: '/updateDates',
+	method: 'post',
+	data: {country: selectedArea, start:moment(start).format('DD/MM/Y'), end:moment(end).format('DD/MM/Y'),chartName:'chartDiv4'},
+	success: function(data){//2
+
+        //console.log(data);
+        if (data!="error"){//3
+        var json_dat = JSON.parse(data);
+
+             var chart="var chart4 = JSC.chart('chartDiv4', {debug: true,type: 'line',title_label_text: 'New Cases to Recovered Cases',legend_visible: false,xAxis_scale_type: 'time',yAxis_markers: [{ value: 1, color: 'red', label_text: 'The risk line' }],series: [{name: 'Value',palette: {pointValue: '%yValue',stops: [  [0, '%color', 0.7],[1, 'red']]},points: [";
+
+             for (i = 0; i < json_dat.values.length-1; i++) {//7
+                var region=json_dat.values[i];
+              chart += "['"+region.key+"',"+region.value+"],";
+              }//7
+               var region=json_dat.values[json_dat.values.length-1];
+              chart += "['"+region.key+"',"+region.value+"]";
+
+            chart+="]}]});";
+           eval(chart);
+           }
+	}
+    });
+});
+
+$('input[name="daterange3"]').daterangepicker({
+    opens: 'left',
+    locale: {
+      format: 'DD/MM/YYYY'
+    },
+    startDate: start,
+    endDate: end,
+    maxDate: end
+  }, function(start, end, label) {
+		$.ajax({//1
+	url: '/updateDates',
+	method: 'post',
+	data: {country: selectedArea, start:moment(start).format('DD/MM/Y'), end:moment(end).format('DD/MM/Y'),chartName:'chartDiv5'},
+	success: function(data){//2
+
+        //console.log(data);
+        if (data!="error"){//3
+        var json_dat = JSON.parse(data);
+
+           var chart="var chart5 = JSC.chart('chartDiv5', {debug: true,defaultSeries_type: 'column',title_label_text:'Death toll for the last 14 days',yAxis:{defaultTick_enabled:false,scale_range_padding:.15},legend_visible:false,toolbar_visible:false,series:[{name:'Number of deaths',color:'black',defaultPoint:{label:{text:'%value'}},points:[";
+
+             for (i = 0; i < json_dat.values.length-1; i++) {//7
+                var region=json_dat.values[i];
+              chart += "['"+region.key+"',"+region.value+"],";
+              }//7
+               var region=json_dat.values[json_dat.values.length-1];
+              chart += "['"+region.key+"',"+region.value+"]";
+
+            chart+="]}]});";
+            //console.log(js_chart5);
+           eval(chart);
+
+           }
+	}
+    });
+});
+});
+</script>
 <script>
   var listA = [{name:'Europe', value:'europe'}, {name:'North America', value:'north_america'},{name:'South America', value:'south_america'},{name:'Asia', value:'asia'}, {name:'Oceania', value:'oceania'}, {name:'Africa', value:'africa'}];
   var listB_europe =[{name:'Albania',value:'Albania'},{name:'Andorra',value:'Andorra'},{name:'Armenia',value:'Armenia'},{name:'Austria',value:'Austria'},{name:'Azerbaijan',value:'Azerbaijan'},{name:'Belarus',value:'Belarus'},{name:'Belgium',value:'Belgium'},{name:'Bosnia and Herzegovina',value:'Bosnia and Herzegovina'},{name:'Bulgaria',value:'Bulgaria'},{name:'Croatia',value:'Croatia'},{name:'Cyprus',value:'Cyprus'},{name:'Channel Islands',value:'Channel Islands'},{name:'Czechia',value:'Czechia'},{name:'Denmark',value:'Denmark'},{name:'Estonia',value:'Estonia'},{name:'Faroe Islands',value:'Faroe Islands'},{name:'Finland',value:'Finland'},{name:'France',value:'France'},{name:'Georgia',value:'Georgia'},{name:'Germany',value:'Germany'},{name:'Gibraltar',value:'Gibraltar'},{name:'Guernsey',value:'Guernsey'},{name:'Greece',value:'Greece'},{name:'Holy See',value:'Holy See'},{name:'Hungary',value:'Hungary'},{name:'Iceland',value:'Iceland'},{name:'Ireland',value:'Ireland'},{name:'Italy',value:'Italy'},{name:'Jersey',value:'Jersey'},{name:'Kosovo',value:'Kosovo'},{name:'Latvia',value:'Latvia'},{name:'Liechtenstein',value:'Liechtenstein'},{name:'Lithuania',value:'Lithuania'},{name:'Luxembourg',value:'Luxembourg'},{name:'Mayotte',value:'Mayotte'},{name:'Malta',value:'Malta'},{name:'Moldova',value:'Moldova'},{name:'MS Zaandam',value:'MS Zaandam'},{name:'Monaco',value:'Monaco'},{name:'Montenegro',value:'Montenegro'},{name:'Netherlands',value:'Netherlands'},{name:'North Macedonia',value:'North Macedonia'},{name:'Norway',value:'Norway'},{name:'Poland',value:'Poland'},{name:'Portugal',value:'Portugal'},{name:'Romania',value:'Romania'},{name:'Russia',value:'Russia'},{name:'San Marino',value:'San Marino'},{name:'Serbia',value:'Serbia'},{name:'Slovakia',value:'Slovakia'},{name:'Slovenia',value:'Slovenia'},{name:'Spain',value:'Spain'},{name:'Sweden',value:'Sweden'},{name:'Switzerland',value:'Switzerland'},{name:'Turkey',value:'Turkey'},{name:'Ukraine',value:'Ukraine'},{name:'United Kingdom',value:'United Kingdom'}];
@@ -314,7 +456,7 @@
   var listB_oceania =[{name:'Australia',value:'Australia'},{name:'Fiji',value:'Fiji'},{name:'Guam',value:'Guam'},{name:'New Zealand',value:'New Zealand'},{name:'Papua New Guinea',value:'Papua New Guinea'},{name:'Kiribati',value:'Kiribati'},{name:'Marshall Islands',value:'Marshall Islands'},{name:'Solomon Islands',value:'Solomon Islands'},{name:'Vanuatu',value:'Vanuatu'}];
 
 </script>
- <script>
+<script>
      $('.mydatatable').DataTable({
          order:[
              [0,'asc']
@@ -378,12 +520,15 @@ js_scr5=js_scr5.replaceAll("&gt;",">");
 eval(js_scr5);
 
 </script>
-
 <script>
-  $(document).ready( function() {
-
+    var selectedArea='';
+</script>
+<script>
+  $(document).ready(
+  function() {
   $('#describe').on('change', function() {
 
+    selectedArea=this.value;
     $("body").addClass("loading");
   $.ajax({//1
 	url: '/updateNumbers',
@@ -428,7 +573,7 @@ eval(js_scr5);
             }//4
             var chart2=obj.chart2;
             if(chart2.update){//6
-            var js_chart2="var chart2 = JSC.chart('chartDiv2', {debug: true,type: 'line',title_label_text: 'Line Series Types',legend_position: 'inside bottom right',toolbar_items: {'Line Type': {type: 'select',label_style_fontSize: 13,margin: 5,items: 'Line,Step,Spline',events_change: function(val) {chart2.series().options({ type: val });}}},xAxis: { scale_type: 'time' },series: [{name: 'New Cases',points: [";
+            var js_chart2="var chart2 = JSC.chart('chartDiv2', {debug: true,type: 'line',title_label_text: 'New confirmed cases',legend_position: 'inside bottom right',toolbar_items: {'Line Type': {type: 'select',label_style_fontSize: 13,margin: 5,items: 'Line,Step,Spline',events_change: function(val) {chart2.series().options({ type: val });}}},xAxis: { scale_type: 'time' },series: [{name: 'New Cases',points: [";
 
              for (i = 0; i < chart2.values.length-1; i++) {//7
                 var region=chart2.values[i];
@@ -489,6 +634,126 @@ var chart5=obj.chart5;
            eval(js_chart5);
         }//6
 
+        var dataSource=obj.dataSource;
+        var updatedAt=obj.updatedAt;
+
+        document.getElementById('dataSource').innerHTML=dataSource;
+        document.getElementById('updatedAt').innerHTML=updatedAt;
+
+ var outliers=obj.outliers;
+
+        document.getElementById("outliers").innerHTML=outliers;
+
+var start = moment().subtract(15, 'days');
+var end = moment().subtract(2,'days');
+
+ $('input[name="daterange"]').daterangepicker({
+    opens: 'left',
+    locale: {
+      format: 'DD/MM/YYYY'
+    },
+    startDate: start,
+    endDate: end,
+    maxDate: end
+  }, function(start, end, label) {
+		$.ajax({//1
+	url: '/updateDates',
+	method: 'post',
+	data: {country: selectedArea, start:moment(start).format('DD/MM/Y'), end:moment(end).format('DD/MM/Y'),chartName:'chartDiv2'},
+	success: function(data){//2
+
+        //console.log(data);
+        if (data!="error"){//3
+        var json_dat = JSON.parse(data);
+
+        var chart="var chart2 = JSC.chart('chartDiv2', {debug: true,type: 'line',title_label_text: 'New confirmed cases',legend_position: 'inside bottom right',toolbar_items: {'Line Type': {type: 'select',label_style_fontSize: 13,margin: 5,items: 'Line,Step,Spline',events_change: function(val) {chart2.series().options({ type: val });}}},xAxis: { scale_type: 'time' },series: [{name: 'New Cases',points: [";
+
+             for (i = 0; i < json_dat.values.length-1; i++) {//7
+                var region=json_dat.values[i];
+              chart += "['"+region.key+"',"+region.value+"],";
+              }//7
+               var region=json_dat.values[json_dat.values.length-1];
+              chart += "['"+region.key+"',"+region.value+"]";
+
+            chart+="]}]});";
+           eval(chart);
+           }
+	}
+    });
+});
+
+$('input[name="daterange2"]').daterangepicker({
+    opens: 'left',
+    locale: {
+      format: 'DD/MM/YYYY'
+    },
+    startDate: start,
+    endDate: end,
+    maxDate: end
+  }, function(start, end, label) {
+		$.ajax({//1
+	url: '/updateDates',
+	method: 'post',
+	data: {country: selectedArea, start:moment(start).format('DD/MM/Y'), end:moment(end).format('DD/MM/Y'),chartName:'chartDiv4'},
+	success: function(data){//2
+
+        //console.log(data);
+        if (data!="error"){//3
+        var json_dat = JSON.parse(data);
+
+             var chart="var chart4 = JSC.chart('chartDiv4', {debug: true,type: 'line',title_label_text: 'New Cases to Recovered Cases',legend_visible: false,xAxis_scale_type: 'time',yAxis_markers: [{ value: 1, color: 'red', label_text: 'The risk line' }],series: [{name: 'Value',palette: {pointValue: '%yValue',stops: [  [0, '%color', 0.7],[1, 'red']]},points: [";
+
+             for (i = 0; i < json_dat.values.length-1; i++) {//7
+                var region=json_dat.values[i];
+              chart += "['"+region.key+"',"+region.value+"],";
+              }//7
+               var region=json_dat.values[json_dat.values.length-1];
+              chart += "['"+region.key+"',"+region.value+"]";
+
+            chart+="]}]});";
+           eval(chart);
+           }
+	}
+    });
+});
+
+$('input[name="daterange3"]').daterangepicker({
+    opens: 'left',
+    locale: {
+      format: 'DD/MM/YYYY'
+    },
+    startDate: start,
+    endDate: end,
+    maxDate: end
+  }, function(start, end, label) {
+		$.ajax({//1
+	url: '/updateDates',
+	method: 'post',
+	data: {country: selectedArea, start:moment(start).format('DD/MM/Y'), end:moment(end).format('DD/MM/Y'),chartName:'chartDiv5'},
+	success: function(data){//2
+
+        //console.log(data);
+        if (data!="error"){//3
+        var json_dat = JSON.parse(data);
+
+           var chart="var chart5 = JSC.chart('chartDiv5', {debug: true,defaultSeries_type: 'column',title_label_text:'Death toll for the last 14 days',yAxis:{defaultTick_enabled:false,scale_range_padding:.15},legend_visible:false,toolbar_visible:false,series:[{name:'Number of deaths',color:'black',defaultPoint:{label:{text:'%value'}},points:[";
+
+             for (i = 0; i < json_dat.values.length-1; i++) {//7
+                var region=json_dat.values[i];
+              chart += "['"+region.key+"',"+region.value+"],";
+              }//7
+               var region=json_dat.values[json_dat.values.length-1];
+              chart += "['"+region.key+"',"+region.value+"]";
+
+            chart+="]}]});";
+            //console.log(js_chart5);
+           eval(chart);
+
+           }
+	}
+    });
+});
+
 		}//3
 
 		else{//8
@@ -502,6 +767,9 @@ var chart5=obj.chart5;
             document.getElementById('total_recovered').innerHTML="-";
             document.getElementById('total_active').innerHTML="-";
             document.getElementById('f_rate').innerHTML="-";
+
+            document.getElementById('dataSource').innerHTML="-";
+            document.getElementById('updatedAt').innerHTML="-";
 
 		}//8
 		$("body").removeClass("loading");
@@ -563,6 +831,13 @@ var chart5=obj.chart5;
         $('#describe').append('<option value="'+value.value+'">'+value.name+'</option>');
       });
     });
+
+ var outliers="[[${outliers}]]".replaceAll("&quot;","\"");
+  outliers=outliers.replaceAll("&lt;","<");
+  outliers=outliers.replaceAll("&gt;",">");
+
+        document.getElementById("outliers").innerHTML=outliers;
+
   });
 </script>
 <script>
@@ -600,7 +875,7 @@ $( "select" )
         map.setZoom(4);
   });
 </script>
- <script>
+<script>
      // LOCATION IN LATITUDE AND LONGITUDE.
      var center = new google.maps.LatLng(40.52, 34.34);
      var map;
@@ -727,6 +1002,15 @@ $( "select" )
 }
  </script>
 <div class="overlay"></div>
- </body>
-
- </html>
+</body>
+<!-- Footer -->
+<footer class="text-center text-lg-start bg-dark text-muted">
+    <!-- Copyright -->
+    <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);">
+        © 2021 Copyright: COVID Info Portal<br/>
+        Support: <a href = "mailto:covid.info.page2021@gmail.com">covid.info.page2021@gmail.com</a>
+    </div>
+    <!-- Copyright -->
+</footer>
+<!-- Footer -->
+</html>

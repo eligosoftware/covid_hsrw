@@ -1,7 +1,6 @@
 package com.hsrw.covid.services;
 
 import com.hsrw.covid.models.*;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.json.*;
 
@@ -19,6 +18,7 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class DataService {
 
+
     //public static String DATA_URL="https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv";
     //public static String DATA_URL="https://covid-19-statistics.p.rapidapi.com/reports";
     private static String DATA_URL_TOTALS ="https://covid-19-statistics.p.rapidapi.com/reports/total";
@@ -30,8 +30,22 @@ public class DataService {
 
     private int max_stat=0;
 
+
+
     private Totals mTotals;
     private HttpClient client;
+
+    public String getReadFrom() {
+        return readFrom;
+    }
+
+    private String readFrom;
+
+    public Date getReadCashDate() {
+        return readCashDate;
+    }
+
+    private Date readCashDate;
 
     public Totals getmTotals() {
         return mTotals;
@@ -49,6 +63,13 @@ public class DataService {
     final String TAG10="0010";
     final String TAG11="0011";
     final String TAG12="0012";
+    final String TAG13="0013";
+    final String TAG14="0014";
+    final String TAG15="0015";
+    final String TAG16="0016";
+    final String TAG17="0017";
+    final String TAG18="0018";
+    final String TAG19="0019";
 
     public List<LocationStats> getCityStats() {
         return cityStats;
@@ -65,6 +86,10 @@ public class DataService {
     public int getMax_stat() {
         return max_stat;
     }
+
+
+
+
 
     @PostConstruct
     //@Scheduled(cron = "* * 1 * * *")
@@ -614,22 +639,30 @@ public class DataService {
             switch(type){
             case 1:
                 if (getFromApi(TAG1+parameter)) {
+                    readFrom="API";
                 return getStatsCountry_by_country(parameter);
                 }else{
                     try{
+                        readFrom="Cache";
+                        readCashDate=readLastTimeFromMemory(TAG1+parameter);
                     return  readFromCache_List(TAG1+parameter); //getStatsCountry_by_country(parameter);
                 }
                 catch (Exception e){
+                    readFrom="API";
                     return getStatsCountry_by_country(parameter);
                 }
                 }
             case 2:
                 if (getFromApi(TAG2+parameter)) {
+                    readFrom="API";
                 return getStatsCountry_by_continent(parameter);
                 }else{
                     try{
+                        readFrom="Cache";
+                        readCashDate=readLastTimeFromMemory(TAG2+parameter);
                     return readFromCache_List(TAG2+parameter);}
                     catch (Exception e){
+                        readFrom="API";
                         return getStatsCountry_by_continent(parameter);
                     }
                 }
@@ -645,57 +678,81 @@ public class DataService {
         switch(type){
             case 3:
                 if(getFromApi(TAG3)){
+                    readFrom="API";
                 return getStatsTotal_14days();
                 }else{
                     try{
+                        readFrom="Cache";
+                        readCashDate=readLastTimeFromMemory(TAG3);
                     return readFromCache_LineChart(TAG3);}
                     catch (Exception e){
+                        readFrom="API";
                         return getStatsTotal_14days();
                     }
                 }
             case 4:
                 if(getFromApi(TAG4+parameter)){
+                    readFrom="API";
                 return getDeaths_14days_continent(parameter);
                 }else{try{
+                    readFrom="Cache";
+                    readCashDate=readLastTimeFromMemory(TAG4+parameter);
                     return readFromCache_LineChart(TAG4+parameter);}
                 catch (Exception e){
+                    readFrom="API";
                     return getDeaths_14days_continent(parameter);
                 }}
             case 5:
                 if(getFromApi(TAG5+parameter)){
+                    readFrom="API";
                     return getDeaths_14days_country(parameter);
                 }else{try{
+                    readFrom="Cache";
+                    readCashDate=readLastTimeFromMemory(TAG5+parameter);
                     return readFromCache_LineChart(TAG5+parameter);}
                 catch (Exception e){
+                    readFrom="API";
                     return getDeaths_14days_country(parameter);
                 }
                 }
             case 6:
                 if(getFromApi(TAG6)){
+                    readFrom="API";
                     return getDeaths_14days();
                 }else{try{
+                    readFrom="Cache";
+                    readCashDate=readLastTimeFromMemory(TAG6);
                     return readFromCache_LineChart(TAG6);}
                 catch (Exception e){
+                    readFrom="API";
                     return getDeaths_14days();
                 }
                 }
 
             case 7:
                 if(getFromApi(TAG7+parameter)){
+                    readFrom="API";
                     return getStatsTotal_14days_country(parameter);
                 }else{try{
+                    readFrom="Cache";
+                    readCashDate=readLastTimeFromMemory(TAG7+parameter);
                     return readFromCache_LineChart(TAG7+parameter);}
                 catch (Exception e){
+                    readFrom="API";
                     return getStatsTotal_14days_country(parameter);
                 }
                 }
 
             case 8:
-                if(getFromApi(TAG8)){
+                if(getFromApi(TAG8+parameter)){
+                    readFrom="API";
                     return getStatsTotal_14days_continents(parameter);
                 }else{try{
+                    readFrom="Cache";
+                    readCashDate=readLastTimeFromMemory(TAG8+parameter);
                     return readFromCache_LineChart(TAG8+parameter);}
                 catch (Exception e){
+                    readFrom="API";
                     return getStatsTotal_14days_continents(parameter);
                 }
                 }
@@ -703,28 +760,510 @@ public class DataService {
         }
         return null;
     }
+
+    public LineChartResult getData_lin_chart_data_period(String parameter, int type,String start, String end)  throws IOException, InterruptedException, ParseException{
+
+        switch(type){
+            case 11:
+                if(getFromApi(TAG11+start.replaceAll("/","-")+end.replaceAll("/","-"))){
+                    readFrom="API";
+                    return getStatsTotal_period(start,end);
+                }else{
+                    try{
+                        readFrom="Cache";
+                        readCashDate=readLastTimeFromMemory(TAG11+start.replaceAll("/","-")+end.replaceAll("/","-"));
+                        return readFromCache_LineChart(TAG11+start.replaceAll("/","-")+end.replaceAll("/","-"));}
+                    catch (Exception e){
+                        readFrom="API";
+                        return getStatsTotal_period(start,end);
+                    }
+                }
+            case 12:
+                if(getFromApi(TAG12+parameter+start.replaceAll("/","-")+end.replaceAll("/","-"))){
+                    readFrom="API";
+                    return getStatsTotal_period_continents(parameter,start,end);
+                }else{try{
+                    readFrom="Cache";
+                    readCashDate=readLastTimeFromMemory(TAG12+parameter+start.replaceAll("/","-")+end.replaceAll("/","-"));
+                    return readFromCache_LineChart(TAG12+parameter+start.replaceAll("/","-")+end.replaceAll("/","-"));}
+                catch (Exception e){
+                    readFrom="API";
+                    return getStatsTotal_period_continents(parameter,start,end);
+                }}
+            case 13:
+                if(getFromApi(TAG13+parameter+start.replaceAll("/","-")+end.replaceAll("/","-"))){
+                    readFrom="API";
+                    return getStatsTotal_period_country(parameter,start,end);
+                }else{try{
+                    readFrom="Cache";
+                    readCashDate=readLastTimeFromMemory(TAG13+parameter+start.replaceAll("/","-")+end.replaceAll("/","-"));
+                    return readFromCache_LineChart(TAG13+parameter+start.replaceAll("/","-")+end.replaceAll("/","-"));}
+                catch (Exception e){
+                    readFrom="API";
+                    return getStatsTotal_period_country(parameter,start,end);
+                }
+                }
+
+            case 14:
+                if(getFromApi(TAG14+start.replaceAll("/","-")+end.replaceAll("/","-"))){
+                    readFrom="API";
+                    return getStatsTotal_period_new_rec(start,end);
+                }else{
+                    try{
+                        readFrom="Cache";
+                        readCashDate=readLastTimeFromMemory(TAG14+start.replaceAll("/","-")+end.replaceAll("/","-"));
+                        return readFromCache_LineChart(TAG14+start.replaceAll("/","-")+end.replaceAll("/","-"));}
+                    catch (Exception e){
+                        readFrom="API";
+                        return getStatsTotal_period_new_rec(start,end);
+                    }
+                }
+
+                case 15:
+                    if(getFromApi(TAG15+parameter+start.replaceAll("/","-")+end.replaceAll("/","-"))){
+                        readFrom="API";
+                        return getStatsTotal_period_continents_new_rec(parameter,start,end);
+                    }else{try{
+                        readFrom="Cache";
+                        readCashDate=readLastTimeFromMemory(TAG15+parameter+start.replaceAll("/","-")+end.replaceAll("/","-"));
+                        return readFromCache_LineChart(TAG15+parameter+start.replaceAll("/","-")+end.replaceAll("/","-"));}
+                    catch (Exception e){
+                        readFrom="API";
+                        return getStatsTotal_period_continents_new_rec(parameter,start,end);
+                    }}
+                case 16:
+                    if(getFromApi(TAG16+parameter+start.replaceAll("/","-")+end.replaceAll("/","-"))){
+                        readFrom="API";
+                        return getStatsTotal_period_country_new_rec(parameter,start,end);
+                    }else{try{
+                        readFrom="Cache";
+                        readCashDate=readLastTimeFromMemory(TAG16+parameter+start.replaceAll("/","-")+end.replaceAll("/","-"));
+                        return readFromCache_LineChart(TAG16+parameter+start.replaceAll("/","-")+end.replaceAll("/","-"));}
+                    catch (Exception e){
+                        readFrom="API";
+                        return getStatsTotal_period_country_new_rec(parameter,start,end);
+                    }
+                    }
+                    case 17:
+                if(getFromApi(TAG17+parameter+start.replaceAll("/","-")+end.replaceAll("/","-"))){
+                    readFrom="API";
+                    return getDeaths_period(start,end);
+                }else{try{
+                    readFrom="Cache";
+                    readCashDate=readLastTimeFromMemory(TAG17+parameter+start.replaceAll("/","-")+end.replaceAll("/","-"));
+                    return readFromCache_LineChart(TAG17+parameter+start.replaceAll("/","-")+end.replaceAll("/","-"));}
+                catch (Exception e){
+                    readFrom="API";
+                    return getDeaths_period(start,end);
+                }
+                }case 18:
+                if(getFromApi(TAG18+parameter+start.replaceAll("/","-")+end.replaceAll("/","-"))){
+                    readFrom="API";
+                    return getDeaths_period_continents(parameter,start,end);
+                }else{try{
+                    readFrom="Cache";
+                    readCashDate=readLastTimeFromMemory(TAG18+parameter+start.replaceAll("/","-")+end.replaceAll("/","-"));
+                    return readFromCache_LineChart(TAG18+parameter+start.replaceAll("/","-")+end.replaceAll("/","-"));}
+                catch (Exception e){
+                    readFrom="API";
+                    return getDeaths_period_continents(parameter,start,end);
+                }}
+                case 19:
+                    if(getFromApi(TAG19+parameter+start.replaceAll("/","-")+end.replaceAll("/","-"))){
+                        readFrom="API";
+                        return getDeaths_period_country(parameter,start,end);
+                    }else{try{
+                        readFrom="Cache";
+                        readCashDate=readLastTimeFromMemory(TAG19+parameter+start.replaceAll("/","-")+end.replaceAll("/","-"));
+                        return readFromCache_LineChart(TAG19+parameter+start.replaceAll("/","-")+end.replaceAll("/","-"));}
+                    catch (Exception e){
+                        readFrom="API";
+                        return getDeaths_period_country(parameter,start,end);
+                    }
+                    }
+
+        }
+        return null;
+    }
+
+    public LineChartResult getDeaths_period_continents(String continent,String start, String end) throws IOException, InterruptedException, ParseException{
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        cal.setTime(sdf.parse(start));
+
+        Date endDate=sdf.parse(end);
+
+        LineChartResult result=new LineChartResult();
+        Map<String,Integer> result1=new HashMap();
+
+
+        String europe= "Albania;Andorra;Armenia;Austria;Azerbaijan;Belarus;Belgium;Bosnia and Herzegovina;Bulgaria;Croatia;Cyprus;Channel Islands;Czechia;Denmark;Estonia;Faroe Islands;Finland;France;Georgia;Germany;Gibraltar;Guernsey;Greece;Holy See;Hungary;Iceland;Ireland;Italy;Jersey;Kosovo;Latvia;Liechtenstein;Lithuania;Luxembourg;Mayotte;Malta;Moldova;MS Zaandam;Monaco;Montenegro;Netherlands;North Macedonia;Norway;Poland;Portugal;Romania;Russia;San Marino;Serbia;Slovakia;Slovenia;Spain;Sweden;Switzerland;Turkey;Ukraine;United Kingdom;";
+        String asia="Afghanistan;Bahrain;Bangladesh;Bhutan;Brunei;Burma;Cambodia;China;India;Indonesia;Iran;Iraq;Israel;West Bank and Gaza;Japan;Jordan;Kazakhstan;Korea, South;Kyrgyzstan;Kuwait;Laos;Lebanon;Malaysia;Macao SAR;Maldives;Mongolia;Nepal;Oman;Pakistan;Philippines;Qatar;Saudi Arabia;Singapore;Sri Lanka;Syria;Taiwan;Tajikistan;Thailand;Timor-Leste;Turkmenistan;Taipei and environs;United Arab Emirates;Uzbekistan;Vietnam;Yemen;";
+        String africa="Algeria;Angola;Benin;Botswana;Tanzania;Burkina Faso;Western Sahara;Burundi;Cabo Verde;Cameroon;Central African Republic;Comoros;Chad;Malawi;Sierra Leone;Sao Tome and Principe;Seychelles;Congo (Brazzaville);Congo (Kinshasa);Cote d'Ivoire;Djibouti;Egypt;Equatorial Guinea;Guinea;Guinea-Bissau;Eritrea;Eswatini;South Sudan;Reunion;Ethiopia;Gabon;Gambia;Ghana;Kenya;Liberia;Libya;Lesotho;Madagascar;Mali;Mauritania;Mauritius;Morocco;Mozambique;Namibia;Niger;Nigeria;Rwanda;Senegal;Somalia;South Africa;Sudan;Togo;Tunisia;Uganda;Zambia;Zimbabwe;";
+        String oceania="Australia;Fiji;Guam;New Zealand;Papua New Guinea;Kiribati;Marshall Islands;Solomon Islands;Vanuatu;";
+        String north_america="Antigua and Barbuda;Aruba;Bahamas;Barbados;Belize;Canada;Cayman Islands;Costa Rica;Cuba;Dominica;Dominican Republic;El Salvador;Greenland;Grenada;Guadeloupe;Guatemala;Haiti;Honduras;Jamaica;Martinique;Mexico;Nicaragua;Panama;Puerto Rico;Saint Kitts and Nevis;Saint Lucia;Saint Martin;Saint Vincent and the Grenadines;Saint Barthelemy;Trinidad and Tobago;US;";
+        String south_america="Argentina;Bolivia;Brazil;Chile;Colombia;Curacao;Ecuador;French Guiana;Guyana;Paraguay;Peru;Suriname;Uruguay;Venezuela;";
+
+        String selected_continent="";
+        switch (continent){
+            case "europe":
+                selected_continent=europe;
+                break;
+            case "asia":
+                selected_continent=asia;
+                break;
+            case "africa":
+                selected_continent=africa;
+                break;
+            case "oceania":
+                selected_continent=oceania;
+                break;
+            case "north_america":
+                selected_continent=north_america;
+                break;
+            case "south_america":
+                selected_continent=south_america;
+                break;
+
+        }
+
+
+        while(endDate.compareTo(cal.getTime())>=0){
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(DATA_URL_STATS+"?date="+simpleDateFormat.format(cal.getTime())))
+                    .header("accept","application/json")
+                    .header("x-rapidapi-key", "7b0e4f3eefmsh9a199e54efe9595p1f6669jsn29c7d74d3974")
+                    .header("x-rapidapi-host", "covid-19-statistics.p.rapidapi.com")
+                    .header("useQueryString", String.valueOf(true))
+                    .build();
+
+            HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            if(response.statusCode()==200){
+
+                String body=String.valueOf(response.body()).replace("\n","");
+                JSONObject obj = new JSONObject(body);
+                JSONArray data=obj.getJSONArray("data");
+                int deaths=0;
+                for(int i = 0 ; i < data.length() ; i++) {
+                    JSONObject row = data.getJSONObject(i);//getString("interestKey");
+                    JSONObject regionJson = row.getJSONObject("region");
+
+                    if (!selected_continent.contains(regionJson.getString("name") + ";"))
+                        continue;
+                    try {
+                        deaths+= row.getInt("deaths_diff");
+
+                    } catch (Exception e){
+
+
+                    }
+                }
+                result1.put(simpleDateFormat.format(cal.getTime()), deaths);
+                deaths=0;
+            }
+            cal.add(Calendar.DATE,1);
+        }
+        result.setMap_cases(result1);
+        saveToCache(result,TAG18+continent+start.replaceAll("/","-")+end.replaceAll("/","-"));
+        writeLastTimeToMemory(TAG18+continent+start.replaceAll("/","-")+end.replaceAll("/","-"),new Date());
+        return result;
+    }
+
+    public LineChartResult getDeaths_period_country(String country,String start, String end) throws IOException, InterruptedException, ParseException{
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        cal.setTime(sdf.parse(start));
+
+        Date endDate=sdf.parse(end);
+
+        LineChartResult result=new LineChartResult();
+        Map<String,Integer> result1=new HashMap();
+
+
+        while(endDate.compareTo(cal.getTime())>=0){
+
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(DATA_URL_STATS+"?date="+simpleDateFormat.format(cal.getTime())+"&region_name="+country))
+                    .header("accept","application/json")
+                    .header("x-rapidapi-key", "7b0e4f3eefmsh9a199e54efe9595p1f6669jsn29c7d74d3974")
+                    .header("x-rapidapi-host", "covid-19-statistics.p.rapidapi.com")
+                    .header("useQueryString", String.valueOf(true))
+                    .build();
+
+            HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            if(response.statusCode()==200){
+
+                String body=String.valueOf(response.body()).replace("\n","");
+                JSONObject obj = new JSONObject(body);
+                JSONArray data=obj.getJSONArray("data");
+                int deaths=0;
+                for(int i = 0 ; i < data.length() ; i++) {
+                    JSONObject row = data.getJSONObject(i);//getString("interestKey");
+
+                    try {
+                        deaths+= row.getInt("deaths_diff");
+                    } catch (Exception e){
+
+
+                    }
+                }
+                result1.put(simpleDateFormat.format(cal.getTime()), deaths);
+            }
+            cal.add(Calendar.DATE,1);
+        }
+        result.setMap_cases(result1);
+        saveToCache(result,TAG19+country+start.replaceAll("/","-")+end.replaceAll("/","-"));
+        writeLastTimeToMemory(TAG19+country+start.replaceAll("/","-")+end.replaceAll("/","-"),new Date());
+        return result;
+    }
+
+
+
+    public LineChartResult getStatsTotal_period_country_new_rec(String country,String start, String end) throws IOException, InterruptedException, ParseException{
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        cal.setTime(sdf.parse(start));
+
+        Date endDate=sdf.parse(end);
+
+        LineChartResult result=new LineChartResult();
+        Map<String,Double> result2=new HashMap();
+        while(endDate.compareTo(cal.getTime())>=0){
+
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(DATA_URL_STATS+"?date="+simpleDateFormat.format(cal.getTime())+"&region_name="+country))
+                    .header("accept","application/json")
+                    .header("x-rapidapi-key", "7b0e4f3eefmsh9a199e54efe9595p1f6669jsn29c7d74d3974")
+                    .header("x-rapidapi-host", "covid-19-statistics.p.rapidapi.com")
+                    .header("useQueryString", String.valueOf(true))
+                    .build();
+        /*mapping = new HashMap<String, Integer>();
+        mapping.put("Province/State",0);
+        mapping.put("Country/Region",1);
+        mapping.put("Lat",2);
+        mapping.put("Long",3);*/
+
+            HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            if(response.statusCode()==200){
+
+                String body=String.valueOf(response.body()).replace("\n","");
+                //body=body.replaceAll(" ","");
+                JSONObject obj = new JSONObject(body);
+                JSONArray data=obj.getJSONArray("data");
+
+
+
+
+                Region lastCountry=null;
+                String lastCountryDate="";
+                String lastCountryUpdated="";
+                int t_confirmed_diff=0;
+                int t_recovered_diff=0;
+
+                for(int i = 0 ; i < data.length() ; i++){
+                    JSONObject row=data.getJSONObject(i);//getString("interestKey");
+                    JSONObject regionJson=row.getJSONObject("region");
+                    //System.out.println(regionJson.getString("lat"));
+                    if(lastCountry!=null && regionJson.getString("name").equals(lastCountry.getName())){
+
+
+                        t_confirmed_diff+=row.getInt("confirmed_diff");
+                        t_recovered_diff+=row.getInt("recovered_diff");
+                    } else {
+
+                        if(lastCountry!=null){
+
+                            if(t_recovered_diff==0) {
+                                result2.put(simpleDateFormat2.format(cal.getTime()),0.0);
+                            }else {
+                                result2.put(simpleDateFormat2.format(cal.getTime()), Math.round(t_confirmed_diff * 1.0 / t_recovered_diff * 100.0) / 100.0);
+                            }
+                            try{
+                                lastCountry=new Region(regionJson.getString("name"),
+                                        regionJson.getString("iso"),
+                                        "",
+                                        coords.get(regionJson.getString("name")).getLat(),
+                                        coords.get(regionJson.getString("name")).getLon());
+                            }
+                            catch (Exception e){
+                                lastCountry=new Region(regionJson.getString("name"),
+                                        regionJson.getString("iso"),
+                                        "",
+                                        0,
+                                        0);
+                            }
+                            lastCountryDate=row.getString("date");
+                            lastCountryUpdated=row.getString("last_update");
+
+                            t_confirmed_diff=row.getInt("confirmed_diff");
+                            t_recovered_diff=row.getInt("recovered_diff");
+                        }
+                        else{
+                            try{
+                                lastCountry=new Region(regionJson.getString("name"),
+                                        regionJson.getString("iso"),
+                                        "",
+                                        coords.get(regionJson.getString("name")).getLat(),
+                                        coords.get(regionJson.getString("name")).getLon());
+                            }
+                            catch (Exception e){
+                                lastCountry=new Region(regionJson.getString("name"),
+                                        regionJson.getString("iso"),
+                                        "",
+                                        0,
+                                        0);
+                            }
+                            lastCountryDate=row.getString("date");
+                            lastCountryUpdated=row.getString("last_update");
+                            t_confirmed_diff=row.getInt("confirmed_diff");
+                            t_recovered_diff=row.getInt("recovered_diff");
+                        }
+                    }
+
+                }
+
+                if(t_recovered_diff==0) {
+                    result2.put(simpleDateFormat2.format(cal.getTime()),0.0);
+                }else {
+                    result2.put(simpleDateFormat2.format(cal.getTime()), Math.round(t_confirmed_diff * 1.0 / t_recovered_diff * 100.0) / 100.0);
+                }
+            }
+
+            cal.add(Calendar.DATE,1);
+        }
+        result.setMap_ratio(result2);
+        saveToCache(result,TAG16+country+start.replaceAll("/","-")+end.replaceAll("/","-"));
+        writeLastTimeToMemory(TAG16+country+start.replaceAll("/","-")+end.replaceAll("/","-"),new Date());
+        return result;
+    }
+
+    public LineChartResult getStatsTotal_period_continents_new_rec(String continent, String start, String end) throws IOException, InterruptedException, ParseException{
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        cal.setTime(sdf.parse(start));
+
+        Date endDate=sdf.parse(end);
+
+
+        LineChartResult result=new LineChartResult();
+        Map<String,Double> result2=new HashMap();
+        Date date=null;
+
+        String europe= "Albania;Andorra;Armenia;Austria;Azerbaijan;Belarus;Belgium;Bosnia and Herzegovina;Bulgaria;Croatia;Cyprus;Channel Islands;Czechia;Denmark;Estonia;Faroe Islands;Finland;France;Georgia;Germany;Gibraltar;Guernsey;Greece;Holy See;Hungary;Iceland;Ireland;Italy;Jersey;Kosovo;Latvia;Liechtenstein;Lithuania;Luxembourg;Mayotte;Malta;Moldova;MS Zaandam;Monaco;Montenegro;Netherlands;North Macedonia;Norway;Poland;Portugal;Romania;Russia;San Marino;Serbia;Slovakia;Slovenia;Spain;Sweden;Switzerland;Turkey;Ukraine;United Kingdom;";
+        String asia="Afghanistan;Bahrain;Bangladesh;Bhutan;Brunei;Burma;Cambodia;China;India;Indonesia;Iran;Iraq;Israel;West Bank and Gaza;Japan;Jordan;Kazakhstan;Korea, South;Kyrgyzstan;Kuwait;Laos;Lebanon;Malaysia;Macao SAR;Maldives;Mongolia;Nepal;Oman;Pakistan;Philippines;Qatar;Saudi Arabia;Singapore;Sri Lanka;Syria;Taiwan;Tajikistan;Thailand;Timor-Leste;Turkmenistan;Taipei and environs;United Arab Emirates;Uzbekistan;Vietnam;Yemen;";
+        String africa="Algeria;Angola;Benin;Botswana;Tanzania;Burkina Faso;Western Sahara;Burundi;Cabo Verde;Cameroon;Central African Republic;Comoros;Chad;Malawi;Sierra Leone;Sao Tome and Principe;Seychelles;Congo (Brazzaville);Congo (Kinshasa);Cote d'Ivoire;Djibouti;Egypt;Equatorial Guinea;Guinea;Guinea-Bissau;Eritrea;Eswatini;South Sudan;Reunion;Ethiopia;Gabon;Gambia;Ghana;Kenya;Liberia;Libya;Lesotho;Madagascar;Mali;Mauritania;Mauritius;Morocco;Mozambique;Namibia;Niger;Nigeria;Rwanda;Senegal;Somalia;South Africa;Sudan;Togo;Tunisia;Uganda;Zambia;Zimbabwe;";
+        String oceania="Australia;Fiji;Guam;New Zealand;Papua New Guinea;Kiribati;Marshall Islands;Solomon Islands;Vanuatu;";
+        String north_america="Antigua and Barbuda;Aruba;Bahamas;Barbados;Belize;Canada;Cayman Islands;Costa Rica;Cuba;Dominica;Dominican Republic;El Salvador;Greenland;Grenada;Guadeloupe;Guatemala;Haiti;Honduras;Jamaica;Martinique;Mexico;Nicaragua;Panama;Puerto Rico;Saint Kitts and Nevis;Saint Lucia;Saint Martin;Saint Vincent and the Grenadines;Saint Barthelemy;Trinidad and Tobago;US;";
+        String south_america="Argentina;Bolivia;Brazil;Chile;Colombia;Curacao;Ecuador;French Guiana;Guyana;Paraguay;Peru;Suriname;Uruguay;Venezuela;";
+
+        String selected_continent="";
+        switch (continent){
+            case "europe":
+                selected_continent=europe;
+                break;
+            case "asia":
+                selected_continent=asia;
+                break;
+            case "africa":
+                selected_continent=africa;
+                break;
+            case "oceania":
+                selected_continent=oceania;
+                break;
+            case "north_america":
+                selected_continent=north_america;
+                break;
+            case "south_america":
+                selected_continent=south_america;
+                break;
+
+        }
+        while(endDate.compareTo(cal.getTime())>=0){
+
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(DATA_URL_STATS+"?date="+simpleDateFormat.format(cal.getTime())))
+                    .header("accept","application/json")
+                    .header("x-rapidapi-key", "7b0e4f3eefmsh9a199e54efe9595p1f6669jsn29c7d74d3974")
+                    .header("x-rapidapi-host", "covid-19-statistics.p.rapidapi.com")
+                    .header("useQueryString", String.valueOf(true))
+                    .build();
+        /*mapping = new HashMap<String, Integer>();
+        mapping.put("Province/State",0);
+        mapping.put("Country/Region",1);
+        mapping.put("Lat",2);
+        mapping.put("Long",3);*/
+
+            HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            if(response.statusCode()==200){
+
+                String body=String.valueOf(response.body()).replace("\n","");
+                //body=body.replaceAll(" ","");
+                JSONObject obj = new JSONObject(body);
+                JSONArray data=obj.getJSONArray("data");
+                int t_confirmed_diff=0;
+                int t_recovered_diff=0;
+                double ratio=0;
+                for(int i = 0 ; i < data.length() ; i++) {
+                    JSONObject row = data.getJSONObject(i);//getString("interestKey");
+                    JSONObject regionJson = row.getJSONObject("region");
+
+                    if (!selected_continent.contains(regionJson.getString("name") + ";"))
+                        continue;
+
+                    t_confirmed_diff += row.getInt("confirmed_diff");
+                    t_recovered_diff += row.getInt("recovered_diff");
+                }
+                if(t_recovered_diff==0) {
+                    result2.put(simpleDateFormat2.format(cal.getTime()),0.0);
+                }else{
+                    result2.put(simpleDateFormat2.format(cal.getTime()),Math.round(t_confirmed_diff*1.0/t_recovered_diff*100.0)/100.0);
+                }
+            }
+
+            cal.add(Calendar.DATE,1);
+
+        }
+        result.setMap_ratio(result2);
+        saveToCache(result,TAG15+continent+start.replaceAll("/","-")+end.replaceAll("/","-"));
+        writeLastTimeToMemory(TAG15+continent+start.replaceAll("/","-")+end.replaceAll("/","-"),new Date());
+        return result;
+    }
+
+
     public void getData_void
             (int type) throws InterruptedException, ParseException, IOException {
 
             switch(type) {
                 case 9:
                     if(getFromApi(TAG9)){
+                        readFrom="API";
                         getStatsCountry();
                     }else{try{
+                        readFrom="Cache";
+                        readCashDate=readLastTimeFromMemory(TAG9);
                         readMaxStat();
                         regionStatsCountry=readFromCache_List(TAG9);}
                         catch (Exception e){
+                            readFrom="API";
                             getStatsCountry();
                         }
                     }
                     break;
                 case 10:
                     if(getFromApi(TAG10)){
+                        readFrom="API";
                         getTotals();
                     }else{
                         try{
+                            readFrom="Cache";
+                            readCashDate=readLastTimeFromMemory(TAG10);
                             readFromCache_Total(TAG10);}
                         catch (Exception e){
+                            readFrom="API";
                             getTotals();
                         }
                     }
@@ -1467,20 +2006,13 @@ public class DataService {
                 JSONObject obj = new JSONObject(body);
                 try {
                     JSONObject data=obj.getJSONObject("data");
-                    if(data.getInt("confirmed_diff")>0) {
-                        result1.put(simpleDateFormat2.format(date), data.getInt("confirmed_diff"));
-                        if(data.getInt("recovered_diff")==0)
-                            result2.put(simpleDateFormat2.format(date), 0.0);
-                        else
-                            result2.put(simpleDateFormat2.format(date), Math.round(data.getInt("confirmed_diff")*1.0/data.getInt("recovered_diff")*100.0)/100.0);
-
-                    }
-                    else{
-                        result1.put(simpleDateFormat2.format(date),0);
+                    result1.put(simpleDateFormat2.format(date), data.getInt("confirmed_diff"));
+                    if(data.getInt("recovered_diff")==0)
                         result2.put(simpleDateFormat2.format(date), 0.0);
+                    else
+                        result2.put(simpleDateFormat2.format(date), Math.round(data.getInt("confirmed_diff")*1.0/data.getInt("recovered_diff")*100.0)/100.0);
 
 
-                    }
                 } catch (Exception e){
                     result1.put(simpleDateFormat2.format(date),0);
                     result2.put(simpleDateFormat2.format(date), 0.0);
@@ -1493,6 +2025,66 @@ public class DataService {
 
         saveToCache(result,TAG3);
         writeLastTimeToMemory(TAG3,new Date());
+        return result;
+    }
+
+    public LineChartResult getStatsTotal_period_new_rec(String start, String end) throws IOException, InterruptedException, ParseException{
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        cal.setTime(sdf.parse(start));
+
+        Date endDate=sdf.parse(end);
+
+        LineChartResult result=new LineChartResult();
+        Map<String,Double> result2=new HashMap();
+
+
+
+        while(endDate.compareTo(cal.getTime())>=0){
+
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(DATA_URL_TOTALS+"?date="+simpleDateFormat.format(cal.getTime())))
+                    .header("accept","application/json")
+                    .header("x-rapidapi-key", "7b0e4f3eefmsh9a199e54efe9595p1f6669jsn29c7d74d3974")
+                    .header("x-rapidapi-host", "covid-19-statistics.p.rapidapi.com")
+                    .header("useQueryString", String.valueOf(true))
+                    .build();
+        /*mapping = new HashMap<String, Integer>();
+        mapping.put("Province/State",0);
+        mapping.put("Country/Region",1);
+        mapping.put("Lat",2);
+        mapping.put("Long",3);*/
+
+            HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            if(response.statusCode()==200){
+
+                String body=String.valueOf(response.body()).replace("\n","");
+                //body=body.replaceAll(" ","");
+                JSONObject obj = new JSONObject(body);
+                try {
+                    JSONObject data=obj.getJSONObject("data");
+                    if(data.getInt("recovered_diff")==0)
+                        result2.put(simpleDateFormat2.format(cal.getTime()), 0.0);
+                    else
+                        result2.put(simpleDateFormat2.format(cal.getTime()), Math.round(data.getInt("confirmed_diff")*1.0/data.getInt("recovered_diff")*100.0)/100.0);
+
+
+
+
+
+                } catch (Exception e){
+                    result2.put(simpleDateFormat2.format(cal.getTime()), 0.0);
+
+                }
+
+            }
+            cal.add(Calendar.DATE,1);
+        }
+        result.setMap_ratio(result2);
+
+        saveToCache(result,TAG14+start.replaceAll("/","-")+end.replaceAll("/","-"));
+        writeLastTimeToMemory(TAG14+start.replaceAll("/","-")+end.replaceAll("/","-"),new Date());
         return result;
     }
     //4
@@ -1560,9 +2152,8 @@ public class DataService {
                     if (!selected_continent.contains(regionJson.getString("name") + ";"))
                         continue;
                     try {
-                        if(row.getInt("deaths_diff")>0) {
-                              deaths+= row.getInt("deaths_diff");
-                        }
+                        deaths+= row.getInt("deaths_diff");
+
                     } catch (Exception e){
 
 
@@ -1607,9 +2198,8 @@ public class DataService {
                     JSONObject row = data.getJSONObject(i);//getString("interestKey");
 
                     try {
-                        if(row.getInt("deaths_diff")>0) {
-                            deaths+= row.getInt("deaths_diff");
-                        }
+                        deaths+= row.getInt("deaths_diff");
+
                     } catch (Exception e){
 
 
@@ -1650,12 +2240,8 @@ public class DataService {
                 JSONObject obj = new JSONObject(body);
                 try {
                     JSONObject data=obj.getJSONObject("data");
-                    if(data.getInt("confirmed_diff")>0) {
-                        result1.put(simpleDateFormat.format(date), data.getInt("deaths_diff"));
-                    }
-                    else{
-                        result1.put(simpleDateFormat.format(date),0);
-                    }
+                    result1.put(simpleDateFormat.format(date), data.getInt("deaths_diff"));
+
                 } catch (Exception e){
                     result1.put(simpleDateFormat.format(date),0);
 
@@ -1878,6 +2464,300 @@ public class DataService {
         result.setMap_ratio(result2);
         saveToCache(result,TAG8+continent);
         writeLastTimeToMemory(TAG8+continent,new Date());
+        return result;
+    }
+
+    //13
+    public LineChartResult getStatsTotal_period_continents(String continent,String start, String end) throws IOException, InterruptedException, ParseException{
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        cal.setTime(sdf.parse(start));
+
+        Date endDate=sdf.parse(end);
+
+
+        LineChartResult result=new LineChartResult();
+        Map<String,Integer> result1=new HashMap();
+        String europe= "Albania;Andorra;Armenia;Austria;Azerbaijan;Belarus;Belgium;Bosnia and Herzegovina;Bulgaria;Croatia;Cyprus;Channel Islands;Czechia;Denmark;Estonia;Faroe Islands;Finland;France;Georgia;Germany;Gibraltar;Guernsey;Greece;Holy See;Hungary;Iceland;Ireland;Italy;Jersey;Kosovo;Latvia;Liechtenstein;Lithuania;Luxembourg;Mayotte;Malta;Moldova;MS Zaandam;Monaco;Montenegro;Netherlands;North Macedonia;Norway;Poland;Portugal;Romania;Russia;San Marino;Serbia;Slovakia;Slovenia;Spain;Sweden;Switzerland;Turkey;Ukraine;United Kingdom;";
+        String asia="Afghanistan;Bahrain;Bangladesh;Bhutan;Brunei;Burma;Cambodia;China;India;Indonesia;Iran;Iraq;Israel;West Bank and Gaza;Japan;Jordan;Kazakhstan;Korea, South;Kyrgyzstan;Kuwait;Laos;Lebanon;Malaysia;Macao SAR;Maldives;Mongolia;Nepal;Oman;Pakistan;Philippines;Qatar;Saudi Arabia;Singapore;Sri Lanka;Syria;Taiwan;Tajikistan;Thailand;Timor-Leste;Turkmenistan;Taipei and environs;United Arab Emirates;Uzbekistan;Vietnam;Yemen;";
+        String africa="Algeria;Angola;Benin;Botswana;Tanzania;Burkina Faso;Western Sahara;Burundi;Cabo Verde;Cameroon;Central African Republic;Comoros;Chad;Malawi;Sierra Leone;Sao Tome and Principe;Seychelles;Congo (Brazzaville);Congo (Kinshasa);Cote d'Ivoire;Djibouti;Egypt;Equatorial Guinea;Guinea;Guinea-Bissau;Eritrea;Eswatini;South Sudan;Reunion;Ethiopia;Gabon;Gambia;Ghana;Kenya;Liberia;Libya;Lesotho;Madagascar;Mali;Mauritania;Mauritius;Morocco;Mozambique;Namibia;Niger;Nigeria;Rwanda;Senegal;Somalia;South Africa;Sudan;Togo;Tunisia;Uganda;Zambia;Zimbabwe;";
+        String oceania="Australia;Fiji;Guam;New Zealand;Papua New Guinea;Kiribati;Marshall Islands;Solomon Islands;Vanuatu;";
+        String north_america="Antigua and Barbuda;Aruba;Bahamas;Barbados;Belize;Canada;Cayman Islands;Costa Rica;Cuba;Dominica;Dominican Republic;El Salvador;Greenland;Grenada;Guadeloupe;Guatemala;Haiti;Honduras;Jamaica;Martinique;Mexico;Nicaragua;Panama;Puerto Rico;Saint Kitts and Nevis;Saint Lucia;Saint Martin;Saint Vincent and the Grenadines;Saint Barthelemy;Trinidad and Tobago;US;";
+        String south_america="Argentina;Bolivia;Brazil;Chile;Colombia;Curacao;Ecuador;French Guiana;Guyana;Paraguay;Peru;Suriname;Uruguay;Venezuela;";
+
+        String selected_continent="";
+        switch (continent){
+            case "europe":
+                selected_continent=europe;
+                break;
+            case "asia":
+                selected_continent=asia;
+                break;
+            case "africa":
+                selected_continent=africa;
+                break;
+            case "oceania":
+                selected_continent=oceania;
+                break;
+            case "north_america":
+                selected_continent=north_america;
+                break;
+            case "south_america":
+                selected_continent=south_america;
+                break;
+
+        }
+
+        while(endDate.compareTo(cal.getTime())>=0){
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(DATA_URL_STATS+"?date="+simpleDateFormat.format(cal.getTime())))
+                    .header("accept","application/json")
+                    .header("x-rapidapi-key", "7b0e4f3eefmsh9a199e54efe9595p1f6669jsn29c7d74d3974")
+                    .header("x-rapidapi-host", "covid-19-statistics.p.rapidapi.com")
+                    .header("useQueryString", String.valueOf(true))
+                    .build();
+        /*mapping = new HashMap<String, Integer>();
+        mapping.put("Province/State",0);
+        mapping.put("Country/Region",1);
+        mapping.put("Lat",2);
+        mapping.put("Long",3);*/
+
+            HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            if(response.statusCode()==200){
+
+                String body=String.valueOf(response.body()).replace("\n","");
+                //body=body.replaceAll(" ","");
+                JSONObject obj = new JSONObject(body);
+                JSONArray data=obj.getJSONArray("data");
+                int t_confirmed_diff=0;
+                double ratio=0;
+                for(int i = 0 ; i < data.length() ; i++) {
+                    JSONObject row = data.getJSONObject(i);//getString("interestKey");
+                    JSONObject regionJson = row.getJSONObject("region");
+
+                    if (!selected_continent.contains(regionJson.getString("name") + ";"))
+                        continue;
+
+                    t_confirmed_diff += row.getInt("confirmed_diff");
+                }
+                result1.put(simpleDateFormat2.format(cal.getTime()),t_confirmed_diff);
+            }
+
+            cal.add(Calendar.DATE,1);
+
+        }
+        result.setMap_cases(result1);
+        saveToCache(result,TAG12+continent+start.replaceAll("/","-")+end.replaceAll("/","-"));
+        writeLastTimeToMemory(TAG12+continent+start.replaceAll("/","-")+end.replaceAll("/","-"),new Date());
+        return result;
+    }
+
+    //12
+    public LineChartResult getStatsTotal_period_country(String country,String start, String end) throws IOException, InterruptedException, ParseException{
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        cal.setTime(sdf.parse(start));
+
+        Date endDate=sdf.parse(end);
+
+        LineChartResult result=new LineChartResult();
+        Map<String,Integer> result1=new HashMap();
+
+        while(endDate.compareTo(cal.getTime())>=0){
+
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(DATA_URL_STATS+"?date="+simpleDateFormat.format(cal.getTime())+"&region_name="+country))
+                    .header("accept","application/json")
+                    .header("x-rapidapi-key", "7b0e4f3eefmsh9a199e54efe9595p1f6669jsn29c7d74d3974")
+                    .header("x-rapidapi-host", "covid-19-statistics.p.rapidapi.com")
+                    .header("useQueryString", String.valueOf(true))
+                    .build();
+        /*mapping = new HashMap<String, Integer>();
+        mapping.put("Province/State",0);
+        mapping.put("Country/Region",1);
+        mapping.put("Lat",2);
+        mapping.put("Long",3);*/
+
+            HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            if(response.statusCode()==200){
+
+                String body=String.valueOf(response.body()).replace("\n","");
+                //body=body.replaceAll(" ","");
+                JSONObject obj = new JSONObject(body);
+                JSONArray data=obj.getJSONArray("data");
+
+
+
+
+                Region lastCountry=null;
+                String lastCountryDate="";
+                String lastCountryUpdated="";
+                int t_confirmed_diff=0;
+
+                for(int i = 0 ; i < data.length() ; i++){
+                    JSONObject row=data.getJSONObject(i);//getString("interestKey");
+                    JSONObject regionJson=row.getJSONObject("region");
+                    //System.out.println(regionJson.getString("lat"));
+                    if(lastCountry!=null && regionJson.getString("name").equals(lastCountry.getName())){
+
+
+                        t_confirmed_diff+=row.getInt("confirmed_diff");
+                    } else {
+
+                        if(lastCountry!=null){
+
+                            result1.put(simpleDateFormat2.format(cal.getTime()),t_confirmed_diff);
+                            try{
+                                lastCountry=new Region(regionJson.getString("name"),
+                                        regionJson.getString("iso"),
+                                        "",
+                                        coords.get(regionJson.getString("name")).getLat(),
+                                        coords.get(regionJson.getString("name")).getLon());
+                            }
+                            catch (Exception e){
+                                lastCountry=new Region(regionJson.getString("name"),
+                                        regionJson.getString("iso"),
+                                        "",
+                                        0,
+                                        0);
+                            }
+                            lastCountryDate=row.getString("date");
+                            lastCountryUpdated=row.getString("last_update");
+
+                            t_confirmed_diff=row.getInt("confirmed_diff");
+                        }
+                        else{
+                            try{
+                                lastCountry=new Region(regionJson.getString("name"),
+                                        regionJson.getString("iso"),
+                                        "",
+                                        coords.get(regionJson.getString("name")).getLat(),
+                                        coords.get(regionJson.getString("name")).getLon());
+                            }
+                            catch (Exception e){
+                                lastCountry=new Region(regionJson.getString("name"),
+                                        regionJson.getString("iso"),
+                                        "",
+                                        0,
+                                        0);
+                            }
+                            lastCountryDate=row.getString("date");
+                            lastCountryUpdated=row.getString("last_update");
+                            t_confirmed_diff=row.getInt("confirmed_diff");
+                        }
+                    }
+
+                    cal.add(Calendar.DATE,1);
+                }
+
+                result1.put(simpleDateFormat2.format(cal.getTime()),t_confirmed_diff);
+
+            }
+
+            cal.add(Calendar.DATE,1);
+        }
+        result.setMap_cases(result1);
+        saveToCache(result,TAG13+country+start.replaceAll("/","-")+end.replaceAll("/","-"));
+        writeLastTimeToMemory(TAG13+country+start.replaceAll("/","-")+end.replaceAll("/","-"),new Date());
+        return result;
+    }
+
+    //13
+    public LineChartResult getStatsTotal_period(String start, String end) throws IOException, InterruptedException, ParseException{
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        cal.setTime(sdf.parse(start));
+
+        Date endDate=sdf.parse(end);
+
+        LineChartResult result=new LineChartResult();
+        Map<String,Integer> result1=new HashMap();
+
+        while(endDate.compareTo(cal.getTime())>=0){
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(DATA_URL_TOTALS+"?date="+simpleDateFormat.format(cal.getTime())))
+                    .header("accept","application/json")
+                    .header("x-rapidapi-key", "7b0e4f3eefmsh9a199e54efe9595p1f6669jsn29c7d74d3974")
+                    .header("x-rapidapi-host", "covid-19-statistics.p.rapidapi.com")
+                    .header("useQueryString", String.valueOf(true))
+                    .build();
+        /*mapping = new HashMap<String, Integer>();
+        mapping.put("Province/State",0);
+        mapping.put("Country/Region",1);
+        mapping.put("Lat",2);
+        mapping.put("Long",3);*/
+
+            HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            if(response.statusCode()==200){
+
+                String body=String.valueOf(response.body()).replace("\n","");
+                //body=body.replaceAll(" ","");
+                JSONObject obj = new JSONObject(body);
+                try {
+                    JSONObject data=obj.getJSONObject("data");
+                    result1.put(simpleDateFormat2.format(cal.getTime()), data.getInt("confirmed_diff"));
+
+                } catch (Exception e){
+                    result1.put(simpleDateFormat2.format(cal.getTime()),0);
+
+                }
+
+            }
+            cal.add(Calendar.DATE,1);
+        }
+        result.setMap_cases(result1);
+
+        saveToCache(result,TAG11+start.replaceAll("/","-")+end.replaceAll("/","-"));
+        writeLastTimeToMemory(TAG11+start.replaceAll("/","-")+end.replaceAll("/","-"),new Date());
+        return result;
+    }
+
+    //6
+    public LineChartResult getDeaths_period(String start, String end) throws IOException, InterruptedException, ParseException{
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        cal.setTime(sdf.parse(start));
+
+        Date endDate=sdf.parse(end);
+
+        LineChartResult result=new LineChartResult();
+        Map<String,Integer> result1=new HashMap();
+
+        while(endDate.compareTo(cal.getTime())>=0){
+
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(DATA_URL_TOTALS+"?date="+simpleDateFormat.format(cal.getTime())))
+                    .header("accept","application/json")
+                    .header("x-rapidapi-key", "7b0e4f3eefmsh9a199e54efe9595p1f6669jsn29c7d74d3974")
+                    .header("x-rapidapi-host", "covid-19-statistics.p.rapidapi.com")
+                    .header("useQueryString", String.valueOf(true))
+                    .build();
+
+            HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            if(response.statusCode()==200){
+
+                String body=String.valueOf(response.body()).replace("\n","");
+                //body=body.replaceAll(" ","");
+                JSONObject obj = new JSONObject(body);
+                try {
+                    JSONObject data=obj.getJSONObject("data");
+                    result1.put(simpleDateFormat.format(cal.getTime()), data.getInt("deaths_diff"));
+
+                } catch (Exception e){
+                    result1.put(simpleDateFormat.format(cal.getTime()),0);
+
+                }
+
+            }
+            cal.add(Calendar.DATE,1);
+        }
+        result.setMap_cases(result1);
+        saveToCache(result,TAG17+start.replaceAll("/","-")+end.replaceAll("/","-"));
+        writeLastTimeToMemory(TAG17+start.replaceAll("/","-")+end.replaceAll("/","-"),new Date());
         return result;
     }
 
